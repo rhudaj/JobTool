@@ -35,22 +35,27 @@ function SectionContainer(props: {
             {props.hasNext ? <ChangeSection next={true} /> : null}
         </div>
     );
-}
+};
 
 function AppSection(props: {
     id: string;
     heading: string;
+    isLoad: boolean;
     children: ReactElement;
 }) {
     return (
         <div className={`AppSection`} id={props.id}>
             <h1>{props.heading}</h1>
-            <div className="section-content">
-                {props.children.props.children}
+            <div className="section-content loading-div">
+                {
+                    props.isLoad ?
+                        <span className="loader"/> :
+                        props.children
+                }
             </div>
         </div>
     );
-}
+};
 
 const SubSection = (props: {
     id: string;
@@ -94,11 +99,7 @@ function JobInfoDisplay(props: { jobInfo: JobInfo }) {
                     headers={["lang"]}
                 />
             </SubSection>
-            {Object.entries(parsedSections).map((sect) => (
-                <SubSection id={`${sect[0]}-div`} heading={sect[0]}>
-                    <textarea defaultValue={sect[1]}></textarea>
-                </SubSection>
-            ))}
+            {GenerateTextAreas({ obj: parsedSections })}
         </>
     );
 }
@@ -128,20 +129,19 @@ function App() {
         setExtractJobInfoEnabled(e.target.value !== "");
     };
 
-    const extractJobInfo = async () => {
+    const extractJobInfo = () => {
         console.log("Extracting Job Info...");
 
         const jobTxt = (
             document.getElementById("job-info-input") as HTMLTextAreaElement
         ).value;
 
-        // 1 - BACKEND
-
-        const jobInfo: JobInfo | null = await BackendAPI.getJobInfo(jobTxt);
-        if (jobInfo !== null) {
-            console.log("Job Info is not null!");
-            setJobInfo(jobInfo);
-        }
+        BackendAPI.getJobInfo(jobTxt)
+            .then(jobInfo=>{
+                if (jobInfo === null) console.log("Job Info is null!");
+                else setJobInfo(jobInfo);
+                setResultsEnabled(true);
+            })
     };
 
     const generateCL = () => {
@@ -164,7 +164,7 @@ function App() {
             id: "section-job-info",
             heading: "Job Info",
             onNext: extractJobInfo,
-            complete: extractJobInfoEnabled,
+            complete: true,
             content: (
                 <>
                     <textarea id="job-info-input" onChange={onTextInput} />
@@ -175,7 +175,7 @@ function App() {
             id: "section-job-analysis",
             heading: "Job Analysis",
             onNext: generateCL,
-            complete: true,
+            complete: resultsEnabled,
             content: (
                 <>
                     <JobInfoDisplay jobInfo={jobInfo} />
@@ -210,7 +210,11 @@ function App() {
                     setSec(sec + (next ? 1 : -1));
                 }}
             >
-                <AppSection id={curSec.id} heading={curSec.heading}>
+                <AppSection
+                    id={curSec.id}
+                    heading={curSec.heading}
+                    isLoad={!curSec.complete}
+                >
                     {curSec.content}
                 </AppSection>
             </SectionContainer>

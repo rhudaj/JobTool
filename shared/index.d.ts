@@ -3,8 +3,8 @@ interface JobExtractResponse {
     company: string;
     positionName: string;
     positionType: string;
-    aboutRole: string;
-    aboutYou: string;
+    aboutRole: string[];
+    aboutYou: string[];
     requirements: string[];
     other: string[];
     dateRange: string;
@@ -16,8 +16,8 @@ interface JobInfo {
     company: string;
     positionName: string;
     positionType: string;
-    aboutRole: string;
-    aboutYou: string;
+    aboutRole: string[];
+    aboutYou: string[];
     requirements: string[];
     other: string[];
     dateRange: string;

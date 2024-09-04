@@ -1,5 +1,6 @@
 import * as AssistantAPI from "../shared/openai/assistant.js"
 import { CoverLetterResponse, JobInfo } from "shared"
+import { delay } from "../shared/util/delay.js";
 
 const TEST = true;
 
@@ -118,7 +119,7 @@ async function genCL(jobInfo: JobInfo) {
 
     // 1 - Get the json response
         if(TEST) {
-            await (new Promise(res => setTimeout(res, 5000)));
+            await delay(5000);
             console.log("Waited 5s");
             return test_cl;
         }
