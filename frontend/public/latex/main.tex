@@ -1,0 +1,109 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PACKAGES & DOCUMENT CONFIGURATIONS
+\documentclass[9pt]{developercv} % Default font size, values from 8-12pt are recommended
+\usepackage{multicol}
+\setlength{\columnsep}{0mm}
+\usepackage{lipsum}  
+\input{variables.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	TITLE AND CONTACT INFORMATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\wI{0.45}      % width of column 1
+\def\gap{0.05}     % gap between
+\def\wII{0.5}      % width of column 2
+\begin{minipage}[t]{\wI\textwidth} 
+    \vspace{-\baselineskip} % Required for vertically aligning minipages
+    { \fontsize{16}{20} \textcolor{black}{\textbf{\MakeUppercase{Roman Hudaj}}}} % First name
+    \vspace{6pt} \\
+    {\Large CS Student $\sim$ \personalTitle} % Career or current job title
+\end{minipage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+%  CONTACT INFO / LINKS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setsepchar{,}  % seperator for \mylist
+\readlist*\linksArr{\links} % star option removes surrounding whitespace
+\edef\linkOne{\linksArr[1]}
+\edef\linkTwo{\linksArr[2]}
+\edef\linkThree{\linksArr[3]}
+\edef\linkFour{\linksArr[4]}
+%-----------------------------
+\def\boxsize{10}
+\hfill
+% Portfolio - Phone # - Location
+\begin{minipage}[t]{0.25\textwidth} % 25% of the page width for the first row of icons
+	\vspace{-\baselineskip} % Required for vertically aligning minipages
+        \customLink{\boxsize}{\linkOne} \\
+        \customLink{\boxsize}{\linkTwo} \\
+\end{minipage}
+% Email - GitHub - LinkedIn
+\begin{minipage}[t]{0.25\textwidth} % 27% of the page width for the second row of icons
+    \vspace{-\baselineskip} % Required for vertically aligning minipages
+    \customLink{\boxsize}{\linkThree} \\
+    \customLink{\boxsize}{\linkFour} \\
+\end{minipage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	SUMMARY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{minipage}[t]{\wI\textwidth}
+    \cvsect{Summary}
+	\vspace{-6pt} \\
+        \summary % space above required
+\end{minipage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	SKILLS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hfill % Whitespace between
+\begin{minipage}[t]{\wII\textwidth}
+    \cvsect{Skills}
+    \vspace{-6pt} \\
+        \begin{minipage}[t]{0.25\textwidth}
+            \textbf{Languages:}
+        \end{minipage}
+        \hfill
+        \begin{minipage}[t]{0.75\textwidth}
+          \languages
+        \end{minipage}
+        \vspace{1mm} \\
+        \begin{minipage}[t]{0.25\textwidth}
+            \textbf{Technology:}
+        \end{minipage}
+        \hfill
+        \begin{minipage}[t]{0.75\textwidth}
+            \technologies
+        \end{minipage}
+\end{minipage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+% EXPERIENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\\ \\
+\cvsect{Experience}
+\ExperienceList{\experiences}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	Projects
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\\
+\cvsect{Projects}
+\ProjectList{\projects}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	EDUCATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{\topSpace}
+\cvsect{Education}
+\\
+\begin{entrylist}
+    \entry
+        {9/20 - 12/24}
+        {Computer Science, Honours}
+        {University of Waterloo}
+	{
+            \vspace{\topSpace}
+            \begin{customItemize}
+                \item Awards: Presidents Scholarship of Distinction, Dean's Honours List
+                \item Course-Work: \courses
+            \end{customItemize}
+        }
+\end{entrylist}
+\end{document}

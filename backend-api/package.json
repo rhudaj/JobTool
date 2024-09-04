@@ -1,0 +1,23 @@
+{
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --env-file=.env dist/api.js",
+    "start": "npm run build && npm run dev"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "docx": "8.0",
+    "express": "^4.19.2",
+    "fs": "^0.0.1-security",
+    "openai": "^4.56.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.13",
+    "typescript": "^5.5.3"
+  }
+}

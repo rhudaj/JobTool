@@ -1,0 +1,23 @@
+.header-row td {
+    background-color: black;
+    color: white;
+}
+
+.custom-table {
+    width: min-content;
+}
+
+.custom-table tr:first-child td {
+    background-color:#282c34;
+    color: white;
+}
+
+.custom-table, tr, td {
+    padding: 5px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.custom-table tr:hover {
+    background-color:darkcyan;
+}

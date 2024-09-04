@@ -1,0 +1,48 @@
+Name: Roman Hudaj \
+Title: CS Student & Software Developer
+# SUMMARY
+Dynamic, agile software full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.
+# LINKS
+* Github: github.com/rhudaj
+* Email: rhudaj@uwaterloo.ca
+* Personal Portfolio: roman-hudaj.com
+* LinkedIn: /in/rhudaj
+# SKILLS
+* Languages: Python, SQL, JavaScript, TypeScript, C++, C, HTML, CSS
+* Technology: ReactJS, NodeJS, Git, Alteryx, SQL Server, MySQL, Numpy, Pandas Selenium, Excel
+# EXPERIENCE
+1. Company: Timeplay, Role: Product Assistant, Description:
+    * Improved UI for lottery and instant-win games using React and TypeScript, supporting the rollout of a gaming platform on cruise ships from inception to deployment.
+    * Optimized data structures and improved frontend tools for admin management on cruise ships, reducing data redundancy and enhancing usability based on client feedback.
+    * Prioritized and deployed new game features through Jira, coordinating with stakeholders to ensure timely updates, which led to a ￿￿% increase in game engagement.
+    * Tech used: Jira / Node.js / Docker / React
+2. Company: Environics Analytics, Role: Software Product Management Intern, Description:
+    * Developed an automated pipeline with Alteryx and the API of an AI model to parse and translate data product documents and variable lists to French, resulting in savings of tens of thousands per product.
+    * Created a user-friendly app with Python/QT to extract client usage data of company products from databases; provided ease of data access and analysis by non-technical teams.
+    * Enhanced databases to monitor client usage of products/APIs to formulate an optimized product pricing strategy and ultimately increase profitability and user satisfaction.
+    * Tech used: SQL / Alteryx / Python / Azure
+3. Company: Martinrea International, Role: Student Engineer, Description:
+    * Spearheaded a major project to optimize the ￿ow of materials across a large facility; improved system for collecting and analyzing data to plan the project; resulted in increased output and cost e￿ciency.
+    * Implemented a supply chain tracking system using SQL and advanced Excel for proactive identi￿cation of issues, enabling timely alerts to managers and achieving estimated $XX,XXX annual cost savings.
+    * Tech used: SQL / Excel
+# PROJECTS
+1. Automated Restaurant Reservation Business
+    * Created a fully automated reservation system using TypeScript and Node.js through API requests, to secure hard-to-get reservations at world-popular restaurants for clients generating $X,XXX a month
+    * Deployed the project on Google Cloud, utilizing Scheduler for automated tasks, Firestore for managing data, and cloud storage for transaction and listing records, ensuring a scalable and reliable system.
+    * tech used: TypeScript / Node / Google Cloud
+2. Database Interface App
+    * Created a efficient, user-friendly app to interact with a database, featuring:
+        * Connection to any specifed database via ODBC
+        * Intuitive UI for table selection and data filtering, dynamically generated in real-time by efficiently handling of millions of records via Pandas, optimized display algorithms and batch querying
+        * Crash-safe via multi-threading
+        * MVC architecture.
+    * tech used: Python / SQL
+3. Voice-to-Instrument Translator
+    * Developed an app enabling real-time translation of human voice into various musical instruments
+    * Utilized Python (Numpy) to implement advanced probabilistic algorithms for detecting: pitch, tempo and note-onsets
+    * Exposed the backend as a REST API to integrate with a GUI built with React.
+    * tech used: Python / React
+# EDUCATION
+University of Waterloo: Computer Science, Honours
+* Awards: Presidents Scholarship of Distinction, Dean’s Honours List
+* Example Course-Work: Databases, UI, Networks, Algorithms

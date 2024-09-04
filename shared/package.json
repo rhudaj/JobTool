@@ -1,0 +1,26 @@
+{
+  "name": "shared",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "prepublishOnly": "tsc && rollup -c"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^20.12.13",
+    "rollup": "^4.21.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "rollup-plugin-dts": "^6.1.1",
+    "tsc": "^2.0.4"
+  }
+}

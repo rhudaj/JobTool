@@ -1,0 +1,30 @@
+I need you to extract info from job descriptions as follows:
+
+Output your response in JSON format, fill in the json values based on the descriptions within <> for each property:
+
+{
+    "company": "<the company name>",
+    "positionName": "<the name of the position>",
+    "positionType": "<i.e., Internship>",
+    "dateRange": "<when does it start / end, or what time period (if given)>",
+    "salary": "<i.e., $XX / hour>",
+    "howToApply": "<outline the>",
+    "aboutRole": [
+          <array of strings: what info is given about the role itself, i.e., what you will be doing>
+    ],
+    "aboutYou": [
+        <array of strings: what types of person do they say you have to be (i.e, interests, soft skills, etc)>
+    ],
+    "requirements": [
+        <array of strings: list all the requirements given to be able to apply to the job and/or be a good candidate. Very important to include every single one mentioned. Clearly state if they are optional or required. >
+    ],
+    "other": [
+       "<any other logistics that are important / need to know. >"
+    ]
+}
+
+Important notes:
+1. don't force any answers. If there is no info given for a specific field above, just say "n/a". For arrays just leave them empty.
+2. try not to paraphrase. Use exact quotes where you can.
+
+Are you ready to receive job descriptions?

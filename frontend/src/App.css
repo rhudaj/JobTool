@@ -1,0 +1,157 @@
+:root {
+    --main-border-radius: 3px;
+}
+
+button {
+    user-select: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h5 {
+    user-select: none;
+	height: min-content;
+}
+
+.App-Div {
+    background-color: #282c34;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+
+    font-size: calc(10px + 2vmin);
+    color: white;
+
+    padding: 50px;
+
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+/* GENERAL ------------------------- */
+
+.disabled {
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+/* APP SECTIONs --------------------- */
+
+.section-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.AppSection {
+	flex: 1 0 100%;
+
+	background-color: grey;
+	padding: 2%;
+	border-radius: var(--main-border-radius);
+
+	display: flex;
+	flex-direction: column;
+
+	overflow-y: scroll;
+}
+
+	/* heading */
+
+	.AppSection > *:first-child {
+		margin-bottom: 10px;
+	}
+
+	/* section content */
+
+	.AppSection > .section-content {
+		flex: 1 1 100%;
+
+		display: flex;
+		flex-direction: column;
+		gap: 30px
+	}
+
+/* SUB SECTION ----------------------- */
+
+.sub-section {
+	border: 1px solid black;
+	border-radius: var(--main-border-radius);
+	padding: 20px;
+
+	height: min-content;
+
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+	.sub-section > .content {
+		max-height: 300px;
+		overflow-y: scroll;
+	}
+
+/* NEXT SECTION --------------------- */
+
+.change-section-div {
+	flex: 0 1 min-content;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+	.change-section-button {
+		flex: 0 1 min-content;
+
+		background-color: white;
+		padding: 10px;
+		font-size: x-large;
+		font-weight: bold;
+	}
+
+	.change-section-button:hover {
+		transform: scale(1.1);
+		background-color: lightcoral;
+		transition: 0.3s;
+	}
+
+/* section-job-analysis --------------------- */
+
+#section-job-analysis > .content {
+    padding: 2%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+	overflow-y:scroll;
+}
+
+.parsed-section-div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+/* section-cl --------------------- */
+
+
+.download-button {
+	height: min-content;
+    width: 100%;
+
+    padding: 5px;
+    font-size: medium;
+    font-weight: bold;
+    border-radius: var(--main-border-radius);
+}
