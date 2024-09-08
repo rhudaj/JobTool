@@ -29,7 +29,7 @@ export async function extractFromJobDesc(jobTxt: string) {
     // 2 - Get assistant response
         let assResp: JobExtractResponse;
         if (TEST) {
-            await delay(3000);
+            await delay(1000);
             assResp = {
                 "company": "Palantir",
                 "positionName": "Defense Tech Software Engineer Intern",

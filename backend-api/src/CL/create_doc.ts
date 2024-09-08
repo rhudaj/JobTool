@@ -1,20 +1,25 @@
-import * as fs from "fs";
-import pkg, { IStylesOptions } from "docx";
+import * as fs from "fs"
+import pkg from "docx";
 const { Document, Paragraph, Packer } = pkg;
 
 import { CoverLetterResponse } from "shared";
 
-export function outputCLDoc(CL: CoverLetterResponse, fileName: string) {
-    const styleID = "customStyle";
-    const newParagraph = (txt: string) =>
-        new Paragraph({
-            text: txt,
-            style: styleID,
-    });
-    const addParagraphs = (arr: string[]) => arr.map(newParagraph);
+const styleID = "customStyle";
 
+// HELPERS:
+const newParagraph = (txt: string) =>
+    new Paragraph({
+        text: txt,
+        style: styleID,
+    });
+const addParagraphs = (arr: string[]) => arr.map(newParagraph);
+
+export async function outputCLDoc(
+    CL: CoverLetterResponse
+): Promise<null|Buffer> {
+    let isError = false;
     try {
-        const doc = new Document({
+        var doc = new Document({
             sections: [
                 {
                     children: addParagraphs([
@@ -49,15 +54,16 @@ export function outputCLDoc(CL: CoverLetterResponse, fileName: string) {
                 ],
             },
         });
-
-        // Save the document
-        Packer.toBuffer(doc).then((buffer) => {
-            fs.writeFileSync(`public/out/${fileName}.docx`, buffer);
-        });
     } catch (err: unknown) {
-        console.log(
-            "some error occured when outputting to cover letter to .docx:",
-            err
-        );
+        console.log("Error outputting to CL to .docx:", err);
+        isError = true;
     }
-}
+
+    // Save the document locally:
+    Packer.toBuffer(doc).then((buffer) => {
+        fs.writeFileSync("public/out/cl.docx", buffer);
+    });
+
+    return isError ? null : Packer.toBuffer(doc);
+    // return isError;
+};

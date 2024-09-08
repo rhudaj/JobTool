@@ -2,7 +2,7 @@ import { ReactElement, useState } from "react";
 import "./App.css";
 import "./components/CustomTextArea/customTextArea.css";
 import { CustomTable } from "./components/CustomTable/customTable";
-import { JobInfo, WordOccurences } from "shared";
+import { JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
 import { CoverLetterResponse } from "shared";
 
@@ -84,7 +84,6 @@ function JobInfoDisplay(props: { jobInfo: JobInfo }) {
         "About-You": props.jobInfo.aboutYou,
         Other: props.jobInfo.other,
     };
-
     return (
         <>
             <SubSection id="top-words-div" heading="Top Words">
@@ -108,7 +107,7 @@ const GenerateTextAreas = (props: { obj: any }) =>
     Object.entries(props.obj).map((e) => (
         <SubSection id={`${e[0]}-section`} heading={e[0]}>
             {(Array.isArray(e[1]) ? e[1] : [e[1]]).map((item: any[]) => (
-                <textarea value={item} />
+                <textarea defaultValue={item}/>
             ))}
         </SubSection>
     ));
@@ -124,10 +123,8 @@ function App() {
     const [clEnabled, setCLEnabled] = useState(false);
     const [cvEnabled, setCVEnabled] = useState(false);
 
-    const onTextInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const txt = e.target.value;
+    const onTextInput = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
         setExtractJobInfoEnabled(e.target.value !== "");
-    };
 
     const extractJobInfo = () => {
         console.log("Extracting Job Info...");
@@ -152,6 +149,10 @@ function App() {
             setCL(cl);
             setCLEnabled(true);
         });
+    };
+
+    const downloadCL = () => {
+        BackendAPI.outputCLDoc(CL)
     };
 
     const generateCV = () => {
@@ -187,7 +188,12 @@ function App() {
             heading: "Cover Letter",
             onNext: generateCV,
             complete: clEnabled,
-            content: <>{GenerateTextAreas({ obj: CL })}</>,
+            content: (
+                <>
+                    {GenerateTextAreas({ obj: CL })}
+                    <button id="download-cl-button" onClick={downloadCL}>Download</button>
+                </>
+            )
         },
         {
             id: "section-cv",

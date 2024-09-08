@@ -55,7 +55,6 @@ You will be answering questions based on the following job description:
 */
 
 async function setup() {
-
     const response_function = {
         "name": "response",
         "description": "Output cover letter",
@@ -119,8 +118,7 @@ async function genCL(jobInfo: JobInfo) {
 
     // 1 - Get the json response
         if(TEST) {
-            await delay(5000);
-            console.log("Waited 5s");
+            await delay(1000);
             return test_cl;
         }
 
