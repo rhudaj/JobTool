@@ -1,4 +1,3 @@
-import * as fs from "fs"
 import pkg from "docx";
 const { Document, Paragraph, Packer } = pkg;
 
@@ -12,6 +11,7 @@ const newParagraph = (txt: string) =>
         text: txt,
         style: styleID,
     });
+
 const addParagraphs = (arr: string[]) => arr.map(newParagraph);
 
 export async function outputCLDoc(
@@ -59,11 +59,5 @@ export async function outputCLDoc(
         isError = true;
     }
 
-    // Save the document locally:
-    Packer.toBuffer(doc).then((buffer) => {
-        fs.writeFileSync("public/out/cl.docx", buffer);
-    });
-
     return isError ? null : Packer.toBuffer(doc);
-    // return isError;
 };

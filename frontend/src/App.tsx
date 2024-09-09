@@ -190,7 +190,7 @@ function App() {
             complete: clEnabled,
             content: (
                 <>
-                    {GenerateTextAreas({ obj: CL })}
+                    <textarea defaultValue={Object.values(CL).join("\n")}></textarea>
                     <button id="download-cl-button" onClick={downloadCL}>Download</button>
                 </>
             )
