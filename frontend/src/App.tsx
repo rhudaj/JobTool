@@ -1,10 +1,9 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import "./App.css";
 import "./components/CustomTextArea/customTextArea.css";
 import { CustomTable } from "./components/CustomTable/customTable";
-import { JobInfo } from "shared";
+import { JobInfo, CoverLetterResponse, WordOccurences } from "shared";
 import { BackendAPI } from "./backend_api";
-import { CoverLetterResponse } from "shared";
 
 function SectionContainer(props: {
     hasPrev: boolean;
@@ -35,7 +34,7 @@ function SectionContainer(props: {
             {props.hasNext ? <ChangeSection next={true} /> : null}
         </div>
     );
-};
+}
 
 function AppSection(props: {
     id: string;
@@ -47,15 +46,11 @@ function AppSection(props: {
         <div className={`AppSection`} id={props.id}>
             <h1>{props.heading}</h1>
             <div className="section-content loading-div">
-                {
-                    props.isLoad ?
-                        <span className="loader"/> :
-                        props.children
-                }
+                {props.isLoad ? <span className="loader" /> : props.children}
             </div>
         </div>
     );
-};
+}
 
 const SubSection = (props: {
     id: string;
@@ -70,47 +65,76 @@ const SubSection = (props: {
     );
 };
 
-function JobInfoDisplay(props: { jobInfo: JobInfo }) {
-    const parsedSections = {
-        Company: props.jobInfo.company,
-        "Date-Range": props.jobInfo.dateRange,
-        Deadline: props.jobInfo.deadline,
-        "How-to-apply": props.jobInfo.howToApply,
-        "Position-Name": props.jobInfo.positionName,
-        "Position-Type": props.jobInfo.positionType,
-        Salary: props.jobInfo.salary,
-        Requirements: props.jobInfo.requirements,
-        "About-Role": props.jobInfo.aboutRole,
-        "About-You": props.jobInfo.aboutYou,
-        Other: props.jobInfo.other,
-    };
+function JobInfoDisplay(props: {
+    jobInfo: JobInfo;
+    changeJobInfo: (JI: JobInfo) => void;
+}) {
     return (
         <>
             <SubSection id="top-words-div" heading="Top Words">
                 <CustomTable
+                    changeData={(newKeywords: WordOccurences) => {
+                        const newJI = structuredClone(props.jobInfo);
+                        newJI.keywords = newKeywords;
+                        props.changeJobInfo(newJI);
+                    }}
                     data={props.jobInfo.keywords}
                     headers={["word", "#"]}
                 />
             </SubSection>
             <SubSection id="prog-langs-div" heading="Languages">
                 <CustomTable
+                    changeData={(newLangs: string[]) => {
+                        const newJI = structuredClone(props.jobInfo);
+                        newJI.languages = newLangs;
+                        props.changeJobInfo(newJI);
+                    }}
                     data={props.jobInfo.languages}
                     headers={["lang"]}
                 />
             </SubSection>
-            {GenerateTextAreas({ obj: parsedSections })}
+            {GenerateTextAreas({
+                obj: props.jobInfo,
+                editObj: props.changeJobInfo,
+            })}
         </>
     );
 }
 
-const GenerateTextAreas = (props: { obj: any }) =>
-    Object.entries(props.obj).map((e) => (
-        <SubSection id={`${e[0]}-section`} heading={e[0]}>
-            {(Array.isArray(e[1]) ? e[1] : [e[1]]).map((item: any[]) => (
-                <textarea defaultValue={item}/>
-            ))}
-        </SubSection>
-    ));
+const GenerateTextAreas = (props: {
+    obj: any;
+    editObj: (newObj: any) => void;
+}) => {
+    const objEntries = Object.entries(props.obj);
+    const subSectionArr = objEntries.map((sec: [string, any], i: number) => {
+        const secTitle = sec[0];
+        const secVal = sec[1];
+        let content: ReactElement;
+        if (Array.isArray(secVal)) {
+            // Create a table
+            content = (
+                <CustomTable
+                    data={secVal}
+                    handleCell={(item) => <textarea defaultValue={item} />}
+                    changeData={(newData: any[]) => {
+                        const newObj = structuredClone(props.obj);
+                        newObj[secTitle] = newData;
+                        props.editObj(newObj);
+                    }}
+                />
+            );
+        } else {
+            content = <textarea defaultValue={secVal as string} />;
+        }
+        return (
+            <SubSection id={`${secTitle}-section`} heading={secTitle}>
+                {content}
+            </SubSection>
+        );
+    });
+
+    return subSectionArr;
+};
 
 function App() {
     const [sec, setSec] = useState(0);
@@ -133,12 +157,11 @@ function App() {
             document.getElementById("job-info-input") as HTMLTextAreaElement
         ).value;
 
-        BackendAPI.getJobInfo(jobTxt)
-            .then(jobInfo=>{
-                if (jobInfo === null) console.log("Job Info is null!");
-                else setJobInfo(jobInfo);
-                setResultsEnabled(true);
-            })
+        BackendAPI.getJobInfo(jobTxt).then((jobInfo) => {
+            if (jobInfo === null) console.log("Job Info is null!");
+            else setJobInfo(jobInfo);
+            setResultsEnabled(true);
+        });
     };
 
     const generateCL = () => {
@@ -152,7 +175,7 @@ function App() {
     };
 
     const downloadCL = () => {
-        BackendAPI.outputCLDoc(CL)
+        BackendAPI.outputCLDoc(CL);
     };
 
     const generateCV = () => {
@@ -179,7 +202,10 @@ function App() {
             complete: resultsEnabled,
             content: (
                 <>
-                    <JobInfoDisplay jobInfo={jobInfo} />
+                    <JobInfoDisplay
+                        jobInfo={jobInfo}
+                        changeJobInfo={setJobInfo}
+                    />
                 </>
             ),
         },
@@ -190,10 +216,14 @@ function App() {
             complete: clEnabled,
             content: (
                 <>
-                    <textarea defaultValue={Object.values(CL).join("\n")}></textarea>
-                    <button id="download-cl-button" onClick={downloadCL}>Download</button>
+                    <textarea
+                        defaultValue={Object.values(CL).join("\n")}
+                    ></textarea>
+                    <button id="download-cl-button" onClick={downloadCL}>
+                        Download
+                    </button>
                 </>
-            )
+            ),
         },
         {
             id: "section-cv",

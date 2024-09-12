@@ -27,6 +27,7 @@ export async function outputCLDoc(
                         "Dear hiring manager,",
                         CL.intro,
                         ...CL.body_paragraphs,
+                        CL.closing_remarks,
                         "Sincerely,",
                         "Roman Hudaj",
                     ]),

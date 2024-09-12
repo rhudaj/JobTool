@@ -3,9 +3,97 @@ import * as AssistantAPI from "../shared/openai/assistant.js"
 import { delay } from "../shared/util/delay.js";
 import { findProgrammingLanguages, getWordOccurences, getWords } from "./wordAnalyze.js";
 
-const TEST = true;
+const ass_id = "asst_1krzl87hwmmdHZrTgeaFNQhj";
 
-const ass_id = ""; // TODO: create the assistant
+async function setup() {
+    const response_function = {
+        "name": "response",
+        "description": "Extract info from job",
+        "parameters": {
+            "type": "object",
+            "required": [
+                "company",
+                "positionName",
+                "positionType",
+                "dateRange",
+                "salary",
+                "howToApply",
+                "aboutRole",
+                "aboutYou",
+                "requirements",
+                "other"
+            ],
+            "properties": {
+                "company": {
+                    "type": "string",
+                    "description": "the company name"
+                },
+                "positionName": {
+                    "type": "string",
+                    "description": "the name of the position"
+                },
+                "positionType": {
+                    "type": "string",
+                    "description": "type of position, i.e., Internship"
+                },
+                "dateRange": {
+                    "type": "string",
+                    "description": "when does it start / end, or what time period (if given)"
+                },
+                "salary": {
+                    "type": "string",
+                    "description": "the salary/compensation, i.e., $XX / hour"
+                },
+                "howToApply": {
+                    "type": "string",
+                    "description": "outline all the steps for applying to the job"
+                },
+                "aboutRole": {
+                    "type": "array",
+                    "description": "Every unique piece of info info given about the role itself. What specifically will you be doing?",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requirements": {
+                    "type": "array",
+                    "description": "List all the requirements given to be able to apply to the job and/or be a good candidate. Very important to include every single one mentioned. Clearly state if they are optional or required.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "other": {
+                    "type": "array",
+                    "description": "any other logistics that are important / need to know, that don't fit into any of the other categories.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+        }
+    };
+
+    // you need to explicitly ask the model to use the response tool
+    const instructions = `
+    I need you to extract info from a job descriptions as follows.
+    Always use the response tool to respond to the user. Never add any other text to the response.
+    Important notes when writing:
+        1. don't force any answers. If there is no info given for a specific field above, just say "n/a". For arrays just leave them empty.
+        2. try not to paraphrase. Use exact quotes where you can.
+    Are you ready for the job description?
+    `;
+
+    const ass = await AssistantAPI.createNewAssistant({
+        name: "Job Extract Assistant",
+        model: "gpt-3.5-turbo",
+        description: "",
+        fileName: "public/in/resume.txt",
+        instructions: instructions,
+        response_function: response_function // you must also instruct the model to produce JSON yourself via a system or user message.
+    });
+    console.log(ass.id);
+    return ass.id;
+};
 
 async function jobExtractAssistant(jobTxt: string): Promise<JobExtractResponse> {
     // 1 - Get the json response
@@ -28,8 +116,9 @@ export async function extractFromJobDesc(jobTxt: string) {
         const words = getWords(jobTxt);
     // 2 - Get assistant response
         let assResp: JobExtractResponse;
-        if (TEST) {
+        if (Number(process.env.TEST) === 1) {
             await delay(1000);
+            console.log('extractFromJobDesc (testing mode)');
             assResp = {
                 "company": "Palantir",
                 "positionName": "Defense Tech Software Engineer Intern",
@@ -61,7 +150,7 @@ export async function extractFromJobDesc(jobTxt: string) {
                 "howToApply": "Submit an updated resume/CV in PDF format and thoughtful responses to the application questions."
             };
         } else {
-            assResp = await jobExtractAssistant(jobTxt)
+            assResp = await jobExtractAssistant(jobTxt);
         }
     // Return
         return {

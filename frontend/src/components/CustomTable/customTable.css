@@ -4,20 +4,39 @@
 }
 
 .custom-table {
-    width: min-content;
+
 }
 
-.custom-table tr:first-child td {
+textarea {
+    min-height: max-content;
+}
+
+#header-row {
     background-color:#282c34;
     color: white;
 }
 
 .custom-table, tr, td {
+    height: max-content;
     padding: 5px;
     border: 1px solid black;
     border-collapse: collapse;
 }
 
-.custom-table tr:hover {
+.data-col.hover {
     background-color:darkcyan;
+}
+
+.row-removal-col {
+    border-right: hidden;
+    border-bottom: hidden;
+    border-top: hidden;
+}
+
+.row-removal-col:hover {
+    background-color:lightcoral;
+}
+
+tr.delHover {
+    background-color: lightcoral;
 }

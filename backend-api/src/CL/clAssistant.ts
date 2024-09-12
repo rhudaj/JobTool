@@ -2,8 +2,6 @@ import * as AssistantAPI from "../shared/openai/assistant.js"
 import { CoverLetterResponse, JobInfo } from "shared"
 import { delay } from "../shared/util/delay.js";
 
-const TEST = true;
-
 const test_cl = {
     intro: 'Dear Hiring Manager at Palantir,\n' +
         '\n' +
@@ -117,20 +115,25 @@ async function genCL(jobInfo: JobInfo) {
         const inputTxt = JSON.stringify(input);
 
     // 1 - Get the json response
-        if(TEST) {
-            await delay(1000);
+        if(Number(process.env.TEST) === 1) {
+            await delay(500);
+            console.log('genCL (testing mode)');
             return test_cl;
         }
 
-        const response = await AssistantAPI.askAssistant({
+        const response: CoverLetterResponse = await AssistantAPI.askAssistant({
             assistant_id: ass_id,
             question: `Generate the cover letter object (based on the file resume.txt), for the following job description:\n${inputTxt}`
         });
-        console.log("response:\n", response);
+
+        // remove any citation text: '/【\d+(:\d+)?+†source】/'
+            let as_str = JSON.stringify(response);
+            const as_str_replaced = as_str.replace(/【\d+†source】/g, "");
+            const response_fixed = JSON.parse(as_str_replaced);
+
+        console.log("response:\n", response_fixed);
     // 2 - Cast it to the desired format
-        return (response as CoverLetterResponse);
+        return response_fixed;
 };
-
-
 
 export { setup, genCL }
