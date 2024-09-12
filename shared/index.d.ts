@@ -5,25 +5,26 @@ interface JobExtractResponse {
     positionType: string;
     aboutRole: string[];
     aboutYou: string[];
-    requirements: string[];
-    other: string[];
+    qualifications: [reqType, string][];
+    coverLetter: string;
     dateRange: string;
     salary: string;
     deadline: string;
     howToApply: string;
 }
+type reqType = "required" | "optional";
 interface JobInfo {
     company: string;
     positionName: string;
     positionType: string;
     aboutRole: string[];
     aboutYou: string[];
-    requirements: string[];
-    other: string[];
+    qualifications: [reqType, string][];
     dateRange: string;
     salary: string;
     deadline: string;
     howToApply: string;
+    coverLetter: string;
     keywords: WordOccurences;
     languages: string[];
     technologies: string[];

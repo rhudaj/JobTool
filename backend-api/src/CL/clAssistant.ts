@@ -110,7 +110,7 @@ async function genCL(jobInfo: JobInfo) {
             "Position Type": jobInfo.positionType,
             "About the Role": jobInfo.aboutRole,
             "About you": jobInfo.aboutYou,
-            "Requirements": jobInfo.requirements
+            "Requirements": jobInfo.qualifications.map(req=>req[1]) // only want the requirement part
         };
         const inputTxt = JSON.stringify(input);
 

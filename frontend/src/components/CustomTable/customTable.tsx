@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import "./customTable.css";
 
 function CustomTable(props: {

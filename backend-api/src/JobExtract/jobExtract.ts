@@ -134,16 +134,14 @@ export async function extractFromJobDesc(jobTxt: string) {
                     "Willingness to learn and make decisions independently.",
                     "Ability to ask questions when needed."
                 ],
-                "requirements": [
-                    "Required: Engineering background in fields such as Computer Science, Mathematics, Software Engineering, and Physics.",
-                    "Required: Familiarity with data structures, storage systems, cloud infrastructure, front-end frameworks, and other technical tools.",
-                    "Required: Active US Security clearance, or eligibility and willingness to obtain a US Security clearance prior to start of internship.",
-                    "Required: Experience coding in programming languages such as Java, C++, Python, JavaScript, or similar languages.",
-                    "Required: Must be planning on graduating in 2026. This should be the final internship before graduating."
+                "qualifications": [
+                    ["required", "Engineering background in fields such as Computer Science, Mathematics, Software Engineering, and Physics."],
+                    ["required", "Familiarity with data structures, storage systems, cloud infrastructure, front-end frameworks, and other technical tools."],
+                    ["required", "Active US Security clearance, or eligibility and willingness to obtain a US Security clearance prior to start of internship."],
+                    ["required", "Experience coding in programming languages such as Java, C++, Python, JavaScript, or similar languages."],
+                    ["required", "Must be planning on graduating in 2026. This should be the final internship before graduating."]
                 ],
-                "other": [
-                    "Offer deadline: By applying to this position, you commit to confirming your decision within two weeks of receiving your written offer."
-                ],
+                "coverLetter": "n/a",
                 "dateRange": "n/a",
                 "salary": "$10,000/month",
                 "deadline": "n/a",

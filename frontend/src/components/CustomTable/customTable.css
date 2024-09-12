@@ -3,13 +3,15 @@
     color: white;
 }
 
-.custom-table {
-
-}
-
 textarea {
     min-height: max-content;
+    width: 
 }
+
+td > textarea {
+    width: 100%;
+}
+
 
 #header-row {
     background-color:#282c34;
