@@ -1,0 +1,16 @@
+/* SUB SECTION ----------------------- */
+
+.sub-section {
+	border: 1px solid black;
+	border-radius: var(--main-border-radius);
+	padding: 20px;
+
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+	.sub-section > .content {
+		color:rgb(234, 234, 234);
+		overflow-y: scroll;
+	}

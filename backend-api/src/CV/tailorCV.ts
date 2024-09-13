@@ -22,7 +22,5 @@ export function tailorCV(og_cv: CV, job: JobInfo): CV {
             proj.description = "";
             return proj;
         });
-
-
     return new_cv;
 };

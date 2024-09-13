@@ -1,0 +1,29 @@
+/* APP SECTIONs --------------------- */
+
+.AppSection {
+	display: flex;
+	flex-direction: column;
+
+	background-color: grey;
+	padding:20px;
+	border-radius: var(--main-border-radius);
+}
+
+	/* heading */
+
+	.AppSection > *:first-child {
+		margin-bottom: 10px;
+		border-bottom: 4px solid rgb(35, 35, 35);
+	}
+
+	/* section content */
+
+	.AppSection > .section-content {
+		padding-left: 10%;
+		padding-right: 10%;
+		overflow-y: scroll;
+
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+	}

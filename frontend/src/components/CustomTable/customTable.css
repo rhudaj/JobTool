@@ -1,29 +1,34 @@
+
+
+.custom-table {
+    overflow-x: hidden;
+}
+
 .header-row td {
     background-color: black;
-    color: white;
 }
 
 textarea {
     min-height: max-content;
-    width: 
 }
-
-td > textarea {
-    width: 100%;
-}
-
 
 #header-row {
     background-color:#282c34;
-    color: white;
 }
 
 .custom-table, tr, td {
-    height: max-content;
-    padding: 5px;
     border: 1px solid black;
     border-collapse: collapse;
 }
+
+td {
+    text-align:left;
+    vertical-align:top;
+    width: min-content; /* IMPORTANT */
+    overflow-x: hidden;
+    padding: 5px;
+}
+
 
 .data-col.hover {
     background-color:darkcyan;

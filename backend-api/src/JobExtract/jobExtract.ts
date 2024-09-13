@@ -153,7 +153,7 @@ export async function extractFromJobDesc(jobTxt: string) {
     // Return
         return {
             ...assResp,
-            keywords: getWordOccurences(words),
+            keywords: getWordOccurences(words, 2),
             languages: findProgrammingLanguages(words),
             technologies: [],
         } as JobInfo;
