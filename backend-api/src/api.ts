@@ -1,10 +1,12 @@
 import { extractFromJobDesc } from "./JobExtract/jobExtract.js";
 import express from "express";
 import cors from "cors";
-import { CoverLetterResponse, JobInfo } from "shared";
-import { genCL } from "./CL/clAssistant.js";
+import { JobInfo } from "shared";
+import { genCL, transformCLResponse } from "./CL/clAssistant.js";
 import { outputCLDoc } from "./CL/create_doc.js";
 import { Log } from "./shared/util/files.js";
+import * as fs from "fs"
+import { outputCLPDF } from "./CL/create_pdf.js";
 
 let LOG: Log;
 const TEST: boolean = Number(process.env.TEST) === 1;
@@ -43,7 +45,7 @@ app.post("/getJobInfo", async (req, res) => {
     }
 });
 
-// JobInfo => generateCoverLetter => CoverLetterResponse
+// JobInfo => generateCoverLetter => cl_response => [ paragraphs ]
 app.post("/genCL", async (req, res) => {
     const jobInfo = req.body as JobInfo;
     const cl_response = await genCL(jobInfo); // run function
@@ -51,21 +53,44 @@ app.post("/genCL", async (req, res) => {
         if(!TEST) {
             LOG.addFile("cl.json", cl_response);
         }
-        res.json(cl_response); // send result (as a JSON response)
+        // convert to string[]
+        const cl_paragraphs = transformCLResponse(cl_response);
+        // outputCLPDF(cl_paragraphs, pdf_path);
+        res.json(cl_paragraphs); // send result (as a JSON response)
     } else {
         res.status(404).send("Error getting cl_response info from jobInfo.");
     }
 });
 
+const pdf_path = process.cwd() + "/public/cl.pdf";
+
 app.post("/outputCLDoc", async (req, res) => {
     console.log("outputCLDoc called");
-    const cl_response = req.body as CoverLetterResponse;
-    if (!cl_response)
-        return console.log("Invalid request.body<CoverLetterResponse>");
-    const buff = await outputCLDoc(cl_response);
+    const cl_paragraphs = req.body as string[];
+    if (!cl_paragraphs) return console.log("Invalid request.body");
+    const buff: Buffer = await outputCLDoc(cl_paragraphs);
     if (buff !== null) {
         res.end(buff);
     } else {
         res.status(404).send("Error downloading cover letter as .docx");
     }
+});
+
+app.post('/outputCLPDF', async (req, res) => {
+    console.log("outputCLPDF called");
+    const cl_paragraphs = req.body as string[];
+    console.log('cl_paragraphs = ', cl_paragraphs);
+    if (!cl_paragraphs) return console.log("Invalid request.body");
+    outputCLPDF(cl_paragraphs, pdf_path);
+    res.status(200).send("PDF updated!");
+});
+
+app.get('/cl.pdf', (req, res) => {
+    var file = fs.createReadStream(pdf_path);
+    res.setHeader('Content-Type', 'application/pdf');
+    // Content-Disposition:
+    //      "attachment; filename=cl.pdf"   => to download instead
+    //      "inline; filename=cl.pdf"       => to display
+    res.setHeader('Content-Disposition', 'inline; filename=cl.pdf');
+    file.pipe(res);
 });

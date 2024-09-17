@@ -1,7 +1,7 @@
 import { CV } from "shared";
 
 export let cv: CV = {
-    "personalTitle": "Software Developer",
+    "personalTitle": "CS Student ~ Software Developer",
     "summary": "Dynamic, agile software full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": ["Python", "SQL", "JavaScript", "TypeScript", "C++", "C", "HTML", "CSS"],
     "technologies": ["ReactJS", "NodeJS", "Git", "Alteryx", "SQL Server", "MySQL", "Numpy/Pandas/Selenium", "Excel"],

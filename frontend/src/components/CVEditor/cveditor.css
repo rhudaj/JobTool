@@ -1,0 +1,195 @@
+:root {
+/* ALL SIZES RELATIVE TO PARENT, #A4-page */
+    --base-font-size: 2rem;
+
+    /* PAGE PADDING */
+    --page-padding:         calc(20 * var(--base-font-size));
+    /* GAPS */
+    --cv-row-gap:           calc(5 * var(--base-font-size));
+    --cv-col-gap:           calc(5 * var(--base-font-size));
+    --experiences-gap:      calc(5 * var(--base-font-size));
+    --exp-row-gap:          calc(5 * var(--base-font-size));
+    --exp-col-gap:          calc(5 * var(--base-font-size));
+    --exp-head-content-gap: calc(5 * var(--base-font-size));
+    --sec-row-gap:          calc(6 * var(--base-font-size));
+    --sec-head-line-gap:    calc(3 * var(--base-font-size));
+    --sec-head-line-height: calc(0.5 * var(--base-font-size));
+    --link-col-gap:         calc(3 * var(--base-font-size));
+    --skills-col-gap:       calc(3 * var(--base-font-size));
+    --bullet-point-gap:     calc(2 * var(--base-font-size));
+    /* FONT SIZES */
+    --p-font:               calc(6 * var(--base-font-size));
+    --name-font:            calc(12 * var(--base-font-size));
+    --title-font:           calc(8 * var(--base-font-size));
+}
+
+/* PAGE CONTAINER ----------------------------*/
+
+#A4-page {
+    border: 1px solid black;
+    background-color: white;
+    /* A4 SIZED DIV 550h to 388.9w */
+    width:  calc(389 * var(--base-font-size));
+    height: calc(550 * var(--base-font-size));
+}
+
+/* ROW GRID ----------------------------*/
+
+#cv-row-grid {
+    padding: var(--page-padding);
+    color: black;
+
+    display: grid;
+    grid-auto-rows: min-content; /* same as repeat(N, min-content), where N = # rows */
+    row-gap: var(--cv-row-gap);
+
+    /* FONT STYLE */
+    font-family: 'Arial Narrow Bold', sans-serif;;
+}
+
+/* SECTION ----------------------------*/
+
+.sec {
+    display: grid;
+    font-size: var(--p-font);
+    grid-template-rows: repeat(2, min-content);
+    row-gap: var(--sec-row-gap);
+}
+
+    .sec > .sec-head {
+        font-weight: bold;
+
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        column-gap: var(--sec-head-line-gap);
+    }
+        .sec-head > hr {
+            /* HORIZONTAL LINE ACROSS CENTER OF DIV */
+            border: none;
+            height: var(--sec-head-line-height);
+            background-color: black;
+            align-self: center;
+        }
+
+/* EXPERIENCE ----------------------------*/
+
+.experience {
+    /* [COL-1 (DATE)] [COL-2] */
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--exp-head-content-gap) var(--exp-col-gap);
+}
+    .experience > .exp-col-2 {
+        /*
+            [ [title] [side_title] ]
+            [ content              ]
+            [ item_list            ]
+        */
+        display: grid;
+        grid-auto-rows: min-content;
+        row-gap: var(--exp-row-gap);
+    }
+
+        .exp-col-2 .titles {
+            display: grid;
+            grid-template-columns: 1fr max-content;
+        }
+
+            .titles > .exp-title, .exp-side-title {
+                font-weight: bold;
+            }
+
+        .exp-col-2 > .exp-item-list {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 501;
+        }
+
+/* LINK ----------------------------*/
+
+.link {
+    display: grid;
+    white-space: nowrap;
+    grid-template-columns: min-content 1fr;
+    column-gap: var(--link-col-gap);
+}
+
+    .link > i {
+        color: black;
+    }
+
+    .link > a {
+        text-decoration: none;
+        color: black;
+    }
+
+/* ROW 1 ----------------------------*/
+
+#row-1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(2, min-content);
+    column-gap: var(--cv-col-gap);
+    grid-template-areas:
+        "name links"
+        "title links"
+
+}
+    #row-1 > #div-full-name {
+        grid-area: name;
+        font-size: var(--name-font);
+        white-space: nowrap;
+        font-weight: bolder;
+    }
+    #row-1 > #div-personal-title {
+        grid-area: title;
+        font-size: var(--title-font);
+    }
+    #row-1 > #div-links {
+        grid-area: links;
+        font-size: var(--p-font);
+        display: grid;
+        /* ASSUMES EXACTLY 4 LINKS */
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+/* ROW 2 ----------------------------*/
+
+#row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(2, min-content);
+    column-gap: var(--cv-col-gap);
+}
+    #row-2 > #section-skills > .sec-content {
+        display: grid;
+        grid-template-rows: repeat(2, min-content);
+        row-gap: 1fr;
+    }
+        .sub-sec {
+            display: grid;
+            grid-template-columns: 0.35fr 1fr;
+            column-gap: var(--skills-col-gap);
+        }
+            .sub-sec > .sub-sec-head {
+                font-weight: bold;
+            }
+
+/* ROW 3 ----------------------------*/
+
+    #row-3 > #experiences > .sec-content {
+        /* LIST OF EXPERIENCES */
+        display: grid;
+        row-gap: var(--experiences-gap);
+    }
+        .bullet-points {
+            display: grid;
+            row-gap: var(--bullet-point-gap);
+        }
+
+/* ROW 4 ----------------------------*/
+
+    #row-4 > #projects > .sec-content {
+        display: grid;
+        row-gap: var(--experiences-gap);
+    }

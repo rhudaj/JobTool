@@ -1,13 +1,13 @@
 /* SUB SECTION ----------------------- */
 
 .sub-section {
-	border: 1px solid black;
+	border: 1rem solid black;
 	border-radius: var(--main-border-radius);
-	padding: 20px;
+	padding: 20rem;
 
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
+	gap: 15rem;
 }
 
 	.sub-section > .content {

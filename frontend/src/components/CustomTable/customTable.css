@@ -8,8 +8,16 @@
     background-color: black;
 }
 
-textarea {
-    min-height: max-content;
+
+#row-adder > td {
+    background-color: lightblue;
+    height: 35rem;
+    font-weight: bolder;
+    text-align: center;
+}
+
+#row-adder:hover {
+    font-size: 1.3em; /* sclae up*/
 }
 
 #header-row {
@@ -17,7 +25,7 @@ textarea {
 }
 
 .custom-table, tr, td {
-    border: 1px solid black;
+    border: 1rem solid black;
     border-collapse: collapse;
 }
 
@@ -26,9 +34,8 @@ td {
     vertical-align:top;
     width: min-content; /* IMPORTANT */
     overflow-x: hidden;
-    padding: 5px;
+    padding: 5rem;
 }
-
 
 .data-col.hover {
     background-color:darkcyan;

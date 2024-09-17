@@ -117,7 +117,7 @@ export async function extractFromJobDesc(jobTxt: string) {
     // 2 - Get assistant response
         let assResp: JobExtractResponse;
         if (Number(process.env.TEST) === 1) {
-            await delay(1000);
+            await delay(500);
             console.log('extractFromJobDesc (testing mode)');
             assResp = {
                 "company": "Palantir",

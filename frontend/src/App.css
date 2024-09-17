@@ -1,5 +1,5 @@
 :root {
-    --main-border-radius: 3px;
+    --main-border-radius: 3rem;
 }
 
 button {
@@ -19,7 +19,7 @@ h5 {
 .App-Div {
     background-color: #282c34;
 	color: white;
-	padding: 20px 10% 20px 10%;
+	padding: 20rem 10% 20rem 10%;
 	width: 100vw;
 	height: 100%;
     min-height: 100%;
@@ -30,13 +30,13 @@ h5 {
 .section-container {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 20rem;
 }
 
 /* GENERAL ------------------------- */
 
 .disabled {
-    filter: blur(2px);
+    filter: blur(2rem);
     pointer-events: none;
 }
 
@@ -54,7 +54,7 @@ h5 {
 		flex-basis: min-content;
 
 		background-color: white;
-		padding: 10px;
+		padding: 10rem;
 		font-size: x-large;
 		font-weight: bold;
 	}
@@ -70,9 +70,9 @@ h5 {
 
 #download-cl-button {
 	height: min-content;
-    width: 100%;
-
-    padding: 5px;
+    width: min-content;
+	align-self: center;
+	padding: 5rem 40rem 5rem 40rem;
     font-size: medium;
     font-weight: bold;
     border-radius: var(--main-border-radius);
@@ -80,10 +80,10 @@ h5 {
 
 .loader {
 	align-self: center;
-	padding: 50px;
-	width: 10px;
-	height: 10px;
-	border: 5px solid black;
+	padding: 50rem;
+	width: 10rem;
+	height: 10rem;
+	border: 5rem solid black;
 	border-bottom-color: transparent;
 	border-radius: 50%;
 	display: inline-block;

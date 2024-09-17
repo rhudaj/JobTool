@@ -1,8 +1,6 @@
 import pkg from "docx";
 const { Document, Paragraph, Packer } = pkg;
 
-import { CoverLetterResponse } from "shared";
-
 const styleID = "customStyle";
 
 // HELPERS:
@@ -14,23 +12,13 @@ const newParagraph = (txt: string) =>
 
 const addParagraphs = (arr: string[]) => arr.map(newParagraph);
 
-export async function outputCLDoc(
-    CL: CoverLetterResponse
-): Promise<null|Buffer> {
+export async function outputCLDoc(paragraphs: string[]): Promise<null|Buffer> {
     let isError = false;
     try {
         var doc = new Document({
             sections: [
                 {
-                    children: addParagraphs([
-                        new Date().toDateString(),
-                        "Dear hiring manager,",
-                        CL.intro,
-                        ...CL.body_paragraphs,
-                        CL.closing_remarks,
-                        "Sincerely,",
-                        "Roman Hudaj",
-                    ]),
+                    children: addParagraphs(paragraphs),
                 },
             ],
             styles: {
