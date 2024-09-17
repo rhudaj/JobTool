@@ -4,11 +4,13 @@
 	border: 1rem solid black;
 	border-radius: var(--main-border-radius);
 	padding: 20rem;
-
 	display: flex;
 	flex-direction: column;
 	gap: 15rem;
 }
+ 	.sub-section > .sub-sec-head {
+		font-size: 16rem;
+	}
 
 	.sub-section > .content {
 		color:rgb(234, 234, 234);

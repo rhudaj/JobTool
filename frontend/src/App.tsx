@@ -418,8 +418,7 @@ function App() {
     ];
 
     // RENDER ACTIVE SECTION
-    // const curSec = sections[sec];
-    const curSec = sections[3];
+    const curSec = sections[sec];
     return (
         <div className="App-Div">
             <SectionContainer

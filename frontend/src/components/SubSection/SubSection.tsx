@@ -7,7 +7,7 @@ export function SubSection(props: {
 }) {
     return (
         <div className="sub-section">
-            <h3>{props.heading}</h3>
+            <h3 className="sub-sec-head">{props.heading}</h3>
             <div className="content">{props.children}</div>
         </div>
     );
