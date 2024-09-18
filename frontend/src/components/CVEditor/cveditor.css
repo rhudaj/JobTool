@@ -24,13 +24,33 @@
 }
 
 /* PAGE CONTAINER ----------------------------*/
+#A4-page-cv {
+    --base-font-size: 2rem;
+    /* PAGE PADDING */
+    --page-padding:         calc(20 * var(--base-font-size));
+    /* GAPS */
+    --cv-row-gap:           calc(5 * var(--base-font-size));
+    --cv-col-gap:           calc(5 * var(--base-font-size));
+    --experiences-gap:      calc(5 * var(--base-font-size));
+    --exp-row-gap:          calc(5 * var(--base-font-size));
+    --exp-col-gap:          calc(5 * var(--base-font-size));
+    --exp-head-content-gap: calc(5 * var(--base-font-size));
+    --sec-row-gap:          calc(6 * var(--base-font-size));
+    --sec-head-line-gap:    calc(3 * var(--base-font-size));
+    --sec-head-line-height: calc(0.5 * var(--base-font-size));
+    --link-col-gap:         calc(3 * var(--base-font-size));
+    --skills-col-gap:       calc(3 * var(--base-font-size));
+    --bullet-point-gap:     calc(2 * var(--base-font-size));
+    /* FONT SIZES */
+    --p-font:               calc(6 * var(--base-font-size));
+    --name-font:            calc(12 * var(--base-font-size));
+    --title-font:           calc(8 * var(--base-font-size));
 
-#A4-page {
+    align-self: center;
     border: 1px solid black;
     background-color: white;
-    /* A4 SIZED DIV 550h to 388.9w */
-    width:  calc(389 * var(--base-font-size));
-    height: calc(550 * var(--base-font-size));
+
+    size: A4;
 }
 
 /* ROW GRID ----------------------------*/
@@ -127,25 +147,20 @@
 #row-1 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(2, min-content);
     column-gap: var(--cv-col-gap);
-    grid-template-areas:
-        "name links"
-        "title links"
-
 }
-    #row-1 > #div-full-name {
-        grid-area: name;
-        font-size: var(--name-font);
-        white-space: nowrap;
-        font-weight: bolder;
+    #row-1 > #name-title {
+        display: grid;
     }
-    #row-1 > #div-personal-title {
-        grid-area: title;
-        font-size: var(--title-font);
-    }
-    #row-1 > #div-links {
-        grid-area: links;
+        #div-full-name {
+            font-size: var(--name-font);
+            white-space: nowrap;
+            font-weight: bolder;
+        }
+        #div-personal-title {
+            font-size: var(--title-font);
+        }
+    #div-links {
         font-size: var(--p-font);
         display: grid;
         /* ASSUMES EXACTLY 4 LINKS */

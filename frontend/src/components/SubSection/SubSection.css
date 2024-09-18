@@ -13,6 +13,7 @@
 	}
 
 	.sub-section > .content {
+		font-size: 12rem;
 		color:rgb(234, 234, 234);
 		overflow-y: scroll;
 	}

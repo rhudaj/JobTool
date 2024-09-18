@@ -3,9 +3,8 @@
 .AppSection {
 	display: flex;
 	flex-direction: column;
-
 	background-color: grey;
-	padding: 20rem;
+	padding: 30rem;
 	border-radius: var(--main-border-radius);
 }
 
@@ -17,10 +16,12 @@
 	}
 
 	/* section content */
-
 	.AppSection > .section-content {
+		/* 2 rows:
+			[heading]
+			[content]
+		 */
 		overflow-y: scroll;
-
 		display: flex;
 		flex-direction: column;
 		gap: 30rem;

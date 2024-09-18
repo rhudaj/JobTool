@@ -11,7 +11,11 @@ export function Section(props: {
         <div className={`AppSection`} id={props.id}>
             <h1>{props.heading}</h1>
             <div className="section-content loading-div">
-                {props.isLoading ? <span className="loader" /> : props.children}
+                {
+                    props.isLoading
+                    ? <span className="loader" />
+                    : props.children
+                }
             </div>
         </div>
     );

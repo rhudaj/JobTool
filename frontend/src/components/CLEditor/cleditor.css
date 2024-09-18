@@ -1,0 +1,39 @@
+/* PAGE CONTAINER ----------------------------*/
+
+#A4-page-cl {
+    --base-font-size: 2rem;
+    /* PAGE PADDING */
+    --page-padding:         calc(38 * var(--base-font-size));
+    /* GAPS */
+    --cl-row-gap:           calc(8 * var(--base-font-size));
+    /* FONT SIZES */
+    --p-font:               calc(8 * var(--base-font-size));
+
+    align-self: center;
+    font-size: var(--p-font);
+
+    border: 1px solid black;
+    background-color: white;
+    /* A4 SIZED DIV 550h to 388.9w */
+    size: A4;
+}
+
+/* ROW GRID ----------------------------*/
+
+#cl-row-grid {
+    padding: var(--page-padding);
+    color: black;
+
+    display: grid;
+    grid-auto-rows: min-content;
+    row-gap: var(--cl-row-gap);
+
+    /* FONT STYLE */
+    font-family: 'Arial Narrow Bold', sans-serif;;
+}
+
+/* TEXT-EDIT-DIV ----------------------------*/
+
+.text-edit-div:hover {
+    border: 1px dashed blue;
+}

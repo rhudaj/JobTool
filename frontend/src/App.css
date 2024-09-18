@@ -28,6 +28,11 @@ h5 {
 }
 
 .section-container {
+	/* 3 rows:
+		[ChangeSection]
+		[AppSection]
+		[ChangeSection]
+	*/
 	display: flex;
 	flex-direction: column;
 	gap: 20rem;
@@ -68,7 +73,7 @@ h5 {
 /* section-cl --------------------- */
 
 
-#download-cl-button {
+.download-button {
 	height: min-content;
     width: min-content;
 	align-self: center;

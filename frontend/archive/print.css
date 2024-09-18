@@ -1,0 +1,8 @@
+/* All your print styles go here */
+@media print {
+    #header,
+    #footer,
+    #nav {
+      display: none !important;
+    }
+}

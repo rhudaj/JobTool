@@ -13,8 +13,10 @@ import { Section } from "./components/Section/Section";
 import { CustomTable } from "./components/CustomTable/customTable";
 import { CV, JobInfo, WordOccurences } from "shared";
 import { BackendAPI } from "./backend_api";
-import { SplitView } from "./components/SplitView/splitview";
 import { CVEditor } from "./components/CVEditor/cveditor";
+import { CLEditor } from "./components/CLEditor/cleditor";
+import { useReactToPrint } from 'react-to-print';
+
 
 let cv: CV = {
     "personalTitle": "CS Student ~ Software Developer",
@@ -103,6 +105,24 @@ let cv: CV = {
         }
     ]
 };
+const cl = {
+    intro: 'My name is Roman Hudaj, and I am currently pursuing an Honours degree in Computer Science at the University of Waterloo. I am excited to apply for the Defense Tech Software Engineer Intern position at Palantir, as it aligns perfectly with both my academic pursuits and my passion for innovative technology solutions in defense and security sectors.',
+    body_paragraphs: [
+        'My educational background and project experiences have equipped me with a solid foundation in engineering and technology, specifically in areas such as Computer Science, Mathematics, and Software Engineering, which are essential for the role at Palantir. During my tenure at Timeplay and Martinrea International, I developed key software solutions and optimized data systems that significantly improved operational efficiency and customer satisfaction【4†source】. My projects, such as the Automated Restaurant Reservation Business and the Voice-to-Instrument Translator, showcase my ability to handle complex technical challenges and innovate solutions using a variety of programming languages and frameworks, including Python, JavaScript, and React【4†source】.',
+        "I have a proven track record of collaborating effectively with both technical and non-technical team members to deliver high-quality products. At Environics Analytics, I spearheaded the development of a user-friendly app that facilitated non-technical teams' access to complex data, enhancing product strategy and profitability【4†source】. My ability to communicate complex technical details in an understandable manner and my willingness to learn and adapt quickly will allow me to effectively contribute to Palantir's mission of delivering advanced defense capabilities.",
+        'I am eager to bring my technical skills and my proactive approach to learning and problem-solving to Palantir. I am also in the process of obtaining a US Security clearance, which will enable me to start contributing to your team immediately. I am particularly excited about the opportunity to be mentored by experienced professionals and to work on impactful projects that align with my career goals and interests.'
+    ],
+    closing_remarks: 'Thank you for considering my application. I am looking forward to the possibility of discussing how I can contribute to the innovative projects at Palantir. Please feel free to contact me at your earliest convenience to schedule an interview.'
+};
+const cl_paragraphs = [
+    new Date().toDateString(),
+    "Dear Hiring Manager",
+    cl.intro,
+    ...cl.body_paragraphs,
+    cl.closing_remarks,
+    "Sincerely,",
+    "Roman Hudaj"
+];
 
 function SectionContainer(props: {
     hasPrev: boolean;
@@ -279,38 +299,6 @@ const JIDisplay = forwardRef((
     }
 );
 
-const CLDisply = (props: {
-    cl: string[],
-    updateCL: (cl: string[]) => void
-}) => {
-    const DELIM = "\n\n";
-    const TARGET_ID = "cl-textarea";
-    return (
-        <>
-            <SplitView>
-                <textarea
-                    id={TARGET_ID}
-                    defaultValue={props.cl.join(DELIM)}
-                />
-                <object
-                    data={`http://localhost:8080/cl.pdf?${Date.now()}`}   //"https://pdfobject.com/pdf/sample.pdf"
-                    type="application/pdf"
-                    width="100%"
-                    height="100%"
-                />
-            </SplitView>
-            <button id="download-cl-button" onClick={()=>{
-                const el =  document.getElementById(TARGET_ID) as HTMLTextAreaElement;
-                const newText = el.value;
-                const paragraphs = newText.split(DELIM);
-                props.updateCL(paragraphs);
-            }}>
-                Update
-            </button>
-        </>
-    )
-};
-
 interface AppSection {
     id: string;
     heading: string;
@@ -326,8 +314,12 @@ function App() {
     const [jobInfo, setJobInfo] = useState({} as JobInfo);
     const JIDisplayRef = useRef(null);
 
-    const [CL, setCL] = useState([] as string[]);
+    // const [CL, setCL] = useState([] as string[]);
+    const [CL, setCL] = useState(cl_paragraphs);
     const [CV, setCV] = useState(cv);
+
+    const clEditorRef = useRef(null);
+    const cvEditorRef = useRef(null);
 
     const [extractJobInfoEnabled, setExtractJobInfoEnabled] = useState(false);
     const [resultsEnabled, setResultsEnabled] = useState(false);
@@ -337,6 +329,32 @@ function App() {
     const onTextInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setExtractJobInfoEnabled(e.target.value !== "");
     };
+
+    const handlePrint = useReactToPrint({
+        // A function that returns a component reference value. The content of this reference value is then used for print. Alternatively, pass the content directly to the callback returned by useReactToPrint:
+        // Copy all <style> and <link type="stylesheet" /> tags from <head> inside the parent window into the print window. (default: true)
+            // content: () => componentRef.current,
+        //Copy all <style> and <link type="stylesheet" /> tags from <head> inside the parent window into the print window. (default: true)
+            copyStyles: true,
+        // Set the title for printing when saving as a file:
+            documentTitle: "NoTitle",
+        // Callback function that triggers after the print dialog is closed regardless of if the user selected to print or cancel
+            onAfterPrint: undefined,
+        // Callback function that triggers before the library gathers the page's content. Either returns void or a Promise. This can be used to change the content on the page before printing
+            onBeforeGetContent: undefined,
+        // Callback function that triggers before print. Either returns void or a Promise. Note: this function is run immediately prior to printing, but after the page's content has been gathered.
+            onBeforePrint: undefined,
+        // Callback function (signature: function(errorLocation: 'onBeforePrint' | 'onBeforeGetContent' | 'print', error: Error)) that will be called if there is a printing error serious enough that printing cannot continue. Currently limited to Promise rejections in onBeforeGetContent, onBeforePrint, and print. Use this to attempt to print again. errorLocation will tell you in which callback the Promise was rejected
+            onPrintError: undefined,
+        // We set some basic styles to help improve page printing. Use this to override them and provide your own. If given as a function it must return a string
+            pageStyle: undefined,
+        // If passed, this function will be used instead of window.print to print the content. This function is passed the HTMLIFrameElement which is the iframe used internally to gather content for printing. When finished, this function must return a Promise. Use this to print in non-browser environments such as Electron
+            print: undefined,
+        // Remove the print iframe after action. Defaults to false
+            removeAfterPrint: false,
+        // A function that returns a React Component or Element. Note: under the hood, we inject a custom onClick prop into the returned Component/Element. As such, do not provide an onClick prop to the root node returned by trigger, as it will be overwritten
+            trigger: undefined,
+    });
 
     const sections: AppSection[] = [
         {
@@ -399,21 +417,37 @@ function App() {
             onNext: () => {
                 setCVEnabled(true);
             },
-            isEnabled: clEnabled,
+            isEnabled:  clEnabled,
             isComplete: true,
-            content: <CLDisply cl={CL} updateCL={(cl: string[])=>{
-                console.log('calling BackendAPI.outputCLPDF(cl), cl = ', cl);
-                setCL(cl);
-                BackendAPI.outputCLPDF(cl);
-            }}/>
+            content: (
+                <>
+                    <CLEditor ref={clEditorRef} cl_paragraphs={cl_paragraphs}/>
+                    <button
+                        className="download-button"
+                        onClick={()=>handlePrint(null, () => clEditorRef.current.get())}
+                    >
+                        Download
+                    </button>
+                </>
+            )
         },
         {
             id: "section-cv",
             heading: "CV",
-            isEnabled: true,
-            isComplete: cvEnabled,
+            isEnabled: cvEnabled,
+            isComplete: true,
             onNext: () => {},
-            content: <CVEditor cv={CV}/>,
+            content: (
+                <>
+                    <CVEditor ref={cvEditorRef} cv={CV}/>,
+                    <button
+                        className="download-button"
+                        onClick={()=>handlePrint(null, () => cvEditorRef.current.get())}
+                    >
+                        Download
+                    </button>
+                </>
+            )
         },
     ];
 
@@ -443,6 +477,6 @@ function App() {
             </SectionContainer>
         </div>
     );
-}
+};
 
 export default App;
