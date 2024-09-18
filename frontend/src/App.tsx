@@ -7,7 +7,6 @@ import {
     ReactElement,
 } from "react";
 import "./App.css";
-import "./components/CustomTextArea/customTextArea.css";
 import { SubSection } from "./components/SubSection/SubSection";
 import { Section } from "./components/Section/Section";
 import { CustomTable } from "./components/CustomTable/customTable";
@@ -16,6 +15,7 @@ import { BackendAPI } from "./backend_api";
 import { CVEditor } from "./components/CVEditor/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { useReactToPrint } from 'react-to-print';
+import { SectionContainer } from "./components/SectionContainer/sectioncontainer";
 
 
 let cv: CV = {
@@ -123,37 +123,6 @@ const cl_paragraphs = [
     "Sincerely,",
     "Roman Hudaj"
 ];
-
-function SectionContainer(props: {
-    hasPrev: boolean;
-    hasNext: boolean;
-    nextEnabled: boolean;
-    onChangeSection: (next: boolean) => void;
-    children: React.ReactNode;
-}) {
-    const ChangeSection = (P: { next: boolean }) => {
-        return (
-            <div className="change-section-div">
-                <button
-                    className={`change-section-button ${
-                        props.nextEnabled ? "" : "disabled"
-                    }`}
-                    onClick={() => props.onChangeSection(P.next)}
-                >
-                    {P.next ? "⇩" : "⇧"}
-                </button>
-            </div>
-        );
-    };
-
-    return (
-        <div className="section-container">
-            {props.hasPrev ? <ChangeSection next={false} /> : null}
-            {props.children}
-            {props.hasNext ? <ChangeSection next={true} /> : null}
-        </div>
-    );
-}
 
 const JIDisplay = forwardRef((
     props: {
@@ -295,7 +264,11 @@ const JIDisplay = forwardRef((
             </SubSection>
         ));
 
-        return <>{subSectionElements}</>;
+        return (
+            <div id="job-info-display">
+                {subSectionElements}
+            </div>
+        );
     }
 );
 
@@ -314,7 +287,6 @@ function App() {
     const [jobInfo, setJobInfo] = useState({} as JobInfo);
     const JIDisplayRef = useRef(null);
 
-    // const [CL, setCL] = useState([] as string[]);
     const [CL, setCL] = useState(cl_paragraphs);
     const [CV, setCV] = useState(cv);
 
@@ -401,15 +373,7 @@ function App() {
                     setCLEnabled(true);
                 });
             },
-            content: (
-                <>
-                    <JIDisplay
-                        ref={JIDisplayRef}
-                        jobInfo={jobInfo}
-                        changeJobInfo={setJobInfo}
-                    />
-                </>
-            ),
+            content: <JIDisplay ref={JIDisplayRef} jobInfo={jobInfo} changeJobInfo={setJobInfo}/>
         },
         {
             id: "section-cl",

@@ -9,7 +9,7 @@
 }
 
 	/* heading */
-	.AppSection > *:first-child {
+	.AppSection > .app-sec-head {
 		font-size: 25em;
 		margin-bottom: 10rem;
 		border-bottom: 4rem solid rgb(35, 35, 35);

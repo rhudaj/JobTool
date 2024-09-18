@@ -9,7 +9,7 @@ export function Section(props: {
 }) {
     return (
         <div className={`AppSection`} id={props.id}>
-            <h1>{props.heading}</h1>
+            <h1 className="app-sec-head">{props.heading}</h1>
             <div className="section-content loading-div">
                 {
                     props.isLoading
