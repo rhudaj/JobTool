@@ -15,16 +15,6 @@
 	row-gap: 10em;
 }
 
-.download-button {
-	height: min-content;
-    width: min-content;
-	align-self: center;
-	padding: 5rem 40rem 5rem 40rem;
-    font-size: medium;
-    font-weight: bold;
-    border-radius: 3rem;
-}
-
 .loader {
 	align-self: center;
 	padding: 50rem;

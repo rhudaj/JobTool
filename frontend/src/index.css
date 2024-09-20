@@ -48,6 +48,6 @@ body {
     #header,
     #footer,
     #nav {
-      display: none !important;
+        display: none !important;
     }
 }

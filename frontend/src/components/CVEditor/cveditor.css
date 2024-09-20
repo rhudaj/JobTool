@@ -1,31 +1,4 @@
-:root {
-/* ALL SIZES RELATIVE TO PARENT, #A4-page */
-    --base-font-size: 2rem;
-
-    /* PAGE PADDING */
-    --page-padding:         calc(20 * var(--base-font-size));
-    /* GAPS */
-    --cv-row-gap:           calc(5 * var(--base-font-size));
-    --cv-col-gap:           calc(5 * var(--base-font-size));
-    --experiences-gap:      calc(5 * var(--base-font-size));
-    --exp-row-gap:          calc(5 * var(--base-font-size));
-    --exp-col-gap:          calc(5 * var(--base-font-size));
-    --exp-head-content-gap: calc(5 * var(--base-font-size));
-    --sec-row-gap:          calc(6 * var(--base-font-size));
-    --sec-head-line-gap:    calc(3 * var(--base-font-size));
-    --sec-head-line-height: calc(0.5 * var(--base-font-size));
-    --link-col-gap:         calc(3 * var(--base-font-size));
-    --skills-col-gap:       calc(3 * var(--base-font-size));
-    --bullet-point-gap:     calc(2 * var(--base-font-size));
-    /* FONT SIZES */
-    --p-font:               calc(6 * var(--base-font-size));
-    --name-font:            calc(12 * var(--base-font-size));
-    --title-font:           calc(8 * var(--base-font-size));
-}
-
-/* PAGE CONTAINER ----------------------------*/
-#A4-page-cv {
-    --base-font-size: 2rem;
+#cv-editor {
     /* PAGE PADDING */
     --page-padding:         calc(20 * var(--base-font-size));
     /* GAPS */
@@ -46,16 +19,6 @@
     --name-font:            calc(12 * var(--base-font-size));
     --title-font:           calc(8 * var(--base-font-size));
 
-    align-self: center;
-    border: 1px solid black;
-    background-color: white;
-
-    size: A4;
-}
-
-/* ROW GRID ----------------------------*/
-
-#cv-row-grid {
     padding: var(--page-padding);
     color: black;
 
@@ -68,7 +31,6 @@
 }
 
 /* SECTION ----------------------------*/
-
 .sec {
     display: grid;
     font-size: var(--p-font);
@@ -87,7 +49,7 @@
             /* HORIZONTAL LINE ACROSS CENTER OF DIV */
             border: none;
             height: var(--sec-head-line-height);
-            background-color: black;
+            border-bottom: 0.5rem solid black;
             align-self: center;
         }
 

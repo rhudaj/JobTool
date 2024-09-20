@@ -1,6 +1,6 @@
 import { JobExtractResponse, JobInfo } from "shared";
-import * as AssistantAPI from "../shared/openai/assistant.js"
-import { delay } from "../shared/util/delay.js";
+import * as AssistantAPI from "../util/openai/assistant.js"
+import { delay } from "../util/delay.js";
 import { findProgrammingLanguages, getWordOccurences, getWords } from "./wordAnalyze.js";
 
 const ass_id = "asst_1krzl87hwmmdHZrTgeaFNQhj";

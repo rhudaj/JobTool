@@ -1,6 +1,6 @@
-import * as AssistantAPI from "../shared/openai/assistant.js"
+import * as AssistantAPI from "../util/openai/assistant.js"
 import { CoverLetterResponse, JobInfo } from "shared"
-import { delay } from "../shared/util/delay.js";
+import { delay } from "../util/delay.js";
 
 const test_cl = {
     intro: 'My name is Roman Hudaj, and I am currently pursuing an Honours degree in Computer Science at the University of Waterloo. I am excited to apply for the Defense Tech Software Engineer Intern position at Palantir, as it aligns perfectly with both my academic pursuits and my passion for innovative technology solutions in defense and security sectors.',
@@ -13,39 +13,6 @@ const test_cl = {
 };
 
 const ass_id = "asst_kiS7Nbb0VeXRd1T8kraFE3JY";
-
-/* Old Instructions:
-Based on my personal resume and the job description I gave you, answer the prompt:
-
-    Write a note to let them know what interests you / why you think you'd be a good fit.
-
-- If any specific questions were asked in the job description, answer them.
-- Start with a brief introduction on yourself (school, major, why your interested, etc.)
-- Then outly how you meet the job requirements clearly.
-    - Don't use any repetitive or summarizing sentences such as "In summary..." or "And that's how I...".
-    - Most of your info should be from the resume. Don't include long unnecessary sentences.
-    - Don't leave any blanks in your answer like "[Your Name]". The answer should be complete.
-- At the end mention that you'd love to share more about yourself.
-
-V2 Instructions:
-- Answer with the info from your resume based on the job requirements.
-    - Don't use any repetitive or summarizing sentences such as "In summary..." or "And that's how I...".
-    - Most of the details should be from your resume. Don't include long unnecessary sentences.
-    - Don't leave any blanks in your answer like "[Your Name]". The answer should be complete.
-
-MORE:
-- Be sure to use the keywords in the job-description. Also, make sure to use proof from the resume when demonstrating how you meet the requirements.
-
-MORE:
-You write in the first-person perspective of a student/proffesional with the skills/experiences listed in the resume below.
-[RESUME START]
-{resume}
-[RESUME END]
-You will be answering questions based on the following job description:
-[JOB DESC. START]
-{job}
-[JOB DESC. END]
-*/
 
 export async function setup() {
     const response_function = {

@@ -1,6 +1,6 @@
 // source: https://www.youtube.com/watch?v=eawYpMYH11Y
 import { getUrl, JobQuery } from "./query.js";
-import { Append2Csv } from "../../shared/util/csv.js";
+import { Append2Csv } from "../../util/csv.js";
 import * as cheerio from "cheerio";
 import { JobDetails, JobInfo, JobOverview } from "./types.js";
 

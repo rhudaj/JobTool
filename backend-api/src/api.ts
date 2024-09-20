@@ -3,26 +3,31 @@ import express from "express";
 import cors from "cors";
 import { JobInfo } from "shared";
 import { genCL, transformCLResponse } from "./CL/clAssistant.js";
-import { Log } from "./shared/util/files.js";
+import { Log } from "./util/files.js";
+import { cv } from "./CV/cv.js";
+import { tailorCV } from "./CV/cvAssistant.js";
 
 let LOG: Log;
 const TEST: boolean = Number(process.env.TEST) === 1;
+const PORT = process.env.PORT;
 
-// Create an instance of the express application
 const app = express();
-
-const corsOptions = {
-    origin: "*",
-    credentials: true, //access-control-allow-credentials:true
-    optionSuccessStatus: 200,
-};
-app.use(cors(corsOptions)); // Use this after the variable declaration
-app.use(express.json({ type: "application/json" })); // parses incoming requests with JSON payloads
+app
+    .use(
+        cors({
+            origin:'*',
+            credentials: true,
+            optionsSuccessStatus:200
+        })
+    )
+    .use(
+        // parses incoming requests with JSON payloads
+        express.json({ type: "application/json" })
+    );
 
 // Start the server and listen to the port
-const port = process.env.PORT;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 // { job_text: string } => extractFromJobDesc => JobInfo
@@ -42,7 +47,7 @@ app.post("/getJobInfo", async (req, res) => {
     }
 });
 
-// JobInfo => generateCoverLetter => cl_response => [ paragraphs ]
+// JobInfo => genCL() => cl_response => [ paragraphs ]
 app.post("/genCL", async (req, res) => {
     const jobInfo = req.body as JobInfo;
     const cl_response = await genCL(jobInfo); // run function
@@ -56,5 +61,22 @@ app.post("/genCL", async (req, res) => {
         res.json(cl_paragraphs); // send result (as a JSON response)
     } else {
         res.status(404).send("Error getting cl_response info from jobInfo.");
+    }
+});
+
+// (none) => tailorCV() => CV
+app.post("/tailorCV", async (req, res) => {
+    // no body
+    const old_cv = cv;
+    const info = {};
+    const new_cv = await tailorCV(old_cv, info); // run function
+    if (new_cv) {
+        if(!TEST) {
+            LOG.addFile("old_cv.json", old_cv);
+            LOG.addFile("new_cv.json", new_cv);
+        }
+        res.json(new_cv); // send result (as a JSON response)
+    } else {
+        res.status(404).send("Error getting new CV.");
     }
 });
