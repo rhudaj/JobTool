@@ -1,9 +1,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-The purpose of this project is to streamline the job application process. From finding jobs, to extracting usefull information, to writing a cover letter and tailored resume. 
+The purpose of this project is to streamline the job application process. From finding jobs, to extracting usefull information, to writing a cover letter and tailored resume.
 
-The project features a frontend implementing the core features and a frontend for interactive UI. 
+The project features a frontend implementing the core features and a frontend for interactive UI.
 
 ### Built With
 
@@ -12,7 +12,7 @@ The project features a frontend implementing the core features and a frontend fo
 * [![Express.js](https://img.shields.io/badge/Express.js-%23404d59.svg?logo=express&logoColor=%2361DAFB)](#)
 * [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)
 * [![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=fff)](#)
-  
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -31,30 +31,17 @@ To get a local copy up and running follow these simple example steps.
    ```sh
    git clone https://github.com/rhudaj/JobTool.git
    ```
-3. Install NPM packages
+2. Navigate to the new directory
    ```sh
-   cd frontend
-   npm install
-   cd ..
-   cd backend-api
-   npm install
+   cd JobTool
    ```
-4. Create a symbolic link from the package in ```/shared```
+3. Run the setup script (installs all packages and links the shared package)
    ```sh
-   cd /shared
-   npm link
+   npm run setup
    ```
-5. Link the frontend & backend to this 'shared' package
-   ```sh
-   cd frontend
-   npm link shared
-   cd ..
-   cd backend-api
-   npm link shared
-   ```
-7. Create and fill a .env in ```/backend-api```
+7. Create and fill a .env in the root directory:
    ```env
-   PORT=<some port #> # example: 8080
+   PORT=<PORT> # example: 8080
    API_KEY=<your openai API key>
    ```
 8. Change git remote url to avoid accidental pushes to base project
@@ -66,34 +53,32 @@ To get a local copy up and running follow these simple example steps.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. Launch the backend
-   ```sh
-   cd backend-api
-   npm run start
-   # you should see something along the lines of 'started on local-host://8080'
-   ```
-2. Launch the frontend
- ```sh
-   cd frontend
-   npm run start
-   # the react-app should start in your web-browser
-   ```
+To start the project, run the following command in the root directory:
+```sh
+npm run start
+```
 
-
+This will start the frontend and backend servers. The frontend will be available at `localhost:3000` and the backend at `localhost:<PORT>`.
 
 <!-- ROADMAP -->
 ## Roadmap
-- [ ] Improve training for cover-letter & resume text generation. 
+- [ ] Improve training for cover-letter & resume text generation.
 - [ ] Deploy the frontend to a domain.
-- [ ] Improve UI for keyword detection. 
+- [ ] Improve UI for keyword detection.
 
-<!-- CONTRIBUTING -->
-## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+## Code Structure
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+The project is split into two main parts: the frontend and the backend. The frontend is a React application that is served by the backend. The backend is an Express.js server that serves the frontend and provides an API for the frontend to interact with. The shared package contains code (specifically interfaces) that is used by both the frontend and the backend.
+
+### Frontend
+
+The frontend is located in the `frontend` directory. The frontend is split into components that are located in the `src/components` directory.
+
+### Backend
+
+The backend is located in the `backend` directory. The backend is split into routes that are located in the `src/routes` directory. The backend serves the frontend and provides an API for the frontend to interact with.
+
 
 <!-- CONTACT -->
 ## Contact
