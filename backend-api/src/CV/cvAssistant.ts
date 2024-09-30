@@ -1,9 +1,8 @@
 import * as AssistantAPI from "../util/openai/assistant.js"
-import { CV, TailorCVInfo } from "shared"
+import { CV, JobInfo, TailorCVInfo } from "shared"
 import { delay } from "../util/delay.js";
 import { cv } from "./cv.js";
 
-const test_cv = {} as CV;
 const ass_id = "";
 export async function setup() {
     const response_function = {
@@ -55,18 +54,19 @@ export async function setup() {
 };
 
 // MAIN FUNCTION
-export async function tailorCV(textSegments: Map<string, string>, info: TailorCVInfo): Promise<CV> {
-    let response: CV;
+export async function tailorCV(jobInfo: JobInfo): Promise<CV> {
+    let new_cv = cv;
     if(Number(process.env.TEST) === 1) {
-        await delay(500);
         console.log('genCV (testing mode)');
-        response = test_cv;
+        await delay(250);
+        new_cv = cv;
     } else {
-        // 1 - Put <info> as context to the model
-        const CONTEXT = "...";
-        // 2 - Open up a thread of questions w' Assistant
-        // 3 - For each part of CV (textSegments), Ask Assistant to modify that part
-        // 4 - Return the modified parts
+        // TODO: implement
+        // 1 - turn (cv: CV, jobInfo: JobInfo) into (textSegments: Map<string, string>, info: TailorCVInfo)
+        // 2 - Put <info> as context to the model
+        // 3 - Open up a thread of questions w' Assistant
+        // 4 - For each part of CV (textSegments), Ask Assistant to modify that part
+        // 5 - Return the modified parts
     }
-    return response;
+    return new_cv;
 };

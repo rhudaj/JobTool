@@ -2,13 +2,16 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,node,macos
 
 ### custom ###
-frontend/node_modules
 
+# Node Modules
+frontend/node_modules
 backend-api/node_modules
-backend-api/.env
+shared/node_modules
+
 backend-api/dist
 
-shared/node_modules
+# Ignore root & cascaded .env files
+backend-api/.env
 .env
 
 ### macOS ###

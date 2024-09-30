@@ -1,10 +1,9 @@
 import { extractFromJobDesc } from "./JobExtract/jobExtract.js";
 import express from "express";
 import cors from "cors";
-import { JobInfo } from "shared";
+import { CV, JobInfo } from "shared";
 import { genCL, transformCLResponse } from "./CL/clAssistant.js";
 import { Log } from "./util/files.js";
-import { cv } from "./CV/cv.js";
 import { tailorCV } from "./CV/cvAssistant.js";
 
 let LOG: Log;
@@ -57,27 +56,24 @@ app.post("/genCL", async (req, res) => {
         }
         // convert to string[]
         const cl_paragraphs: string[] = transformCLResponse(cl_response);
-        // outputCLPDF(cl_paragraphs, pdf_path);
-        res.json(cl_paragraphs); // send result (as a JSON response)
+        // send result (as a JSON response)
+        res.json(cl_paragraphs);
     } else {
         res.status(404).send("Error getting cl_response info from jobInfo.");
     }
 });
 
-// (none) => tailorCV() => CV
-app.post("/tailorCV", async (req, res) => {
-    // no body
-    const old_cv = cv;
-    const info = {};
-    const new_cv = null;
-    // const new_cv = await tailorCV(undefined, undefined); // run function
-    if (new_cv) {
-        if(!TEST) {
-            LOG.addFile("old_cv.json", old_cv);
-            LOG.addFile("new_cv.json", new_cv);
-        }
+app.post("/genCV", async (req, res) => {
+    console.log('genCV posted to!');
+    const jobInfo = req.body as JobInfo;
+    console.log('genCV body = ', req.body);
+    const new_cv: CV = await tailorCV(jobInfo); // run function
+    if ( new_cv ) {
+        console.log('Sending the new_cv to the frontend');
+        console.log(new_cv);
+        if(!TEST) LOG.addFile("cv.json", new_cv);
         res.json(new_cv); // send result (as a JSON response)
     } else {
-        res.status(404).send("Error getting new CV.");
+        res.status(404).send("Error getting a new CV info from the jobInfo.");
     }
 });

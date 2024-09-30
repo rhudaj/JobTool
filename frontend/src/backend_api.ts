@@ -1,4 +1,4 @@
-import { JobInfo } from "shared";
+import { CV, JobInfo } from "shared";
 
 /**
  * BackendAPI class
@@ -39,6 +39,15 @@ export class BackendAPI {
         const data = await resp.json();
         console.log("data from backend = ", data);
         return Object.keys(data).length === 0 ? null : data;
+    };
+
+    static async genCV(jobInfo: JobInfo): Promise<CV | null> {
+        console.log("BackendAPI.genCV called, jobInfo = ", jobInfo);
+        const resp = await this.POST("genCV", jobInfo);
+        console.log("genCV response = ", resp);
+        if (!resp) return null;
+        const data: CV = await resp.json();
+        return data ? data : null;
     };
 
     static async genCL(jobInfo: JobInfo): Promise<string[] | null> {

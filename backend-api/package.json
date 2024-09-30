@@ -1,11 +1,10 @@
 {
-  "main": "dist/test.js",
+  "main": "dist/api.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "node --env-file=.env dist/api.js",
-    "start": "npm run build && npm run dev",
-    "test": "npm run build && node --env-file=.env dist/test.js"
+    "dev": "node --env-file=../.env dist/api.js",
+    "start": "npm run build && npm run dev"
   },
   "dependencies": {
     "@types/blob-stream": "^0.1.33",

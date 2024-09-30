@@ -1,29 +1,29 @@
 import { CV } from "shared";
 
-export let cv: CV = {
+export const cv: CV = {
     "personalTitle": "CS Student ~ Software Developer",
     "summary": "Dynamic, agile software full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": ["Python", "SQL", "JavaScript", "TypeScript", "C++", "C", "HTML", "CSS"],
-    "technologies": ["ReactJS", "NodeJS", "Git", "Alteryx", "SQL Server", "MySQL", "Numpy/Pandas/Selenium", "Excel"],
-    "courses": ["Databases", "UI", "Networks", "Algorithms"],
+    "technologies": ["React", "Node", "Git", "Alteryx", "SQL Server", "MongoDB", "Numpy/Pandas", "Express"],
+    "courses": ["Databases", "UI/UX", "Networks", "Algorithms", "Machine Learning"],
     "links": [
         {
-            "icon": "Globe",
+            "icon": "fa fa-globe",
             "text": "roman-hudaj.com",
             "url": "https://github.com/rhudaj"
         },
         {
-            "icon": "Github",
+            "icon": "fa fa-github",
             "text": "github.com/rhudaj",
             "url": "https://github.com/rhudaj"
         },
         {
-            "icon": "Envelope",
+            "icon": "fa fa-envelope",
             "text": "rhudaj@uwaterloo.ca",
             "url": "mailto:rhudaj@uwaterloo.ca"
         },
         {
-            "icon": "Linkedin",
+            "icon": "fa fa-linkedin",
             "text": "/in/rhudaj",
             "url": "https://www.linkedin.com/rhudaj"
         }
@@ -49,7 +49,7 @@ export let cv: CV = {
                 "Optimized data structures and improved frontend tools for admin management on cruise ships, reducing data redundancy and enhancing usability based on client feedback.",
                 "Prioritized and deployed new game features through Jira, coordinating with stakeholders to ensure timely updates, which led to a 30% increase in game engagement."
             ],
-            "tech": ["Jira", "Node.js", "Docker", "React"]
+            "tech": ["Node", "Docker", "React", "MongoDB"]
         },
         {
             "date_range": "1/22 - 8/22",
@@ -83,7 +83,7 @@ export let cv: CV = {
             "title": "Voice-to-Instrument Translator",
             "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
             "description": "Developed an app enabling real-time translation of human voice into various musical instruments // Utilized Python (Numpy) to implement  advanced probabilistic algorithms for detecting: pitch, tempo and note-onsets // Exposed the backend as a REST API to integrate with a GUI built with React.",
-            "tech": ["Python", "React"]
+            "tech": ["Python", "React", "Express"]
         }
     ]
-}
+};
