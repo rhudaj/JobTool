@@ -1,11 +1,10 @@
 import * as AssistantAPI from "../util/openai/assistant.js"
-import { CoverLetterResponse, CV, JobInfo } from "shared"
+import { CV, TailorCVInfo } from "shared"
 import { delay } from "../util/delay.js";
 import { cv } from "./cv.js";
 
 const test_cv = {} as CV;
 const ass_id = "";
-
 export async function setup() {
     const response_function = {
         "name": "response",
@@ -39,10 +38,8 @@ export async function setup() {
 
     // you need to explicitly ask the model to use the response tool
     const instructions = `
-    You write in the first-person perspective of the person in the resume.
-    Given a single job description, you will produce a single cover letter.
-    Imporant: always use the response tool to respond to the user. Never add any other text to the response.
-    `;
+    You write text that appears in a resume. Use proper resume language.
+     `;
 
     const ass = await AssistantAPI.createNewAssistant({
         name: "CoverLetterGenerator",
@@ -52,32 +49,24 @@ export async function setup() {
         instructions: instructions,
         response_function: response_function // you must also instruct the model to produce JSON yourself via a system or user message.
     });
+
     console.log(ass.id);
     return ass.id;
 };
 
-interface TailorCVJobInfo {
-
-};
-2
 // MAIN FUNCTION
-export async function tailorCV(og_cv: CV, info: TailorCVJobInfo): Promise<CV> {
+export async function tailorCV(textSegments: Map<string, string>, info: TailorCVInfo): Promise<CV> {
     let response: CV;
     if(Number(process.env.TEST) === 1) {
         await delay(500);
         console.log('genCV (testing mode)');
         response = test_cv;
     } else {
-        // 1 - into the desired format
-        const input = {
-            // TODO: define
-        };
-        // 2 - get the response from assistant
-        const inputTxt = JSON.stringify(input);
-        response = await AssistantAPI.askAssistant({
-            assistant_id: ass_id,
-            question: `... ${inputTxt}`
-        });
+        // 1 - Put <info> as context to the model
+        const CONTEXT = "...";
+        // 2 - Open up a thread of questions w' Assistant
+        // 3 - For each part of CV (textSegments), Ask Assistant to modify that part
+        // 4 - Return the modified parts
     }
     return response;
 };

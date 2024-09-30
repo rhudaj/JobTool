@@ -19,21 +19,26 @@ export interface JobExtractResponse {
 type reqType = "required" | "optional";
 
 export interface JobInfo {
+    // USED FOR CV ------------
     company: string,
     positionName: string,
-    positionType: string,
     aboutRole: string[],
     aboutYou: string[],
     qualifications: [reqType, string][],
+    // ---- DONE MANUALLY ------
+    keywords: WordOccurences,
+    languages: string[],
+    technologies: string[],
+    // ---- DONE MANUALLY ------
+    // USED FOR CV ------------
+    // META INFO --------------
+    positionType: string,
     dateRange: string,
     salary: string,
     deadline: string,
     howToApply: string,
     coverLetter: string,
-    // ***
-    keywords: WordOccurences,
-    languages: string[],
-    technologies: string[],
+    // ------------------------
 };
 
 // CL ------------------------------------------------
@@ -78,3 +83,23 @@ export interface CV {
     experiences: JobExperience[],
     projects: Project[],
 };
+
+
+
+// TAILOR CV -----------------------------------------
+
+export interface TailorCVInfo {
+    company: string,
+    positionName: string,
+    aboutRole: string[],
+    aboutYou: string[],
+    qualifications: [reqType, string][],
+    keywords: WordOccurences,
+    languages: string[],
+    technologies: string[]
+};
+
+// GEN CL --------------------------------------------
+
+// create an interface called 'GenCLInfo' that is the same as the interface TailorCVInfo
+export interface GenCLInfo extends TailorCVInfo {}

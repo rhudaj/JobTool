@@ -16,18 +16,18 @@ type reqType = "required" | "optional";
 interface JobInfo {
     company: string;
     positionName: string;
-    positionType: string;
     aboutRole: string[];
     aboutYou: string[];
     qualifications: [reqType, string][];
+    keywords: WordOccurences;
+    languages: string[];
+    technologies: string[];
+    positionType: string;
     dateRange: string;
     salary: string;
     deadline: string;
     howToApply: string;
     coverLetter: string;
-    keywords: WordOccurences;
-    languages: string[];
-    technologies: string[];
 }
 interface CoverLetterResponse {
     intro: string;
@@ -63,5 +63,17 @@ interface CV {
     experiences: JobExperience[];
     projects: Project[];
 }
+interface TailorCVInfo {
+    company: string;
+    positionName: string;
+    aboutRole: string[];
+    aboutYou: string[];
+    qualifications: [reqType, string][];
+    keywords: WordOccurences;
+    languages: string[];
+    technologies: string[];
+}
+interface GenCLInfo extends TailorCVInfo {
+}
 
-export type { CV, CoverLetterResponse, JobExperience, JobExtractResponse, JobInfo, Project, WordOccurences };
+export type { CV, CoverLetterResponse, GenCLInfo, JobExperience, JobExtractResponse, JobInfo, Project, TailorCVInfo, WordOccurences };

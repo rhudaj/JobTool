@@ -69,7 +69,8 @@ app.post("/tailorCV", async (req, res) => {
     // no body
     const old_cv = cv;
     const info = {};
-    const new_cv = await tailorCV(old_cv, info); // run function
+    const new_cv = null;
+    // const new_cv = await tailorCV(undefined, undefined); // run function
     if (new_cv) {
         if(!TEST) {
             LOG.addFile("old_cv.json", old_cv);

@@ -50,4 +50,7 @@ body {
     #nav {
         display: none !important;
     }
+    *, :after, :before {
+        color: #000!important;
+    }
 }

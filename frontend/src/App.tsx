@@ -15,14 +15,14 @@ import { BackendAPI } from "./backend_api";
 import { CVEditor } from "./components/CVEditor/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { SectionContainer } from "./components/SectionContainer/sectioncontainer";
-import { PrintablePage, printReactComponentAsPdf } from "./components/PagePrint/pageprint";
+import { PrintablePage } from "./components/PagePrint/pageprint";
 
 let cv: CV = {
     "personalTitle": "CS Student ~ Software Developer",
     "summary": "Dynamic, agile software full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": ["Python", "SQL", "JavaScript", "TypeScript", "C++", "C", "HTML", "CSS"],
-    "technologies": ["ReactJS", "NodeJS", "Git", "Alteryx", "SQL Server", "MySQL", "Numpy/Pandas/Selenium", "Excel"],
-    "courses": ["Databases", "UI", "Networks", "Algorithms"],
+    "technologies": ["React", "Node", "Git", "Alteryx", "SQL Server", "MongoDB", "Numpy/Pandas", "Express"],
+    "courses": ["Databases", "UI/UX", "Networks", "Algorithms", "Machine Learning"],
     "links": [
         {
             "icon": "fa fa-globe",
@@ -66,7 +66,7 @@ let cv: CV = {
                 "Optimized data structures and improved frontend tools for admin management on cruise ships, reducing data redundancy and enhancing usability based on client feedback.",
                 "Prioritized and deployed new game features through Jira, coordinating with stakeholders to ensure timely updates, which led to a 30% increase in game engagement."
             ],
-            "tech": ["Jira", "Node.js", "Docker", "React"]
+            "tech": ["Node", "Docker", "React", "MongoDB"]
         },
         {
             "date_range": "1/22 - 8/22",
@@ -100,7 +100,7 @@ let cv: CV = {
             "title": "Voice-to-Instrument Translator",
             "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
             "description": "Developed an app enabling real-time translation of human voice into various musical instruments // Utilized Python (Numpy) to implement  advanced probabilistic algorithms for detecting: pitch, tempo and note-onsets // Exposed the backend as a REST API to integrate with a GUI built with React.",
-            "tech": ["Python", "React"]
+            "tech": ["Python", "React", "Express"]
         }
     ]
 };
@@ -351,7 +351,7 @@ function App() {
             onNext: () => {
                 setCVEnabled(true);
             },
-            isEnabled:  true,
+            isEnabled:  clEnabled,
             isComplete: true,
             content: (
                 <PrintablePage page_id="cl-page">
