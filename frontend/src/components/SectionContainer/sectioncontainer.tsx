@@ -5,6 +5,7 @@ export function SectionContainer(props: {
     hasNext: boolean;
     nextEnabled: boolean;
     onChangeSection: (next: boolean) => void;
+    onSkipSection: () => void;
     children: React.ReactNode;
 }) {
     const ChangeSection = (P: { dirIsNext: boolean, enabled: boolean }) => {
@@ -24,6 +25,7 @@ export function SectionContainer(props: {
         <div className="section-container">
             <div id="section-select">
                 <ChangeSection dirIsNext={false} enabled={props.hasPrev}/>
+                <button id="skip-button" onClick={props.onSkipSection}>Skip</button>
                 <ChangeSection dirIsNext={true} enabled={props.hasNext && props.nextEnabled}/>
             </div>
             {props.children}

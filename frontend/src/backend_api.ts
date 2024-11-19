@@ -50,7 +50,8 @@ export class BackendAPI {
         return data ? data : null;
     };
 
-    static async genCL(jobInfo: JobInfo): Promise<string[] | null> {
+    static async genCL(jobInfo: JobInfo|string): Promise<string[] | null> {
+        if(typeof jobInfo === "string") jobInfo = { "job_info": jobInfo } as any;
         const resp = await this.POST("genCL", jobInfo);
         if (!resp) return null;
         const data: string[] = await resp.json();

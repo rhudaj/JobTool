@@ -31,7 +31,9 @@ interface JobInfo {
 }
 interface CoverLetterResponse {
     intro: string;
+    transition: string;
     body_paragraphs: string[];
+    why_work_here: string;
     closing_remarks: string;
 }
 interface JobExperience {

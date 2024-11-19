@@ -6,7 +6,7 @@ import { genCL, transformCLResponse } from "./CL/clAssistant.js";
 import { Log } from "./util/files.js";
 import { tailorCV } from "./CV/cvAssistant.js";
 
-let LOG: Log;
+let LOG: Log = new Log();
 const TEST: boolean = Number(process.env.TEST) === 1;
 const PORT = process.env.PORT;
 
@@ -29,6 +29,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+
 // { job_text: string } => extractFromJobDesc => JobInfo
 app.post("/getJobInfo", async (req, res) => {
     const jobTxt = req.body.job_text as string;
@@ -36,7 +37,7 @@ app.post("/getJobInfo", async (req, res) => {
     console.log("jobInfo.keywords.length = ", jobInfo.keywords.length);
     if (jobInfo) {
         if(!TEST) {
-            LOG = new Log(`LOG_${jobInfo.company}_${new Date().getSeconds()}`);
+            LOG.setup(`LOG_${jobInfo.company}_${new Date().getSeconds()}`)
             LOG.addFile(`jobText`, jobTxt);
             LOG.addFile(`jobInfo.json`, jobInfo);
         }
@@ -46,12 +47,22 @@ app.post("/getJobInfo", async (req, res) => {
     }
 });
 
+
 // JobInfo => genCL() => cl_response => [ paragraphs ]
 app.post("/genCL", async (req, res) => {
-    const jobInfo = req.body as JobInfo;
-    const cl_response = await genCL(jobInfo); // run function
+    console.log("genCL posted to!");
+    const jobInfo = req.body as JobInfo|any;
+    console.log("\tbody (jobInfo), type: ", typeof jobInfo);
+    let jobInfoAsStr: string;
+    // test if jobInfo matches the JobInfo interface:
+    if( jobInfo.job_info ) {
+        jobInfoAsStr = jobInfo.job_info as string;
+    }
+    const cl_response = await genCL(jobInfoAsStr ? jobInfoAsStr : jobInfo); // run function
+    console.log("cl_response = ", cl_response);
     if (cl_response) {
         if(!TEST) {
+            if(!LOG.isSetup()) LOG.setup(`LOG_someCompany_${new Date().getSeconds()}`)
             LOG.addFile("cl.json", cl_response);
         }
         // convert to string[]
@@ -63,6 +74,7 @@ app.post("/genCL", async (req, res) => {
     }
 });
 
+
 app.post("/genCV", async (req, res) => {
     console.log('genCV posted to!');
     const jobInfo = req.body as JobInfo;
@@ -71,7 +83,10 @@ app.post("/genCV", async (req, res) => {
     if ( new_cv ) {
         console.log('Sending the new_cv to the frontend');
         console.log(new_cv);
-        if(!TEST) LOG.addFile("cv.json", new_cv);
+        if(!TEST && LOG) {
+            if( ! LOG.isSetup() ) LOG.setup(`LOG_someCompany_${new Date().getSeconds()}`)
+            LOG.addFile("cv.json", new_cv);
+        }
         res.json(new_cv); // send result (as a JSON response)
     } else {
         res.status(404).send("Error getting a new CV info from the jobInfo.");

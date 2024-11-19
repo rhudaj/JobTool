@@ -41,3 +41,8 @@
 		background-color: lightcoral;
 		transition: 0.3s;
 	}
+
+	#skip-button {
+		width: min-content;
+		padding: 0px 2rem 0px 2rem;
+	}

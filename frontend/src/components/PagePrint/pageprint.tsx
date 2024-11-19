@@ -20,8 +20,8 @@ export const printReactComponentAsPdf = (element_id: string) => {
 
     // iframe
     const iframe = document.createElement('iframe');
-        // hide it from view
-        iframe.style.display = 'none';
+        // hide it from view (Instead of setting display: none, you can set the iframe's visibility to hidden. This way, the iframe is still rendered but not visible.)
+        iframe.style.display = 'hidden';
         // Append it to body of the document to be able to access the content
         document.body.appendChild(iframe);
         // Get the content of the iframe to be able to access the document
@@ -33,10 +33,11 @@ export const printReactComponentAsPdf = (element_id: string) => {
         // Append a deep copy of the component to the iframe
         doc.body.appendChild(component2print.cloneNode(true));
 
-    // Print the iframe window
-    iframe.contentWindow.print();
-    // Remove it
-    iframe.remove();
+    // Adding a slight delay before calling print() can give the browser enough time to fully render the iframe content:
+    setTimeout(() => {
+        iframe.contentWindow.print();
+        iframe.remove();
+    }, 300);
 };
 
 export function PrintablePage(props: {
@@ -44,16 +45,16 @@ export function PrintablePage(props: {
     page_id: string,
 }) {
     return (
-        <div>
-            <div className="A4-page" id={props.page_id}>
-                {props.children}
-            </div>
+        <div className="page-print-div">
             <button
-                className="download-button"
-                onClick={()=>printReactComponentAsPdf(props.page_id)}
+            className="download-button"
+            onClick={() => printReactComponentAsPdf(props.page_id)}
             >
-                Download
+                Download PDF
             </button>
+            <div className="A4-page" id={props.page_id}>
+            {props.children}
+            </div>
         </div>
     );
 };

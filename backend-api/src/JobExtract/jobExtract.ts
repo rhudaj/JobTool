@@ -3,6 +3,50 @@ import * as AssistantAPI from "../util/openai/assistant.js"
 import { delay } from "../util/delay.js";
 import { findProgrammingLanguages, getWordOccurences, getWords } from "./wordAnalyze.js";
 
+const TEST_response: JobExtractResponse = {
+    "company": "Veeva Systems",
+    "positionName": "Engineering Development Program",
+    "positionType": "Internship",
+    "dateRange": "n/a",
+    "salary": "$25 - $30 / hr",
+    "deadline": "n/a",
+    "howToApply": "At the time of application, please attach the most updated version of your academic transcript.",
+    "coverLetter": "n/a",
+    "aboutRole": [
+        "Join our Engineering Development Program as a front-end, back-end, or full-stack, where you'll work on small teams in a dynamic, agile environment, releasing features every four weeks.",
+        "Help us design our solutions.",
+        "Contribute to technical and functional design decisions, troubleshoot and provide technical product support, and be responsible for all aspects of the software development lifecycle."
+    ],
+    "qualifications": [
+        [
+            "required",
+            "Located near Toronto, Ontario and able to work in the office 4 days/week during your internship"
+        ],
+        [
+            "required",
+            "Working toward Bachelor’s Degree in Computer Science or a related technical degree"
+        ],
+        ["required", "Graduation date is by Summer 2027 or earlier"],
+        ["required", "Overall GPA must be 3.3 or higher"],
+        ["required", "Proficiency in Java"],
+        [
+            "required",
+            "Solid CS fundamentals (data structures, algorithms, and object-oriented design)"
+        ],
+        [
+            "optional",
+            "Working knowledge of frontend technologies such as JavaScript, HTML, and React"
+        ],
+        ["optional", "Working knowledge of relational databases"],
+        ["optional", "Relevant internship/project experience is a plus"]
+    ],
+    "aboutYou": [
+        "Mission-driven",
+        "Committed to making a positive impact on customers, employees, and communities"
+    ]
+};
+
+
 const ass_id = "asst_1krzl87hwmmdHZrTgeaFNQhj";
 
 async function setup() {
@@ -119,34 +163,7 @@ export async function extractFromJobDesc(jobTxt: string) {
         if (Number(process.env.TEST) === 1) {
             await delay(500);
             console.log('extractFromJobDesc (testing mode)');
-            assResp = {
-                "company": "Palantir",
-                "positionName": "Defense Tech Software Engineer Intern",
-                "positionType": "Internship",
-                "aboutRole": [
-                    "Supporting work specifically focusing on delivering Palantir Defense capabilities to critical mission partners.",
-                    "Involved throughout the product lifecycle - from idea generation, design, and prototyping to execution and shipping.",
-                    "Paired with a mentor dedicated to growth and success.",
-                    "Collaborate closely with technical and non-technical counterparts to understand customers' problems and build products that tackle them."
-                ],
-                "aboutYou": [
-                    "Ability to communicate and collaborate with a variety of individuals, including engineers, users, and non-technical team members.",
-                    "Willingness to learn and make decisions independently.",
-                    "Ability to ask questions when needed."
-                ],
-                "qualifications": [
-                    ["required", "Engineering background in fields such as Computer Science, Mathematics, Software Engineering, and Physics."],
-                    ["required", "Familiarity with data structures, storage systems, cloud infrastructure, front-end frameworks, and other technical tools."],
-                    ["required", "Active US Security clearance, or eligibility and willingness to obtain a US Security clearance prior to start of internship."],
-                    ["required", "Experience coding in programming languages such as Java, C++, Python, JavaScript, or similar languages."],
-                    ["required", "Must be planning on graduating in 2026. This should be the final internship before graduating."]
-                ],
-                "coverLetter": "n/a",
-                "dateRange": "n/a",
-                "salary": "$10,000/month",
-                "deadline": "n/a",
-                "howToApply": "Submit an updated resume/CV in PDF format and thoughtful responses to the application questions."
-            };
+            assResp = TEST_response;
         } else {
             assResp = await jobExtractAssistant(jobTxt);
         }

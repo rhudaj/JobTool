@@ -56,7 +56,7 @@ export async function setup() {
 // MAIN FUNCTION
 export async function tailorCV(jobInfo: JobInfo): Promise<CV> {
     let new_cv = cv;
-    if(Number(process.env.TEST) === 1) {
+    if( Number(process.env.TEST) === 1 ) {
         console.log('genCV (testing mode)');
         await delay(250);
         new_cv = cv;

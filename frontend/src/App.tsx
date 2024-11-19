@@ -5,6 +5,7 @@ import {
     forwardRef,
     useImperativeHandle,
     ReactElement,
+    act,
 } from "react";
 import "./App.css";
 import { SubSection } from "./components/SubSection/SubSection";
@@ -16,6 +17,8 @@ import { CVEditor } from "./components/CVEditor/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { SectionContainer } from "./components/SectionContainer/sectioncontainer";
 import { PrintablePage } from "./components/PagePrint/pageprint";
+import { SplitView } from "./components/SplitView/splitview";
+import { RowDragGrid } from "./components/CustomGrid/customGrid";
 
 /*
     const TEST_CL = {
@@ -134,12 +137,12 @@ const JIDisplay = forwardRef((
                 name: "Top Words",
                 content: (
                     <CustomTable
+                        data={props.jobInfo.keywords}
                         changeData={(newKeywords: WordOccurences) => {
                             const newJI = structuredClone(props.jobInfo);
                             newJI.keywords = newKeywords;
                             props.changeJobInfo(newJI);
                         }}
-                        data={props.jobInfo.keywords}
                         headers={["word", "#"]}
                     />
                 ),
@@ -148,12 +151,12 @@ const JIDisplay = forwardRef((
                 name: "Languages",
                 content: (
                     <CustomTable
+                        data={props.jobInfo.languages}
                         changeData={(newLangs: string[]) => {
                             const newJI = structuredClone(props.jobInfo);
                             newJI.languages = newLangs;
                             props.changeJobInfo(newJI);
                         }}
-                        data={props.jobInfo.languages}
                     />
                 ),
             },
@@ -161,12 +164,12 @@ const JIDisplay = forwardRef((
                 name: "Technologies",
                 content: (
                     <CustomTable
+                        data={props.jobInfo.technologies}
                         changeData={(newTech: string[]) => {
                             const newJI = structuredClone(props.jobInfo);
                             newJI.technologies = newTech;
                             props.changeJobInfo(newJI);
                         }}
-                        data={props.jobInfo.technologies}
                     />
                 ),
             },
@@ -187,10 +190,12 @@ const JIDisplay = forwardRef((
     }
 );
 
+
 interface AppSection {
     id: string;
     heading: string;
     onNext: () => void;
+    onSkip?: () => void;
     isEnabled: boolean;
     isComplete: boolean;
     content: ReactElement;
@@ -199,6 +204,7 @@ interface AppSection {
 function App() {
     const [sec, setSec] = useState(0);
 
+    const [jobText, setJobText] = useState("");
     const [jobInfo, setJobInfo] = useState({} as JobInfo);
     const JIDisplayRef = useRef(null);
 
@@ -214,6 +220,76 @@ function App() {
         setExtractJobInfoEnabled(e.target.value !== "");
     };
 
+    const getCL = () => {
+        // 1 - extract the updated <jobInfo> from the UI
+        let input;
+        if (jobText === "") {
+            input = JIDisplayRef.current.getJI();
+            setJobInfo(input);  // save it for when we need the generate the CV
+        } else {
+            input = jobText
+        }
+        // 2 - Use it to generate the CL
+        BackendAPI.genCL(input).then(cl => {
+            if(cl === null) console.log('cl is null!');
+            else setCL(cl);
+            console.log('setCL, now setting CL enabled');
+            setCLEnabled(true);
+        });
+    };
+
+    const getCV = () => {
+        // Job Info was already saved in the previous section.
+        if(!jobInfo) console.log('jobInfo is null!');
+        BackendAPI.genCV(jobInfo).then(cv => {
+            if(cv === null) console.log('cv is null!');
+            else setCV(cv);
+            console.log('setCV, now setting CV enabled');
+            setCVEnabled(true);
+        });
+    };
+
+    const ClCvDisplay = (props: {}) => {
+        let activePage = <div>N/A</div>;
+        if (clEnabled) {
+            activePage = (
+                <PrintablePage page_id="cl-page">
+                    <CLEditor cl_paragraphs={CL}/>
+                </PrintablePage>
+            );
+        } else if (cvEnabled) {
+            activePage = (
+                <PrintablePage page_id="cv-page">
+                    <CVEditor cv={CV}/>
+                </PrintablePage>
+            );
+        }
+        return (
+            <SplitView>
+                <JIDisplay ref={JIDisplayRef} jobInfo={jobInfo} changeJobInfo={setJobInfo}/>
+                <div >
+                    <div style={{display: "flex", height: "min-content", gap:"20em"}}>
+                        <button onClick={()=>{
+                            if(! CL || CL.length === 0) getCL()
+                            else {
+                                setCLEnabled(true)
+                                setCVEnabled(false)
+                            }
+                        }}>CL</button>
+                        <button onClick={()=>{
+                            if(!CV) getCV()
+                            else {
+                                setCVEnabled(true)
+                                setCLEnabled(false)
+                            }
+                        }}>CV</button>
+                    </div>
+                    {activePage}
+                </div>
+            </SplitView>
+        )
+    }
+
     const sections: AppSection[] = [
         {
             id: "section-job-info",
@@ -225,7 +301,6 @@ function App() {
                 const jobTxt = (
                     document.getElementById("job-info-input") as HTMLTextAreaElement
                 ).value;
-
                 // 2 - Backend extracts the job info from the text
                 // Does not stall UI, by using .then(...)
                 BackendAPI.getJobInfo(jobTxt).then((jobInfo: JobInfo | null) => {
@@ -234,6 +309,12 @@ function App() {
                     // display, null or not!
                     setResultsEnabled(true);
                 });
+            },
+            onSkip: () => {
+                const jobTxt = (
+                    document.getElementById("job-info-input") as HTMLTextAreaElement
+                ).value;
+                setJobText(jobTxt);
             },
             isEnabled: true, // first section => always enabled
             isComplete: extractJobInfoEnabled,
@@ -248,55 +329,9 @@ function App() {
             heading: "Job Analysis",
             isEnabled: resultsEnabled, // when POST to backend done.
             isComplete: true, // No changes are necessary
-            onNext: () => {
-            // Get the cover letter
-                // 1 - extract the updated <jobInfo> from the UI
-                const editedJI: JobInfo = JIDisplayRef.current.getJI();
-                // 1.2 - save it for when we need the generate the CV
-                setJobInfo(editedJI);
-                // 2 - Use it to generate the CL
-                BackendAPI.genCL(editedJI).then(cl => {
-                    if(cl === null) console.log('cl is null!');
-                    else setCL(cl);
-                    console.log('setCL, now setting CL enabled');
-                    setCLEnabled(true);
-                });
-            },
-            content: <JIDisplay ref={JIDisplayRef} jobInfo={jobInfo} changeJobInfo={setJobInfo}/>
-        },
-        {
-            id: "section-cl",
-            heading: "Cover Letter",
-            onNext: () => {
-            // Get the resume
-                // Job Info was already saved in the previous section.
-                BackendAPI.genCV(jobInfo).then(cv => {
-                    if(cv === null) console.log('cv is null!');
-                    else setCV(cv);
-                    console.log('setCV, now setting CV enabled');
-                    setCVEnabled(true);
-                });
-            },
-            isEnabled:  clEnabled,
-            isComplete: true,   // no changes required
-            content: (
-                <PrintablePage page_id="cl-page">
-                    <CLEditor cl_paragraphs={CL}/>
-                </PrintablePage>
-            )
-        },
-        {
-            id: "section-cv",
-            heading: "CV",
-            isEnabled: cvEnabled,
-            isComplete: true,   // no changes required
             onNext: () => {},
-            content: (
-                <PrintablePage page_id="cv-page">
-                    <CVEditor cv={CV}/>
-                </PrintablePage>
-            )
-        },
+            content: <ClCvDisplay/>
+        }
     ];
 
     // RENDER ACTIVE SECTION
@@ -310,8 +345,13 @@ function App() {
                 onChangeSection={(next: boolean) => {
                     // first run onNext for the current section
                     if (next) curSec.onNext();
-                    // then change the section
+                    // Then change the section
                     setSec(sec + (next ? 1 : -1));
+                }}
+                onSkipSection={()=>{
+                    if(curSec.onSkip) curSec.onSkip();
+                    setResultsEnabled(true);
+                    setSec(sec + 1)
                 }}
             >
                 <Section

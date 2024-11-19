@@ -1,27 +1,6 @@
 
-
 .custom-table {
     overflow-x: hidden;
-}
-
-.header-row td {
-    background-color: black;
-}
-
-
-#row-adder > td {
-    background-color: lightblue;
-    height: 35rem;
-    font-weight: bolder;
-    text-align: center;
-}
-
-#row-adder:hover {
-    font-size: 1.3em; /* sclae up*/
-}
-
-#header-row {
-    background-color:#282c34;
 }
 
 .custom-table, tr, td {
@@ -37,20 +16,40 @@ td {
     padding: 5rem;
 }
 
+
+/* ROW ADDER */
+
+    #row-adder > td {
+        background-color: lightblue;
+        height: 35rem;
+        font-weight: bolder;
+        text-align: center;
+    }
+
+    #row-adder:hover {
+        font-size: 1.3em; /* scale up*/
+    }
+
+/* HEADER ROW */
+
+    #header-row {
+        background-color:#282c34;
+    }
+
+/* DATA COL */
+
 .data-col.hover {
     background-color:darkcyan;
 }
 
-.row-removal-col {
-    border-right: hidden;
-    border-bottom: hidden;
-    border-top: hidden;
-}
+/* ROW REMOVAL COL */
 
-.row-removal-col:hover {
-    background-color:lightcoral;
-}
+    .row-removal-col {
+        border-right: hidden;
+        border-bottom: hidden;
+        border-top: hidden;
+    }
 
-tr.delHover {
-    background-color: lightcoral;
-}
+    .row-removal-col:hover {
+        background-color:lightcoral;
+    }

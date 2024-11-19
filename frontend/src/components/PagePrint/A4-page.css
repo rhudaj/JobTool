@@ -1,3 +1,7 @@
+.page-print-div {
+    overflow: scroll;
+}
+
 .A4-page {
     background-color: white;
     container-type: size;
@@ -16,7 +20,7 @@
 
 .download-button {
 	height: min-content;
-    width: min-content;
+    width: max-content;
 	align-self: center;
 	padding: 5rem 40rem 5rem 40rem;
     font-size: medium;

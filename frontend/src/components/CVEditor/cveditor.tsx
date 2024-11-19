@@ -74,12 +74,13 @@ const Link = (props: {
 export function CVEditor(props: {
     cv: CV
 }) {
+    console.log('personal title: ', props.cv.personalTitle);
     return (
         <div id="cv-editor">
             <div id="row-1">
                 <div id="name-title">
                     <div id="div-full-name">ROMAN HUDAJ</div>
-                    <div id="div-personal-title">{props.cv.personalTitle}</div>
+                    <TextEditDiv text={props.cv.personalTitle} id="div-personal-title"/>
                 </div>
                 <div id="div-links">
                     {
@@ -142,7 +143,7 @@ export function CVEditor(props: {
                         date="9/20 - 12/24"
                         content={[
                             "Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
-                            `Course-Work: ${props.cv.courses}`
+                            `Course-Work: ${props.cv.courses.join(", ")}`
                         ]}
                     />
                 </Section>

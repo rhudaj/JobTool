@@ -9,8 +9,13 @@ function CustomTable(props: {
     const [data, setData] = useState([]);
 
     useEffect(()=>{
-        console.log('new props.data for table');
-        setData(props.data);
+        if( ! Array.isArray(props.data) ) {
+            console.log("WARNING: CustomTable data prop is not an array. Putting data into an array (may not be what you want)");
+            setData([props.data]);
+        } else {
+            console.log('new props.data for table');
+            setData(props.data);
+        }
     }, [props.data]);
 
     // TOOLS -------------------------
@@ -44,8 +49,6 @@ function CustomTable(props: {
     );
 
     const DataRow = (rowP: { rowData: any[]; rowNum: number }) => {
-        const [dataHover, setDataHover] = useState(false);
-        const [delHover, setDelHover] = useState(false);
         const [rowData, setRowData] = useState([]);
 
         useEffect(() => {
@@ -56,7 +59,7 @@ function CustomTable(props: {
             return (
                 <td
                     key={`row-${rowP.rowNum}-col-${colP.colNum}`} // helps React render
-                    className={`data-col ${ dataHover && !delHover ? "hover" : "" }`}
+                    className="data-col"
                     contentEditable={true}
                     onInput={e=>{
                         // TODO: data should not be updated until
@@ -74,24 +77,15 @@ function CustomTable(props: {
             <td
                 key={`row-${rowP.rowNum}-removal-col`}
                 className="row-removal-col"
-                onMouseEnter={() => setDelHover(true)}
-                onMouseLeave={() => setDelHover(false)}
                 onClick={() => removeRow(rowP.rowNum)}
-            >
-                {dataHover ? "x" : ""}
-            </td>
+            />
         );
 
         if (!data || data.length === 0) {
             return <p>n/a</p>;
         }
         else return (
-            <tr
-                key={`row-${rowP.rowNum}`} // helps React render
-                className={delHover ? "delHover" : ""}
-                onMouseEnter={() => setDataHover(true)}
-                onMouseLeave={() => setDataHover(false)}
-            >
+            <tr key={`row-${rowP.rowNum}`}>
                 {
                     rowData.map((rowItem: any, i: number) =>
                         <Col colData={rowItem} colNum={i}/>

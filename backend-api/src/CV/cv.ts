@@ -2,7 +2,7 @@ import { CV } from "shared";
 
 export const cv: CV = {
     "personalTitle": "CS Student ~ Software Developer",
-    "summary": "Dynamic, agile software full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
+    "summary": "Dynamic, agile full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": ["Python", "SQL", "JavaScript", "TypeScript", "C++", "C", "HTML", "CSS"],
     "technologies": ["React", "Node", "Git", "Alteryx", "SQL Server", "MongoDB", "Numpy/Pandas", "Express"],
     "courses": ["Databases", "UI/UX", "Networks", "Algorithms", "Machine Learning"],
@@ -10,7 +10,7 @@ export const cv: CV = {
         {
             "icon": "fa fa-globe",
             "text": "roman-hudaj.com",
-            "url": "https://github.com/rhudaj"
+            "url": "https://roman-hudaj.com/"
         },
         {
             "icon": "fa fa-github",
@@ -35,26 +35,26 @@ export const cv: CV = {
             "company": "Environics Analytics",
             "bulletPoints": [
                 "Developed an automated pipeline with Alteryx and the API of an AI model to parse and translate data product documents and variable lists to French, resulting in savings of tens of thousands per product.",
-                "Created a user-friendly app with Python/QT to extract client usage data of company products from databases; provided ease of data access and analysis by non-technical teams.",
+                "Created a user-friendly app with Python and Microsoft SQL Server to extract client usage data of company products from databases; provided ease of data access and analysis by non-technical teams.",
                 "Enhanced databases to monitor client usage of products/APIs to formulate an optimized product pricing strategy and ultimately increase profitability and user satisfaction."
             ],
             "tech": ["SQL", "Alteryx", "Python", "Azure"]
         },
         {
             "date_range": "5/24 - 9/24",
-            "title": "Product Assistant",
+            "title": "Software Product Developer",
             "company": "Timeplay",
             "bulletPoints": [
-                "Improved UI for lottery and instant-win games using React and TypeScript, supporting the rollout of a gaming platform on cruise ships from inception to deployment.",
-                "Optimized data structures and improved frontend tools for admin management on cruise ships, reducing data redundancy and enhancing usability based on client feedback.",
-                "Prioritized and deployed new game features through Jira, coordinating with stakeholders to ensure timely updates, which led to a 30% increase in game engagement."
+                "Improved UI for lottery and instant-win games through market-research and development with React and TypeScript, supporting the rollout of a mobile-gaming platform on cruise ships from inception to deployment.",
+                "Optimized data structures, architecture and APIs across backend-services, reducing data redundancy and enhancing usability improving performance of tools used by the end-users; admins on cruise ships.",
+                "Prioritized and deployed new game features based on client/user feedback, coordinating with stakeholders ensuring timely updates, and with developers using Jira which resulted in a 30% increase in game engagement."
             ],
             "tech": ["Node", "Docker", "React", "MongoDB"]
         },
         {
             "date_range": "1/22 - 8/22",
             "title": "Student Engineer",
-            "company": "Martinrea",
+            "company": "Martinrea International",
             "bulletPoints": [
                 "Spearheaded a major project to optimize the flow of materials across a large facility; improved system for collecting and analyzing data to plan the project; resulted in increased output and cost efficiency.",
                 "Implemented a supply chain tracking system using SQL and advanced Excel for proactive identification of issues, enabling timely alerts to managers and achieving estimated $11,000 annual cost savings."
@@ -67,8 +67,8 @@ export const cv: CV = {
         {
             "date_range": "5/24 - Pres",
             "title": "Automated Restaurant Reservation Business",
-            "url": "https://github.com/rhudaj/Automated-Job-Applications",
-            "description": "Created a fully automated reservation system using TypeScript and Node.js through API requests, to secure hard-to-get reservations at world-popular restaurants for clients generating $X,XXX a month // Deployed the project on Google Cloud, utilizing Scheduler for automated tasks, Firestore for managing data, and cloud storage for transaction and listing records, ensuring a scalable and reliable system.",
+            "url": "https://github.com/rhudaj/ResyBot",
+            "description": "Fully automated system to secure sought-after reservations at world-famous restaurants for clients, generating $X,XXX a month // Developed with TypeScript and Node.js // Deployed on Google-Cloud and managed through their REST API, utilizing Scheduler for automated tasks, Task Manager for executing parallel API requests to reservation-platforms, and cloud-storage for saving transaction and listing records, ensuring a scalable and reliable system.",
             "tech": ["TypeScript", "Node", "Google Cloud"]
         },
         {

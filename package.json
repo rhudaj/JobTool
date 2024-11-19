@@ -1,7 +1,7 @@
 {
     "scripts": {
       "install-all": "cd backend-api && npm install && cd ../frontend && npm install && cd ../shared && npm install && cd ..",
-      "link-shared": "cd /shared && npm link && cd ../frontend && npm link shared && cd ../backend-api && npm link shared && cd ..",
+      "link-shared": "cd shared && npm link && cd ../frontend && npm link shared && cd ../backend-api && npm link shared && cd ..",
       "setup": "npm run install-all && npm run link-shared",
       "start": "npm run start:backend & npm run start:frontend",
       "start:backend": "cd backend-api && npm run start",

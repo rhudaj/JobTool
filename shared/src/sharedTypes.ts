@@ -44,9 +44,11 @@ export interface JobInfo {
 // CL ------------------------------------------------
 
 export interface CoverLetterResponse {
-    intro: string;
-    body_paragraphs: string[];
-    closing_remarks: string;
+    intro: string,
+    transition: string,
+    body_paragraphs: string[],
+    why_work_here: string,
+    closing_remarks: string
 };
 
 // CV ------------------------------------------------
