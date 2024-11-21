@@ -15,10 +15,9 @@ import { CV, JobInfo, WordOccurences } from "shared";
 import { BackendAPI } from "./backend_api";
 import { CVEditor } from "./components/CVEditor/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
-import { SectionContainer } from "./components/SectionContainer/sectioncontainer";
 import { PrintablePage } from "./components/PagePrint/pageprint";
-import { SplitView } from "./components/SplitView/splitview";
-import { RowDragGrid } from "./components/CustomGrid/customGrid";
+import { ButtonSet } from "./components/ButtonSet/buttonSet";
+import { printReactComponentAsPdf } from "./components/PagePrint/component2pdf";
 
 /*
     const TEST_CL = {
@@ -53,9 +52,7 @@ const JIDisplay = forwardRef((
 
         // give the parent 'App' access to localJI
         useImperativeHandle(ref, () => ({
-            getJI() {
-                return localJI;
-            }
+            getJI() { return localJI; }
         }));
 
         // Given new props, update local job info:
@@ -190,178 +187,89 @@ const JIDisplay = forwardRef((
     }
 );
 
-
-interface AppSection {
-    id: string;
-    heading: string;
-    onNext: () => void;
-    onSkip?: () => void;
-    isEnabled: boolean;
-    isComplete: boolean;
-    content: ReactElement;
-};
-
 function App() {
-    const [sec, setSec] = useState(0);
 
     const [jobText, setJobText] = useState("");
-    const [jobInfo, setJobInfo] = useState({} as JobInfo);
-    const JIDisplayRef = useRef(null);
+    const [CL, setCL] = useState<string[]>(null);
 
-    const [CL, setCL] = useState([]);
+    const [CVs, setCVs] = useState<{name: string, data: CV}[]>(null);
     const [CV, setCV] = useState(null);
 
-    const [extractJobInfoEnabled, setExtractJobInfoEnabled] = useState(false);
-    const [resultsEnabled, setResultsEnabled] = useState(false);
-    const [clEnabled, setCLEnabled] = useState(false);
-    const [cvEnabled, setCVEnabled] = useState(false);
-
-    const onTextInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setExtractJobInfoEnabled(e.target.value !== "");
+    const getCL = (input: string = null) => {
+        BackendAPI.genCL(input).then(setCL);
     };
 
-    const getCL = () => {
-        // 1 - extract the updated <jobInfo> from the UI
-        let input;
-        if (jobText === "") {
-            input = JIDisplayRef.current.getJI();
-            setJobInfo(input);  // save it for when we need the generate the CV
-        } else {
-            input = jobText
+    const getCV = (input = {}) => {
+        BackendAPI.genCV(input as JobInfo).then(setCV);
+    };
+
+    const changeCV = (name: string) => {
+        const cv = CVs.find(cv => cv.name === name);
+        setCV(cv.data);
+    };
+
+    const saveCV = () => {
+        const userInput = prompt('Enter some text:');
+        if (userInput !== null) {
+            BackendAPI.saveCV(userInput, CV)
+            .then((isSaved) => {
+                alert(`CV was ${isSaved ? "" : "not"} saved successfully`);
+            });
         }
-        // 2 - Use it to generate the CL
-        BackendAPI.genCL(input).then(cl => {
-            if(cl === null) console.log('cl is null!');
-            else setCL(cl);
-            console.log('setCL, now setting CL enabled');
-            setCLEnabled(true);
-        });
     };
 
-    const getCV = () => {
-        // Job Info was already saved in the previous section.
-        if(!jobInfo) console.log('jobInfo is null!');
-        BackendAPI.genCV(jobInfo).then(cv => {
-            if(cv === null) console.log('cv is null!');
-            else setCV(cv);
-            console.log('setCV, now setting CV enabled');
-            setCVEnabled(true);
-        });
-    };
+    useEffect(() => {
+        BackendAPI.getCVs()
+        .then(setCVs);
+    }, []);
 
-    const ClCvDisplay = (props: {}) => {
-        let activePage = <div>N/A</div>;
-        if (clEnabled) {
-            activePage = (
-                <PrintablePage page_id="cl-page">
-                    <CLEditor cl_paragraphs={CL}/>
-                </PrintablePage>
-            );
-        } else if (cvEnabled) {
-            activePage = (
-                <PrintablePage page_id="cv-page">
-                    <CVEditor cv={CV}/>
-                </PrintablePage>
-            );
-        }
-        return (
-            <SplitView>
-                <JIDisplay ref={JIDisplayRef} jobInfo={jobInfo} changeJobInfo={setJobInfo}/>
-                <div >
-                    <div style={{display: "flex", height: "min-content", gap:"20em"}}>
-                        <button onClick={()=>{
-                            if(! CL || CL.length === 0) getCL()
-                            else {
-                                setCLEnabled(true)
-                                setCVEnabled(false)
-                            }
-                        }}>CL</button>
-                        <button onClick={()=>{
-                            if(!CV) getCV()
-                            else {
-                                setCVEnabled(true)
-                                setCLEnabled(false)
-                            }
-                        }}>CV</button>
-                    </div>
-                    {activePage}
-                </div>
-            </SplitView>
-        )
+    const saveJobText = () => {
+        const jobTxt = (
+            document.getElementById("job-info-input") as HTMLTextAreaElement
+        ).value;
+        setJobText(jobTxt);
     }
 
-    const sections: AppSection[] = [
-        {
-            id: "section-job-info",
-            heading: "Job Info",
-            onNext: () => {
-            // Extract job info
-                console.log("Extracting Job Info...");
-                // 1 - Extract the job description from the UI
-                const jobTxt = (
-                    document.getElementById("job-info-input") as HTMLTextAreaElement
-                ).value;
-                // 2 - Backend extracts the job info from the text
-                // Does not stall UI, by using .then(...)
-                BackendAPI.getJobInfo(jobTxt).then((jobInfo: JobInfo | null) => {
-                    if (jobInfo === null) console.log("Job Info is null!");
-                    else setJobInfo(jobInfo);
-                    // display, null or not!
-                    setResultsEnabled(true);
-                });
-            },
-            onSkip: () => {
-                const jobTxt = (
-                    document.getElementById("job-info-input") as HTMLTextAreaElement
-                ).value;
-                setJobText(jobTxt);
-            },
-            isEnabled: true, // first section => always enabled
-            isComplete: extractJobInfoEnabled,
-            content: (
-                <>
-                    <textarea id="job-info-input" onChange={onTextInput} />
-                </>
-            ),
-        },
-        {
-            id: "section-job-analysis",
-            heading: "Job Analysis",
-            isEnabled: resultsEnabled, // when POST to backend done.
-            isComplete: true, // No changes are necessary
-            onNext: () => {},
-            content: <ClCvDisplay/>
-        }
-    ];
-
     // RENDER ACTIVE SECTION
-    const curSec = sections[sec];
     return (
         <div className="App-Div">
-            <SectionContainer
-                hasPrev={sec !== 0}
-                hasNext={sec !== sections.length - 1}
-                nextEnabled={curSec.isComplete}
-                onChangeSection={(next: boolean) => {
-                    // first run onNext for the current section
-                    if (next) curSec.onNext();
-                    // Then change the section
-                    setSec(sec + (next ? 1 : -1));
-                }}
-                onSkipSection={()=>{
-                    if(curSec.onSkip) curSec.onSkip();
-                    setResultsEnabled(true);
-                    setSec(sec + 1)
-                }}
-            >
-                <Section
-                    id={curSec.id}
-                    heading={curSec.heading}
-                    isLoading={!curSec.isEnabled}
-                >
-                    {curSec.content}
-                </Section>
-            </SectionContainer>
+
+            <Section id="section-job-info" heading="Job Info">
+                <textarea style={{minHeight: "30em"}} id="job-info-input"/>
+            </Section>
+
+            <Section id="section-cl" heading="Cover Letter">
+                <ButtonSet>
+                    <button onClick={() => { saveJobText(); getCL(jobText) }}>
+                        Generate
+                    </button>
+                    <button onClick={()=>getCL()}>
+                        Get Template
+                    </button>
+                </ButtonSet>
+                <PrintablePage page_id="cl-page">
+                    { CL ? <CLEditor cl_paragraphs={CL}/> : null }
+                </PrintablePage>
+            </Section>
+
+            <Section id="section-cv" heading="Resume">
+                <ButtonSet>
+                    <button onClick={() => { saveJobText(); getCV() }} >
+                        Generate
+                    </button>
+                    <select onChange={e => changeCV(e.target.value)}>
+                        { CVs ? CVs.map(cv => <option value={cv.name}>{cv.name}</option>) : null }
+                    </select>
+                </ButtonSet>
+                <ButtonSet>
+                    <button className="download-button" onClick={() => printReactComponentAsPdf("cv-page")}> Download PDF </button>
+                    <button onClick={saveCV}> Save CV </button>
+                </ButtonSet>
+                <PrintablePage page_id="cv-page">
+                    { CV ? <CVEditor cv={CV}/> : null }
+                </PrintablePage>
+            </Section>
+
         </div>
     );
 };

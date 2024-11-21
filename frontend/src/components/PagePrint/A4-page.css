@@ -17,12 +17,3 @@
         height: calc(29.7rem * 45);
     }
 }
-
-.download-button {
-	height: min-content;
-    width: max-content;
-	align-self: center;
-	padding: 5rem 40rem 5rem 40rem;
-    font-size: medium;
-    font-weight: bold;
-}

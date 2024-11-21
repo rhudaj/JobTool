@@ -5,6 +5,8 @@ import { CV, JobInfo } from "shared";
 import { genCL, transformCLResponse } from "./CL/clAssistant.js";
 import { Log } from "./util/files.js";
 import { tailorCV } from "./CV/cvAssistant.js";
+import fs from "fs";
+import path from "path";
 
 let LOG: Log = new Log();
 const TEST: boolean = Number(process.env.TEST) === 1;
@@ -26,9 +28,12 @@ app
 
 // Start the server and listen to the port
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}. TEST mode enabled: ${TEST}`);
 });
 
+/* #############################################################################
+                                API ENDPOINTS
+##############################################################################*/
 
 // { job_text: string } => extractFromJobDesc => JobInfo
 app.post("/getJobInfo", async (req, res) => {
@@ -90,5 +95,40 @@ app.post("/genCV", async (req, res) => {
         res.json(new_cv); // send result (as a JSON response)
     } else {
         res.status(404).send("Error getting a new CV info from the jobInfo.");
+    }
+});
+
+
+const cv_dir = '/Users/romanhudaj/Desktop/PROJECTS/JobTool/backend-api/public/CVs';
+
+// All the CVs are located in json files (matching the CV interface )
+// and are stored in the 'public/CVs' directory.
+// This endpoint will send all the CVs to the frontend.
+app.get("/getCVs", async (req, res) => {
+    console.log('getCVs requested');
+    const namedCVs: {name: string, data: CV}[] = [];
+    fs.readdirSync(cv_dir).forEach((file: string) => {
+        console.log('\tFound CV: ', file);
+        const cv: CV = JSON.parse(fs.readFileSync(`${cv_dir}/${file}`, 'utf8'));
+        namedCVs.push({name: file, data: cv});
+    });
+    if (namedCVs.length === 0) {
+        res.status(404).send("No CVs found.");
+    } else {
+        res.json(namedCVs);
+    }
+});
+
+
+app.post("/saveCV", async (req, res) => {
+    console.log('saveCV posted to!');
+    const namedCV = req.body as {name: string, cv: CV};
+    if (namedCV) {
+        console.log('saving CV named: ', namedCV.name);
+        const fileName = namedCV.name + '.json';
+        fs.writeFileSync(`${cv_dir}/${fileName}`, JSON.stringify(namedCV.cv));
+        res.status(200).send("CV saved.");
+    } else {
+        res.status(404).send("Error saving CV.");
     }
 });

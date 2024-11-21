@@ -6,6 +6,8 @@
 	background-color: grey;
 	padding: 30rem;
 	border-radius: var(--main-border-radius);
+
+	height: min-content;
 }
 
 	/* heading */

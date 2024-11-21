@@ -30,6 +30,20 @@ export class BackendAPI {
         return resp.ok ? resp : null;
     };
 
+    private static async GET(func: string): Promise<Response | null> {
+        const url = BackendAPI.HOST + "/" + func;
+        console.log("Attempting GET => ", url);
+        try {
+            var resp = await fetch(url);
+        } catch (err: unknown) {
+            console.log("Something went wrong with fetch @", url, "err: ", err);
+            return null;
+        }
+        console.log("response status = ", resp.status);
+        return resp.ok ? resp : null;
+    }
+
+
     static async getJobInfo(jobTxt: string): Promise<JobInfo | null> {
         console.log("BackendAPI.getJobInfo called");
         const resp = await this.POST("getJobInfo", {
@@ -56,5 +70,17 @@ export class BackendAPI {
         if (!resp) return null;
         const data: string[] = await resp.json();
         return data ? data : null;
+    };
+
+    static async getCVs(): Promise<{name: string, data: CV}[] | null> {
+        const resp = await this.GET("getCVs");
+        if (!resp) return null;
+        const data = await resp.json();
+        return data ? data : null;
+    }
+
+    static async saveCV(name: string, cv: CV): Promise<boolean> {
+        const resp = await this.POST("saveCV", { name, cv });
+        return resp ? resp.ok : false;
     };
 }

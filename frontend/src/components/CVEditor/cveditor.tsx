@@ -1,6 +1,6 @@
 import "./cveditor.css"
 import { CV } from "shared";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
 
 const Experience = (props: {
@@ -47,7 +47,6 @@ const Section = (props: {
             <div className="sec-head">
                 <p>{props.head}</p>
                 <hr/>
-                {/* <span className="hor-line"/> */}
             </div>
             <div className="sec-content">
                 {props.children}
@@ -74,7 +73,10 @@ const Link = (props: {
 export function CVEditor(props: {
     cv: CV
 }) {
-    console.log('personal title: ', props.cv.personalTitle);
+    if (!props.cv) return null;
+
+    const [localCV, setLocalCV] = useState(props.cv);
+
     return (
         <div id="cv-editor">
             <div id="row-1">
