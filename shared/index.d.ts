@@ -36,18 +36,11 @@ interface CoverLetterResponse {
     why_work_here: string;
     closing_remarks: string;
 }
-interface JobExperience {
+interface Experience {
     date_range: string;
     title: string;
-    company: string;
-    bulletPoints: string[];
-    tech: string[];
-}
-interface Project {
-    date_range: string;
-    title: string;
-    url: string;
-    description: string;
+    side_title: string;
+    points: string[];
     tech: string[];
 }
 interface Link {
@@ -60,10 +53,10 @@ interface CV {
     summary: string;
     languages: string[];
     technologies: string[];
-    courses: string[];
     links: Link[];
-    experiences: JobExperience[];
-    projects: Project[];
+    experiences: Experience[];
+    projects: Experience[];
+    education: Experience;
 }
 interface TailorCVInfo {
     company: string;
@@ -78,4 +71,4 @@ interface TailorCVInfo {
 interface GenCLInfo extends TailorCVInfo {
 }
 
-export type { CV, CoverLetterResponse, GenCLInfo, JobExperience, JobExtractResponse, JobInfo, Project, TailorCVInfo, WordOccurences };
+export type { CV, CoverLetterResponse, Experience, GenCLInfo, JobExtractResponse, JobInfo, TailorCVInfo, WordOccurences };

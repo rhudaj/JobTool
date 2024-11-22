@@ -1,12 +1,4 @@
-import {
-    useEffect,
-    useRef,
-    useState,
-    forwardRef,
-    useImperativeHandle,
-    ReactElement,
-    act,
-} from "react";
+import { useEffect, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import "./App.css";
 import { SubSection } from "./components/SubSection/SubSection";
 import { Section } from "./components/Section/Section";
@@ -18,28 +10,6 @@ import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";
 import { printReactComponentAsPdf } from "./components/PagePrint/component2pdf";
-
-/*
-    const TEST_CL = {
-        intro: 'My name is Roman Hudaj, and I am currently pursuing an Honours degree in Computer Science at the University of Waterloo. I am excited to apply for the Defense Tech Software Engineer Intern position at Palantir, as it aligns perfectly with both my academic pursuits and my passion for innovative technology solutions in defense and security sectors.',
-        body_paragraphs: [
-            'My educational background and project experiences have equipped me with a solid foundation in engineering and technology, specifically in areas such as Computer Science, Mathematics, and Software Engineering, which are essential for the role at Palantir. During my tenure at Timeplay and Martinrea International, I developed key software solutions and optimized data systems that significantly improved operational efficiency and customer satisfaction【4†source】. My projects, such as the Automated Restaurant Reservation Business and the Voice-to-Instrument Translator, showcase my ability to handle complex technical challenges and innovate solutions using a variety of programming languages and frameworks, including Python, JavaScript, and React【4†source】.',
-            "I have a proven track record of collaborating effectively with both technical and non-technical team members to deliver high-quality products. At Environics Analytics, I spearheaded the development of a user-friendly app that facilitated non-technical teams' access to complex data, enhancing product strategy and profitability【4†source】. My ability to communicate complex technical details in an understandable manner and my willingness to learn and adapt quickly will allow me to effectively contribute to Palantir's mission of delivering advanced defense capabilities.",
-            'I am eager to bring my technical skills and my proactive approach to learning and problem-solving to Palantir. I am also in the process of obtaining a US Security clearance, which will enable me to start contributing to your team immediately. I am particularly excited about the opportunity to be mentored by experienced professionals and to work on impactful projects that align with my career goals and interests.'
-        ],
-        closing_remarks: 'Thank you for considering my application. I am looking forward to the possibility of discussing how I can contribute to the innovative projects at Palantir. Please feel free to contact me at your earliest convenience to schedule an interview.'
-    };
-
-    const TEST_CL_paragraphs = [
-        new Date().toDateString(),
-        "Dear Hiring Manager",
-        TEST_CL.intro,
-        ...TEST_CL.body_paragraphs,
-        TEST_CL.closing_remarks,
-        "Sincerely,",
-        "Roman Hudaj"
-    ];
-*/
 
 const JIDisplay = forwardRef((
     props: {
@@ -193,7 +163,9 @@ function App() {
     const [CL, setCL] = useState<string[]>(null);
 
     const [CVs, setCVs] = useState<{name: string, data: CV}[]>(null);
+
     const [CV, setCV] = useState(null);
+    const CVEditorRef = useRef(null);
 
     const getCL = (input: string = null) => {
         BackendAPI.genCL(input).then(setCL);
@@ -209,18 +181,51 @@ function App() {
     };
 
     const saveCV = () => {
-        const userInput = prompt('Enter some text:');
-        if (userInput !== null) {
-            BackendAPI.saveCV(userInput, CV)
-            .then((isSaved) => {
-                alert(`CV was ${isSaved ? "" : "not"} saved successfully`);
-            });
+        // Get non-empty user input for CV name
+        let cvName: string|null = null;
+        while (true) {
+            cvName = prompt('Name the CV')?.trim()
+            // 3 cases
+            if (cvName === null) {
+                // they clicked cancel
+                break;
+            } else if (cvName === "") {
+                // they clicked ok but didn't enter anything
+                cvName = null;
+                alert("Input cannot be left blank.");
+            } else if ( CVs.find(cv => cv.name === cvName) ) {
+                cvName = null;
+                alert("CV with that name already exists.");
+            } else {
+                // they entered a valid name
+                break;
+            }
         }
+
+        if (!cvName) {
+            // Can't save a CV without a valid name
+            console.log("User cancelled the prompt.");
+            return;
+        } else {
+            console.log(`User entered CV name: ${cvName}`);
+        }
+
+        // Save the named CV to the backend
+        BackendAPI.saveCV(cvName, CVEditorRef.current.getCV())
+        .then((isSuccess) => {
+            alert(`CV was ${isSuccess ? "" : "not"} saved successfully`);
+        });
     };
 
     useEffect(() => {
         BackendAPI.getCVs()
-        .then(setCVs);
+        .then((CVs) => {
+            console.log("CVs from backend:", CVs.map(cv => cv.name));
+            if (CVs.length > 0) {
+                setCVs(CVs);
+                setCV(CVs[0].data);
+            }
+        })
     }, []);
 
     const saveJobText = () => {
@@ -254,11 +259,11 @@ function App() {
 
             <Section id="section-cv" heading="Resume">
                 <ButtonSet>
-                    <button onClick={() => { saveJobText(); getCV() }} >
+                    <button onClick={() => { saveJobText(); getCV() }}>
                         Generate
                     </button>
                     <select onChange={e => changeCV(e.target.value)}>
-                        { CVs ? CVs.map(cv => <option value={cv.name}>{cv.name}</option>) : null }
+                        { CVs?.map(cv => <option value={cv.name}>{cv.name}</option>) }
                     </select>
                 </ButtonSet>
                 <ButtonSet>
@@ -266,7 +271,7 @@ function App() {
                     <button onClick={saveCV}> Save CV </button>
                 </ButtonSet>
                 <PrintablePage page_id="cv-page">
-                    { CV ? <CVEditor cv={CV}/> : null }
+                    { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
                 </PrintablePage>
             </Section>
 

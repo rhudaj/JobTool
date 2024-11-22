@@ -1,107 +1,81 @@
-export type WordOccurences = [string, number][]
+type WordOccurences = [string, number][];
 
-// JOB -----------------------------------------------
-
-export interface JobExtractResponse {
-    company: string,
-    positionName: string,
-    positionType: string,
-    aboutRole: string[],
-    aboutYou: string[],
-    qualifications: [reqType, string][],
-    coverLetter: string,    // ***
-    dateRange: string,
-    salary: string,
-    deadline: string,
-    howToApply: string,
-};
+interface JobExtractResponse {
+    company: string;
+    positionName: string;
+    positionType: string;
+    aboutRole: string[];
+    aboutYou: string[];
+    qualifications: [reqType, string][];
+    coverLetter: string;
+    dateRange: string;
+    salary: string;
+    deadline: string;
+    howToApply: string;
+}
 
 type reqType = "required" | "optional";
 
-export interface JobInfo {
-    // USED FOR CV ------------
-    company: string,
-    positionName: string,
-    aboutRole: string[],
-    aboutYou: string[],
-    qualifications: [reqType, string][],
-    // ---- DONE MANUALLY ------
-    keywords: WordOccurences,
-    languages: string[],
-    technologies: string[],
-    // ---- DONE MANUALLY ------
-    // USED FOR CV ------------
-    // META INFO --------------
-    positionType: string,
-    dateRange: string,
-    salary: string,
-    deadline: string,
-    howToApply: string,
-    coverLetter: string,
-    // ------------------------
-};
+interface JobInfo {
+    company: string;
+    positionName: string;
+    aboutRole: string[];
+    aboutYou: string[];
+    qualifications: [reqType, string][];
+    keywords: WordOccurences;
+    languages: string[];
+    technologies: string[];
+    positionType: string;
+    dateRange: string;
+    salary: string;
+    deadline: string;
+    howToApply: string;
+    coverLetter: string;
+}
+interface CoverLetterResponse {
+    intro: string;
+    transition: string;
+    body_paragraphs: string[];
+    why_work_here: string;
+    closing_remarks: string;
+}
 
-// CL ------------------------------------------------
-
-export interface CoverLetterResponse {
-    intro: string,
-    transition: string,
-    body_paragraphs: string[],
-    why_work_here: string,
-    closing_remarks: string
-};
-
-// CV ------------------------------------------------
-
-export interface JobExperience {
-    date_range: string,
-    title: string,
-    company: string,
-    bulletPoints: string[],
-    tech: string[]
-};
-
-export interface Project {
-    date_range: string,
-    title: string,
-    url: string,
-    description: string,
-    tech: string[]
-};
+interface Experience {
+    date_range: string;
+    title: string;
+    side_title: string;
+    points: string[];
+    tech: string[];
+}
 
 interface Link {
-    icon: string,
-    text: string,
-    url: string
-};
+    icon: string;
+    text: string;
+    url: string;
+}
 
-export interface CV {
-    personalTitle: string,
-    summary: string,
-    languages: string[],
-    technologies: string[],
-    courses: string[],
-    links: Link[],
-    experiences: JobExperience[],
-    projects: Project[],
-};
+interface CV {
+    personalTitle: string;
+    summary: string;
+    languages: string[];
+    technologies: string[];
+    links: Link[];
+    experiences: Experience[];
+    projects: Experience[];     // same format as Experience
+    education: Experience;
+}
 
+interface TailorCVInfo {
+    company: string;
+    positionName: string;
+    aboutRole: string[];
+    aboutYou: string[];
+    qualifications: [reqType, string][];
+    keywords: WordOccurences;
+    languages: string[];
+    technologies: string[];
+}
+interface GenCLInfo extends TailorCVInfo {
+}
 
-
-// TAILOR CV -----------------------------------------
-
-export interface TailorCVInfo {
-    company: string,
-    positionName: string,
-    aboutRole: string[],
-    aboutYou: string[],
-    qualifications: [reqType, string][],
-    keywords: WordOccurences,
-    languages: string[],
-    technologies: string[]
-};
-
-// GEN CL --------------------------------------------
-
-// create an interface called 'GenCLInfo' that is the same as the interface TailorCVInfo
-export interface GenCLInfo extends TailorCVInfo {}
+export type { CV, CoverLetterResponse, GenCLInfo, Experience, JobExtractResponse, JobInfo, TailorCVInfo, WordOccurences };

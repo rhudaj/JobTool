@@ -5,16 +5,18 @@ import { CV, JobInfo } from "shared";
 import { genCL, transformCLResponse } from "./CL/clAssistant.js";
 import { Log } from "./util/files.js";
 import { tailorCV } from "./CV/cvAssistant.js";
-import fs from "fs";
-import path from "path";
+import { getNamedCVs, saveCV } from "./CV/cvInOut.js";
 
 let LOG: Log = new Log();
 const TEST: boolean = Number(process.env.TEST) === 1;
 const PORT = process.env.PORT;
 
+/* #############################################################################
+                            SETUP SERVER
+##############################################################################*/
+
 const app = express();
-app
-    .use(
+app .use(
         cors({
             origin:'*',
             credentials: true,
@@ -22,7 +24,7 @@ app
         })
     )
     .use(
-        // parses incoming requests with JSON payloads
+        // Parses incoming requests with JSON payloads
         express.json({ type: "application/json" })
     );
 
@@ -34,6 +36,11 @@ app.listen(PORT, () => {
 /* #############################################################################
                                 API ENDPOINTS
 ##############################################################################*/
+
+
+/* ##########################################################
+                            getJobInfo
+############################################################*/
 
 // { job_text: string } => extractFromJobDesc => JobInfo
 app.post("/getJobInfo", async (req, res) => {
@@ -52,6 +59,9 @@ app.post("/getJobInfo", async (req, res) => {
     }
 });
 
+/* ##########################################################
+                            genCL
+############################################################*/
 
 // JobInfo => genCL() => cl_response => [ paragraphs ]
 app.post("/genCL", async (req, res) => {
@@ -79,6 +89,9 @@ app.post("/genCL", async (req, res) => {
     }
 });
 
+/* ##########################################################
+                            genCV
+############################################################*/
 
 app.post("/genCV", async (req, res) => {
     console.log('genCV posted to!');
@@ -99,35 +112,32 @@ app.post("/genCV", async (req, res) => {
 });
 
 
-const cv_dir = '/Users/romanhudaj/Desktop/PROJECTS/JobTool/backend-api/public/CVs';
+/* ##########################################################
+                            getCVs
+############################################################*/
 
-// All the CVs are located in json files (matching the CV interface )
-// and are stored in the 'public/CVs' directory.
-// This endpoint will send all the CVs to the frontend.
+
+// Send all CV files to the frontend.
 app.get("/getCVs", async (req, res) => {
     console.log('getCVs requested');
-    const namedCVs: {name: string, data: CV}[] = [];
-    fs.readdirSync(cv_dir).forEach((file: string) => {
-        console.log('\tFound CV: ', file);
-        const cv: CV = JSON.parse(fs.readFileSync(`${cv_dir}/${file}`, 'utf8'));
-        namedCVs.push({name: file, data: cv});
-    });
-    if (namedCVs.length === 0) {
+    const namedCVs = getNamedCVs();
+    if ( ! namedCVs ) {
         res.status(404).send("No CVs found.");
     } else {
         res.json(namedCVs);
     }
 });
 
+/* ##########################################################
+                            saveCV
+############################################################*/
 
 app.post("/saveCV", async (req, res) => {
     console.log('saveCV posted to!');
     const namedCV = req.body as {name: string, cv: CV};
     if (namedCV) {
-        console.log('saving CV named: ', namedCV.name);
-        const fileName = namedCV.name + '.json';
-        fs.writeFileSync(`${cv_dir}/${fileName}`, JSON.stringify(namedCV.cv));
-        res.status(200).send("CV saved.");
+        saveCV(namedCV.name, namedCV.cv);
+        res.status(200).send("CV saved successfully.");
     } else {
         res.status(404).send("Error saving CV.");
     }
