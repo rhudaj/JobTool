@@ -40,10 +40,12 @@ interface CoverLetterResponse {
     closing_remarks: string;
 }
 
+// TODO: should not have to define a resume interface. The user can specify there own sections and what each of those contain.
+
 interface Experience {
     date_range: string;
     title: string;
-    side_title: string;
+    side_title: string;     // TODO: this can be a link (e.g. for projects)
     points: string[];
     tech: string[];
 }
@@ -78,4 +80,4 @@ interface TailorCVInfo {
 interface GenCLInfo extends TailorCVInfo {
 }
 
-export type { CV, CoverLetterResponse, GenCLInfo, Experience, JobExtractResponse, JobInfo, TailorCVInfo, WordOccurences };
+export type { CV, CoverLetterResponse, GenCLInfo, Experience, Link, JobExtractResponse, JobInfo, TailorCVInfo, WordOccurences };

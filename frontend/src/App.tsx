@@ -10,6 +10,7 @@ import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";
 import { printReactComponentAsPdf } from "./components/PagePrint/component2pdf";
+import { InfoPad } from "./components/infoPad/infoPad";
 
 const JIDisplay = forwardRef((
     props: {
@@ -239,11 +240,16 @@ function App() {
     return (
         <div className="App-Div">
 
+            {/* --------------- JOB INFO --------------- */}
+
             <Section id="section-job-info" heading="Job Info">
-                <textarea style={{minHeight: "30em"}} id="job-info-input"/>
+                <textarea id="job-info-input"/>
             </Section>
 
+            {/* --------------- COVER LETTER --------------- */}
+
             <Section id="section-cl" heading="Cover Letter">
+
                 <ButtonSet>
                     <button onClick={() => { saveJobText(); getCL(jobText) }}>
                         Generate
@@ -252,12 +258,17 @@ function App() {
                         Get Template
                     </button>
                 </ButtonSet>
+
                 <PrintablePage page_id="cl-page">
                     { CL ? <CLEditor cl_paragraphs={CL}/> : null }
                 </PrintablePage>
+
             </Section>
 
+            {/* --------------- RESUME --------------- */}
+
             <Section id="section-cv" heading="Resume">
+
                 <ButtonSet>
                     <button onClick={() => { saveJobText(); getCV() }}>
                         Generate
@@ -266,13 +277,19 @@ function App() {
                         { CVs?.map(cv => <option value={cv.name}>{cv.name}</option>) }
                     </select>
                 </ButtonSet>
+
                 <ButtonSet>
                     <button className="download-button" onClick={() => printReactComponentAsPdf("cv-page")}> Download PDF </button>
                     <button onClick={saveCV}> Save CV </button>
                 </ButtonSet>
-                <PrintablePage page_id="cv-page">
-                    { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
-                </PrintablePage>
+
+                <div style={{display: "flex"}}>
+
+                    <PrintablePage page_id="cv-page">
+                        { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
+                    </PrintablePage>
+                </div>
+
             </Section>
 
         </div>

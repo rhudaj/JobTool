@@ -7,9 +7,9 @@ export function PrintablePage(props: {
 }) {
     if (!props.children) return null;
     return (
-        <div className="page-print-div">
+        <div className="page-container">
             <div className="A4-page" id={props.page_id}>
-            {props.children}
+                { props.children }
             </div>
         </div>
     );

@@ -1,12 +1,13 @@
-.page-print-div {
-    overflow: scroll;
+.page-container {
+    /* CENTER THE PAGE */
+    display: flex;
+    justify-content: center;
 }
 
 .A4-page {
     background-color: white;
     container-type: size;
     --base-font-size: 0.26cqw;
-
     width: calc(21rem * 36);
     height: calc(29.7rem * 36);
 }

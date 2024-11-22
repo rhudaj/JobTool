@@ -9,11 +9,22 @@
     overflow-y: scroll;
 }
 
-#job-info-display {
+
+textarea {
+	height: 20em;
+
+    padding: 5rem;
+    font-size: 16em;
+    font-family: Arial, Helvetica, sans-serif;
+    resize: none;
+    outline: none;
+}
+
+/* #job-info-display {
 	display: grid;
 	grid-template-rows: min-content;
 	row-gap: 10em;
 
 	height: 100%;
 	overflow: scroll;
-}
+} */

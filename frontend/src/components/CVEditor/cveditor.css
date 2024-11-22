@@ -20,17 +20,28 @@
     --title-font:           calc(8 * var(--base-font-size));
 
     padding: var(--page-padding);
-    color: black;
-
-    display: grid;
-    grid-auto-rows: min-content; /* same as repeat(N, min-content), where N = # rows */
-    row-gap: var(--cv-row-gap);
 
     /* FONT STYLE */
+    color: black;
     font-family: 'Arial Narrow Bold', sans-serif;;
 }
 
-/* SECTION ----------------------------*/
+/* HIGH LEVEL LAYOUT (irrespective to content) ---------------------------- */
+
+.columns {
+    grid-template-columns: 1fr 1fr;
+    display: grid;
+    column-gap: var(--cv-col-gap);
+}
+
+.rows {
+    display: grid;
+    grid-auto-rows: min-content; /* same as repeat(N, min-content), where N = # rows */
+    row-gap: var(--cv-row-gap);
+}
+
+
+/* SECTION ---------------------------- */
 .sec {
     display: grid;
     font-size: var(--p-font);
@@ -38,7 +49,7 @@
     row-gap: var(--sec-row-gap);
 }
 
-    .sec > .sec-head {
+    .sec-head {
         font-weight: bold;
 
         display: grid;
@@ -56,12 +67,12 @@
 /* EXPERIENCE ----------------------------*/
 
 .experience {
-    /* [COL-1 (DATE)] [COL-2] */
+    /* [ date-range col-2 ] */
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: var(--exp-head-content-gap) var(--exp-col-gap);
 }
-    .experience > .exp-col-2 {
+    .exp-col-2 {
         /*
             [ [title] [side_title] ]
             [ content              ]
@@ -71,17 +82,15 @@
         grid-auto-rows: min-content;
         row-gap: var(--exp-row-gap);
     }
-
-        .exp-col-2 .titles {
+        .titles {
             display: grid;
             grid-template-columns: 1fr max-content;
         }
-
-            .titles > .exp-title, .exp-side-title {
+            .title, .side-title {
                 font-weight: bold;
             }
 
-        .exp-col-2 > .exp-item-list {
+        .exp-item-list {
             font-family: 'Courier New', Courier, monospace;
             font-weight: 501;
         }
@@ -95,10 +104,6 @@
     column-gap: var(--link-col-gap);
 }
 
-    .link > i {
-        /* color: black; */
-    }
-
     .link > a {
         text-decoration: none;
         color: black;
@@ -106,67 +111,63 @@
 
 /* ROW 1 ----------------------------*/
 
-#row-1 {
+#name-title {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: var(--cv-col-gap);
 }
-    #row-1 > #name-title {
-        display: grid;
+    #div-full-name {
+        font-size: var(--name-font);
+        white-space: nowrap;
+        font-weight: bolder;
     }
-        #div-full-name {
-            font-size: var(--name-font);
-            white-space: nowrap;
-            font-weight: bolder;
-        }
-        #div-personal-title {
-            font-size: var(--title-font);
-        }
-    #div-links {
-        font-size: var(--p-font);
-        display: grid;
-        /* ASSUMES EXACTLY 4 LINKS */
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
+    #div-personal-title {
+        font-size: var(--title-font);
     }
+
+#div-links {
+    font-size: var(--p-font);
+    display: grid;
+    /* ASSUMES EXACTLY 4 LINKS */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
 
 /* ROW 2 ----------------------------*/
 
-#row-2 {
+#section-skills > .sec-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(2, min-content);
-    column-gap: var(--cv-col-gap);
+    row-gap: 1fr;
 }
-    #row-2 > #section-skills > .sec-content {
+    .sub-sec {
         display: grid;
-        grid-template-rows: repeat(2, min-content);
-        row-gap: 1fr;
+        grid-template-columns: 0.35fr 1fr;
+        column-gap: var(--skills-col-gap);
     }
-        .sub-sec {
-            display: grid;
-            grid-template-columns: 0.35fr 1fr;
-            column-gap: var(--skills-col-gap);
+        .sub-sec > .sub-sec-head {
+            font-weight: bold;
         }
-            .sub-sec > .sub-sec-head {
-                font-weight: bold;
-            }
+
+.delimited-list {
+    display: flex;
+    flex-wrap: wrap; /* => items use max content width */
+    white-space-collapse: preserve; /* for the <span> holding the delim */
+}
 
 /* ROW 3 ----------------------------*/
 
-    #row-3 > #experiences > .sec-content {
-        /* LIST OF EXPERIENCES */
+#experiences > .sec-content {
+    /* LIST OF EXPERIENCES */
+    display: grid;
+    row-gap: var(--experiences-gap);
+}
+    .exp-points {
         display: grid;
-        row-gap: var(--experiences-gap);
+        row-gap: var(--bullet-point-gap);
     }
-        .bullet-points {
-            display: grid;
-            row-gap: var(--bullet-point-gap);
-        }
 
 /* ROW 4 ----------------------------*/
 
-    #row-4 > #projects > .sec-content {
-        display: grid;
-        row-gap: var(--experiences-gap);
-    }
+#projects > .sec-content {
+    display: grid;
+    row-gap: var(--experiences-gap);
+}

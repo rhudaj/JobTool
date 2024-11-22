@@ -1,0 +1,143 @@
+{
+    "personalTitle": "",
+    "summary": "",
+    "languages": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ],
+    "technologies": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ],
+    "experiences": [
+        {
+            "title": "",
+            "side_title": "",
+            "date_range": "",
+            "points": [
+                "",
+                "",
+                ""
+            ],
+            "tech": [
+                "",
+                "",
+                "",
+                ""
+            ]
+        },
+        {
+            "title": "",
+            "side_title": "",
+            "date_range": "",
+            "points": [
+                "",
+                "",
+                ""
+            ],
+            "tech": [
+                "",
+                "",
+                "",
+                ""
+            ]
+        },
+        {
+            "title": "",
+            "side_title": "",
+            "date_range": "",
+            "points": [
+                "",
+                ""
+            ],
+            "tech": [
+                "",
+                ""
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "title": "",
+            "side_title": "",
+            "date_range": "",
+            "points": [
+                ""
+            ],
+            "tech": [
+                "",
+                "",
+                ""
+            ]
+        },
+        {
+            "title": "",
+            "side_title": "",
+            "date_range": "",
+            "points": [
+                ""
+            ],
+            "tech": [
+                "",
+                ""
+            ]
+        },
+        {
+            "title": "",
+            "side_title": "",
+            "date_range": "",
+            "points": [
+                ""
+            ],
+            "tech": [
+                "",
+                "",
+                ""
+            ]
+        }
+    ],
+    "education": {
+        "title": "",
+        "side_title": "",
+        "date_range": "",
+        "points": [
+            "",
+            ""
+        ],
+        "tech": []
+    },
+    "links": [
+        {
+            "url": "",
+            "icon": "",
+            "text": ""
+        },
+        {
+            "url": "",
+            "icon": "",
+            "text": ""
+        },
+        {
+            "url": "",
+            "icon": "",
+            "text": ""
+        },
+        {
+            "url": "",
+            "icon": "",
+            "text": ""
+        }
+    ]
+}

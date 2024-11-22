@@ -1,5 +1,5 @@
 html {
-    /* ALL rem UNITS ARE RELATIVE TO THE BELOW VALUE */
+    /* ALL rem UNITS IN THE APP ARE RELATIVE TO THE BELOW VALUE */
     font-size: 1px;
 }
 
@@ -7,9 +7,11 @@ html {
     margin: 0;
     padding: 0;
     box-sizing:border-box;
-    height: 100%;
-    width: 100%;
+    user-select: none;
+    /* height: 100%;
+    width: 100%; */
 }
+
 
 h1,
 h2,
@@ -17,20 +19,7 @@ h3,
 h4,
 h5,
 h5 {
-    user-select: none;
 	height: min-content;
-}
-
-button {
-	user-select: none;
-}
-
-textarea {
-    padding: 5rem;
-    font-size: 16em;
-    font-family: Arial, Helvetica, sans-serif;
-    resize: none;
-    outline: none;
 }
 
 body {

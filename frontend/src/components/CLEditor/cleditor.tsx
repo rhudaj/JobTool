@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
 import "./cleditor.css"
+import { TrackVal, wrapTrackable } from "../../hooks/trackable";
 
 export function CLEditor(props: {
     cl_paragraphs: string[],
 }) {
+
+    const VAL = useState(wrapTrackable(props.cl_paragraphs))[0];
+
     return (
         <div id="cl-editor">
             {
-                props.cl_paragraphs.map((P, P_num)=>(
-                    <TextEditDiv id={`cl-row-${P_num}`} text={P}/>
+                VAL.map((pgraph_tv: TrackVal<string>, i: number)=>(
+                    <TextEditDiv id={`cl-row-${i}`} tv={pgraph_tv}/>
                 ))
             }
         </div>

@@ -1,6 +1,4 @@
 {
-    "personalTitle": "CS Student ~ Software Developer",
-    "summary": "Dynamic, agile full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": [
         "Python",
         "SQL",
@@ -93,27 +91,5 @@
             "Course-Work: Databases, UI/UX, Networks, Algorithms, Machine Learning"
         ],
         "tech": []
-    },
-    "links": [
-        {
-            "url": "https://roman-hudaj.com/",
-            "icon": "fa fa-globe",
-            "text": "roman-hudaj.com"
-        },
-        {
-            "url": "https://github.com/rhudaj",
-            "icon": "fa fa-github",
-            "text": "github.com/rhudaj"
-        },
-        {
-            "url": "mailto:rhudaj@uwaterloo.ca",
-            "icon": "fa fa-envelope",
-            "text": "rhudaj@uwaterloo.ca"
-        },
-        {
-            "url": "https://www.linkedin.com/rhudaj",
-            "icon": "fa fa-linkedin",
-            "text": "/in/rhudaj"
-        }
-    ]
+    }
 }
