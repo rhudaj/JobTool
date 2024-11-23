@@ -1,13 +1,6 @@
-.info-pad {
-    display: flex;
-    flex-direction: column;
-    gap: 10rem;
-
-    padding: 5em;
-}
-
-.item-bin {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+#info-pad {
+    font-size: 16rem;
+    color: black;
+    background-color: white;
+    padding: 10rem;
 }

@@ -6,7 +6,8 @@
 import fs from "fs";
 import { CV } from "shared";
 
-const cv_dir = '/Users/romanhudaj/Desktop/PROJECTS/JobTool/backend-api/public/CVs';
+const public_dir = '/Users/romanhudaj/Desktop/PROJECTS/JobTool/backend-api/public';
+const cv_dir = `${public_dir}/CVs`;
 
 /**
  * All the CVs are located in json files (matching the CV interface )
@@ -27,10 +28,14 @@ function getNamedCVs(): { name: string, data: CV }[] | undefined {
     });
 };
 
+function getCVinfo(): any {
+    return JSON.parse(fs.readFileSync(`${public_dir}/cv_info.json`, 'utf8'));
+};
+
 function saveCV(name: string, cv: CV): void {
     const fileName = name + '.json';
     console.log('saving:', fileName);
     fs.writeFileSync(`${cv_dir}/${fileName}`, JSON.stringify(cv));
 };
 
-export { getNamedCVs, saveCV };
+export { getNamedCVs, getCVinfo, saveCV };

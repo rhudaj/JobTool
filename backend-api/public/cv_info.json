@@ -1,0 +1,22 @@
+{
+    "languages": [
+        "Python",
+        "SQL",
+        "JavaScript",
+        "TypeScript",
+        "C++",
+        "C",
+        "HTML",
+        "CSS"
+    ],
+    "technologies": [
+        "React",
+        "Node",
+        "Git",
+        "Alteryx",
+        "SQL Server",
+        "MongoDB",
+        "Numpy/Pandas",
+        "Express"
+    ]
+}

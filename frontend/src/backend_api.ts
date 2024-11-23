@@ -72,15 +72,22 @@ export class BackendAPI {
         return data ? data : null;
     };
 
+    static async saveCV(name: string, cv: CV): Promise<boolean> {
+        const resp = await this.POST("saveCV", { name, cv });
+        return resp ? resp.ok : false;
+    };
+
     static async getCVs(): Promise<{name: string, data: CV}[] | null> {
         const resp = await this.GET("getCVs");
         if (!resp) return null;
         const data = await resp.json();
         return data ? data : null;
-    }
+    };
 
-    static async saveCV(name: string, cv: CV): Promise<boolean> {
-        const resp = await this.POST("saveCV", { name, cv });
-        return resp ? resp.ok : false;
+    static async getCVinfo(): Promise<any> {
+        const resp = await this.GET("getCVinfo");
+        if (!resp) return null;
+        const data = await resp.json();
+        return data ? data : null;
     };
 }

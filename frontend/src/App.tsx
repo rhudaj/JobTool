@@ -11,6 +11,8 @@ import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";
 import { printReactComponentAsPdf } from "./components/PagePrint/component2pdf";
 import { InfoPad } from "./components/infoPad/infoPad";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const JIDisplay = forwardRef((
     props: {
@@ -168,6 +170,8 @@ function App() {
     const [CV, setCV] = useState(null);
     const CVEditorRef = useRef(null);
 
+    const [cvInfo, setCVInfo] = useState<any>([]);
+
     const getCL = (input: string = null) => {
         BackendAPI.genCL(input).then(setCL);
     };
@@ -219,13 +223,20 @@ function App() {
     };
 
     useEffect(() => {
+        // Get all saved CVs
         BackendAPI.getCVs()
-        .then((CVs) => {
-            console.log("CVs from backend:", CVs.map(cv => cv.name));
-            if (CVs.length > 0) {
-                setCVs(CVs);
-                setCV(CVs[0].data);
+        .then(cvs => {
+            console.log("CVs from backend:", cvs.map(cv => cv.name));
+            if (cvs.length > 0) {
+                setCVs(cvs);
+                setCV(cvs[0].data); // set the first CV as the default
             }
+        })
+        // Get the cv info
+        BackendAPI.getCVinfo()
+        .then(cv_info => {
+            console.log("CV info from backend:", cv_info);
+            setCVInfo(cv_info);
         })
     }, []);
 
@@ -239,7 +250,6 @@ function App() {
     // RENDER ACTIVE SECTION
     return (
         <div className="App-Div">
-
             {/* --------------- JOB INFO --------------- */}
 
             <Section id="section-job-info" heading="Job Info">
@@ -283,12 +293,16 @@ function App() {
                     <button onClick={saveCV}> Save CV </button>
                 </ButtonSet>
 
-                <div style={{display: "flex"}}>
+                <DndProvider backend={HTML5Backend}>
+                    <div className="cv-playground">
 
-                    <PrintablePage page_id="cv-page">
-                        { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
-                    </PrintablePage>
-                </div>
+                        <PrintablePage page_id="cv-page">
+                            { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
+                        </PrintablePage>
+
+                        <InfoPad cv_info={cvInfo}/>
+                    </div>
+                </DndProvider>
 
             </Section>
 

@@ -9,7 +9,6 @@
     overflow-y: scroll;
 }
 
-
 textarea {
 	height: 20em;
 
@@ -28,3 +27,9 @@ textarea {
 	height: 100%;
 	overflow: scroll;
 } */
+
+.cv-playground {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	column-gap: 10rem;
+}

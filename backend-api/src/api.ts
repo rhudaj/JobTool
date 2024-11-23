@@ -5,7 +5,7 @@ import { CV, JobInfo } from "shared";
 import { genCL, transformCLResponse } from "./CL/clAssistant.js";
 import { Log } from "./util/files.js";
 import { tailorCV } from "./CV/cvAssistant.js";
-import { getNamedCVs, saveCV } from "./CV/cvInOut.js";
+import { getCVinfo, getNamedCVs, saveCV } from "./CV/cvInOut.js";
 
 let LOG: Log = new Log();
 const TEST: boolean = Number(process.env.TEST) === 1;
@@ -32,10 +32,6 @@ app .use(
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}. TEST mode enabled: ${TEST}`);
 });
-
-/* #############################################################################
-                                API ENDPOINTS
-##############################################################################*/
 
 /* ##########################################################
                             getJobInfo
@@ -139,5 +135,19 @@ app.post("/saveCV", async (req, res) => {
         res.status(200).send("CV saved successfully.");
     } else {
         res.status(404).send("Error saving CV.");
+    }
+});
+
+/* ##########################################################
+                            getCVinfo
+############################################################*/
+
+app.get("/getCVinfo", async (req, res) => {
+    console.log('getCVinfo requested');
+    const cv_info = getCVinfo();
+    if ( ! cv_info ) {
+        res.status(404).send("No CV info found.");
+    } else {
+        res.json(cv_info);
     }
 });
