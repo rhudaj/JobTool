@@ -51,7 +51,6 @@ const ExperienceUI = (props: any) => {
 
 				{/* ------------ ROW 3 ------------ */}
 
-				<DelimitedList items={props.tech} delimiter=" / " />
 
 			</div>
 		</div>

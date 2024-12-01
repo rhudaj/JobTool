@@ -3,7 +3,7 @@ import "./texteditdiv.css";
 import { TrackVal } from "../../hooks/trackable";
 
 export function TextEditDiv(props: {
-    tv: TrackVal<string>,
+    tv: string|TrackVal<string>,
     id?: string,
     className?: string,
 }) {
@@ -22,7 +22,9 @@ export function TextEditDiv(props: {
     };
 
     const onBlur = (e: React.FocusEvent) => {
-		// fires when an element has lost focus
+		// assert tv as type TrackVal<string>:
+        if (typeof props.tv === "string") return;
+        // fires when an element has lost focus
 		props.tv.value = e.target.textContent;
 	};
 
@@ -34,7 +36,7 @@ export function TextEditDiv(props: {
             onPaste={onPaste}
             onBlur={onBlur}
         >
-            { props.tv.value }
+            { typeof props.tv === "string" ? props.tv : props.tv.value }
         </div>
     );
 }
