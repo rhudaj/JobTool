@@ -1,7 +1,7 @@
 import './infoPad.css';
 import { useEffect, useState } from "react";
 
-import { Bucket, Item, BucketComponent, DragSourceComponent } from '../../dnd/dnd';
+import { Bucket, Item, BucketComponent } from '../../dnd/dnd';
 
 let count = 0;
 
@@ -29,6 +29,14 @@ export function InfoPad(props: { cv_info: any} ) {
                 {props.item.value}
             </div>
         );
+    };
+
+    function DisplayItems (props: {children: JSX.Element[]}) {
+        return (
+            <div className="items-display">
+                {props.children}
+            </div>
+        );
     }
 
     return (
@@ -41,7 +49,8 @@ export function InfoPad(props: { cv_info: any} ) {
                             key={i}
                             bucket={bucket}
                             isVertical={false}
-                            displayItem={displayItem}
+                            DisplayItem={displayItem}
+                            DisplayItems={DisplayItems}
                         />
                     </div>
                 ))

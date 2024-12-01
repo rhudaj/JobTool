@@ -1,37 +1,12 @@
-.drag-item.droppable > * {
-    /* THE BACKGROUND COLOR SHOULD BE OVER ALL CHILDREN ELEMENTS TOO */
+.drag-item-wrapper.droppable > * {
     background-color: lightgreen;
 }
 
-/* TODO: this is not selecting anything in the DOM */
-.box-drag-preview.drag {
-    width: min-content;
-    height: min-content;
-    opacity: 0.3;
-}
-
-.bucket {
+.bucket-wrapper.hover {
     background-color: white;
-    width: min-content;
-    height: max-content;
-    padding: 20px;
     border: 1px dashed black;
-
-    display: flex;
-}
-
-.bucket.hover {
-    background-color: lightyellow;
-}
-
-.bucket-item-container {
-    display: flex;
 }
 
 .drop-gap {
-    width: 100%;
-    min-height: 20px;
-    min-width: 20px;
-    height: 100%;
-    background-color: red;
+    border: 2px solid red;
 }

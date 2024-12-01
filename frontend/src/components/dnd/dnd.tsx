@@ -1,31 +1,13 @@
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import "./dnd.css";
-import React from "react";
-
+import React, { useEffect } from "react";
 
 // monitor.didDrop() only tells you if there was a nested object under. Not wether/not they returned anything from didDrop(). So its kind of useless.
-
 /** Unnecessary React.useEffect to Sync buckets
  * a useEffect re-initializing state every time props change might cause unintended side effects.
  * This reinitialization isn't needed if you want the state to evolve independently of the initial buckets prop.
  * */
 
-
-// TODO: somehow decouple the hover logic from the dragSourceComponent
-
-/** you don't need a bucket manager. Buckets should all be independet ...
- * They don't need a centralized manager. They can manage themselves.
- * Need to modify 'Item' to carry the necessary information to the target.
- * A bucket should manage when its own item leaves (by monitoring the drop result).
- * A bucket shouldn't care about where a dragItem is coming from. It knows itself what it can accept.
- * BUT it does need to send out some msg indicating what it did.
- *
- *
- * PROBLEM: your not supposed to pass around complex objects in the dragItem (ie: components).
- * So need a central reference somewhere
- * */
-
-// The actual Data:
 
 interface Item {
 	id: any;
@@ -37,10 +19,12 @@ interface Bucket {
 	items: Item[];
 };
 
-function DragSourceComponent(props: {
+const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
+
+function DragDrop(props: {
 	item: Item,
-	displayItem: (props: {item: Item}) => JSX.Element,
-	// OPTIONAL PROPS
+	item_type?: string,
+	DisplayItem: (props: {item: Item}) => JSX.Element,
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
 	canBeTarget?: boolean // defaults to true
@@ -50,49 +34,38 @@ function DragSourceComponent(props: {
 
 	const ref = React.useRef(null);
 
-    const [collectedProps, drag, dragPreview] = useDrag(
-		() => ({
-			type: "DRAG-ITEM",
-			item: () => {
-				log("Started to drag.");
-				return props.item; 			// sent to the drop target when dropped.
-			},
-			end: (item: Item, monitor) => {
-				const dropResult: {id: any} = monitor.getDropResult();
-				props.onLetGo(item.id, dropResult.id);
-				log("Drop result:", dropResult);
-			},
-			collect: (monitor) => ({
-				// INJECT PROPS into the component.
-				isDragging: monitor.isDragging()
-			}),
-		}),
-		[props.item, props.onHover]
+    const [{}, drag] = useDrag(() => ({
+		type: props.item_type ?? DEFAULT_ITEM_TYPE,
+		item: () => {
+			log("Started to drag.");
+			return props.item; 			// sent to the drop target when dropped.
+		},
+		end: (item: Item, monitor) => {
+			const dropResult: {id: any} = monitor.getDropResult();
+			props.onLetGo(item.id, dropResult.id);
+			log("Drop result:", dropResult);
+		}
+		}), [props.item, props.onHover]
 	);
 
-	// Works as a Drop Target as well
 	const [{isDropTarget}, dropRef] = useDrop(
 		() => ({
 			accept: "DRAG-ITEM",
 			canDrop: (dropItem: Item) => {
-				return (props.canBeTarget != false) && dropItem.id !== props.item.id;
+				return (props.canBeTarget != false) && (dropItem.id !== props.item.id);
 			},
 			drop: (dragItem: Item, monitor) => {
-				// sent to the drag source & parent bucket that was dropped on.
 				return props.item;
 			},
 			hover: (dragItem: Item, monitor) => {
-				// Report back to parent where the dragItem is relevant to this component:
 
 				if ( !props.onHover || dragItem.id === props.item.id )
-					// We're not meant to care, and don't replace items with themselves
 					return;
 
 				const rect = ref.current.getBoundingClientRect();
 				const dragPos = monitor.getClientOffset();
 
-				props.onHover(
-					dragItem.id,
+				props.onHover(dragItem.id,
 					(dragPos.y - rect.top) > (rect.bottom - rect.top)/2, 	// is it below?
 					(dragPos.x - rect.left) > (rect.right - rect.left)/2	// is it right?
 				);
@@ -106,24 +79,14 @@ function DragSourceComponent(props: {
 
 	drag(dropRef(ref));
 
-	// Render the drag-preview & the original div.
 	return (
-		<div
-			ref={dragPreview}
-			className={`box-drag-preview ${collectedProps.isDragging ? "drag" : ""}`}
-		>
-			<div role="Handle" ref={ref} className={`drag-item ${isDropTarget ? "droppable" : ""}`}>
-				{ props.displayItem({item: props.item}) }
-			</div>
+		<div role="Handle" ref={ref} className={`drag-item-wrapper ${isDropTarget ? "droppable" : ""}`}>
+			<props.DisplayItem item={props.item}/>
 		</div>
 	);
 };
 
-/**
- * Defines a Bucket as a state object.
- * Essentially a wrapper for Item[].
- * Keeps track of state internally, and provides provides methods to add, remove, reorder, etc.
- */
+
 const useBucket = (bucket: Bucket) => {
 
 	const [items, setItems] = React.useState<Item[]>(bucket.items);
@@ -184,21 +147,19 @@ const useBucket = (bucket: Bucket) => {
 
 function BucketComponent(props: {
 	bucket: Bucket,
-	isVertical?: boolean,
-	displayItem: (props: {item: Item}) => JSX.Element,
+	isVertical: boolean,
+	item_type?: string,
+	DisplayItem: (props: {item: Item}) => JSX.Element,
+	DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element,
 }) {
 
 	// -----------------STATE-----------------
 
 	const { items, addItem, moveItem, removeItem, changeItemValue } = useBucket(props.bucket);
 
-	/** hoveredGap (state)
-	 * A number indicating which gap is highlighted when dragging over the bucket.
-	 * undefined if no current hover, otherwise
-	 * A number between 0 and (props.items.length + 1) */
-	const [hoveredGap, setHoveredGap] = React.useState<number|undefined>(undefined);
-
 	// -----------------DND RELATED-----------------
+
+	const [hoveredGap, setHoveredGap] = React.useState<number|undefined>(undefined);
 
 	// Helpers to get the get the gap index from the item index
 	const prevGap = (itemIndex: number) => itemIndex;
@@ -269,41 +230,37 @@ function BucketComponent(props: {
 	};
 
     return (
-        <div
-			ref={dropRef}
-			className={`bucket ${isHovered ? "hover" : ""}`}
-			style={{flexDirection: props.isVertical ? "column" : "row"}}
-		>
-            {
-				items?.map((I: Item, i: number) => (
-					<div
-						key={i}
-						className="bucket-item-container"
-						style={{flexDirection: props.isVertical ? "column" : "row"}}
-					>
-						<DropGap isActive={hoveredGap===prevGap(i)}/>
-						<DragSourceComponent
-							key={i}
-							item={I}
-							displayItem={props.displayItem}
-							canBeTarget={true}
-							onHover={ (dragId, isBelow, isRight) => {
-								// What's considered next/prev item depends on orientation
-								const isPastHalf = props.isVertical ? isBelow : isRight;
-								onBucketItemHover(I.id, dragId, isPastHalf)
-							}}
-							onLetGo={(dragId: any, bucketId: any) => {
-								// Remove the item if it was dropped on a different bucket
-								if (bucketId !== props.bucket.id)
-									removeItem(dragId);
-							}}
-						/>
-						<DropGap isActive={hoveredGap===nextGap(i)}/>
-					</div>
-				))
-			}
+        <div ref={dropRef} className={`bucket-wrapper ${isHovered ? "hover" : ""}`}>
+			<props.DisplayItems>
+				{
+					items?.map((I: Item, i: number) => (
+						<>
+							<DropGap isActive={hoveredGap===prevGap(i)}/>
+							<DragDrop
+								key={i}
+								item={I}
+								item_type={props.item_type}
+								DisplayItem={props.DisplayItem}
+								canBeTarget={true}
+								onHover={ (dragId, isBelow, isRight) => {
+									// What's considered next/prev item depends on orientation
+									const isPastHalf = props.isVertical ? isBelow : isRight;
+									onBucketItemHover(I.id, dragId, isPastHalf)
+								}}
+								onLetGo={(dragId: any, bucketId: any) => {
+									// Remove the item if it was dropped on a different bucket
+									if (bucketId !== props.bucket.id)
+										removeItem(dragId);
+								}}
+							/>
+							<DropGap isActive={hoveredGap===nextGap(i)}/>
+						</>
+					))
+				}
+			</props.DisplayItems>
+
         </div>
     );
 };
 
-export { Item, Bucket, DragSourceComponent, BucketComponent}
+export { Item, Bucket, BucketComponent}

@@ -10,3 +10,10 @@
     border: 1px dashed black;
     width: max-content;
 }
+
+.items-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
