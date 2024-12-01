@@ -2,17 +2,26 @@ import "./cveditor.css";
 import { CV } from "shared";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { TrackVal, wrapTrackable, unwrapTrackable } from "../../hooks/trackable";
+import { BucketComponent, DragDropItem } from "../dnd/dnd";
+import { joinClassNames } from "../../hooks/joinClassNames";
 
 // CUSTOM SUB COMPONENTS
 
 const ExperienceUI = (props: any) => {
 
 	// TODO: this is hacky, need to improve.
-	let sideTitleEl = (props.side_title.value as string).startsWith("http") ? (
-		<Link url={props.side_title.value} icon="fa fa-link" />
+	let sideTitleEl = (props.side_title as string).startsWith("http") ? (
+		<Link url={props.side_title} icon="fa fa-link" />
 	) : (
 		<TextEditDiv tv={props.side_title} className="side-title"/>
+	);
+
+	const Tech = () => (
+		<BucketComponent
+			bucket={{ id: "Tech", values: props.tech }}
+			isVertical={false}
+			DisplayItems={(props) => <DelimitedList delimiter=" / " className="exp-tech" {...props} />}
+		/>
 	);
 
     return (
@@ -40,9 +49,9 @@ const ExperienceUI = (props: any) => {
 						<TextEditDiv tv={props.points[0]} />
 					) : (
 						<ul className="exp-points">
-							{props.points.map((p: TrackVal<string>) => (
+							{props.points.map((bullet_point: string) => (
 								<li>
-									<TextEditDiv tv={p} />
+									<TextEditDiv tv={bullet_point} />
 								</li>
 							))}
 						</ul>
@@ -51,6 +60,7 @@ const ExperienceUI = (props: any) => {
 
 				{/* ------------ ROW 3 ------------ */}
 
+				<Tech />
 
 			</div>
 		</div>
@@ -76,7 +86,7 @@ const Section = (props: {
 const Link = (props: {
 	url: string,
 	icon: string,
-	text?: TrackVal<string> // only the link-text is editable
+	text?: string // only the link-text is editable
 }) => {
 
 	return (
@@ -89,16 +99,18 @@ const Link = (props: {
 	);
 };
 
-const DelimitedList = (props: { items: TrackVal<string>[], delimiter: string }) => (
-	<div className="delimited-list">
-		{props.items.map((item: TrackVal<string>, i: number) => (
-			<>
-				<TextEditDiv tv={item} />
-				{ i === props.items.length-1 ? null : <span>{props.delimiter}</span> }
-			</>
-		))}
-	</div>
-);
+function DelimitedList(props: { children: JSX.Element[], delimiter: string, className?: string }) {
+	return (
+		<div className={joinClassNames("delimited-list", props.className)}>
+			{props.children.map((child, i) => (
+				<>
+					{child}
+					{ i >= props.children.length-1 ? null : <span>{props.delimiter}</span> }
+				</>
+			))}
+		</div>
+	);
+};
 
 // MAIN COMPONENT
 
@@ -108,12 +120,44 @@ export const CVEditor = forwardRef((
 ) => {
 
 	// Keep track each value in the CV
-	const VAL = useState(wrapTrackable(props.cv))[0];
+	const VAL: CV = props.cv;
 
 	// give the parent 'App' access to localJI
 	useImperativeHandle(ref, () => ({
-		getCV: () => unwrapTrackable(VAL)
+		// NOTE: no purpose.
+		getCV: () => props.cv
 	}));
+
+	// ----------------- SUB COMPONENTS -----------------
+
+	const Languages = () => (
+		<BucketComponent
+			bucket = {{ id: "Languages", values: VAL.languages }}
+			isVertical={false}
+			DisplayItem={(props) => <>{props.item.value}</>}
+			DisplayItems={(props) => <DelimitedList delimiter=", " {...props} />}
+		/>
+	)
+
+	const Technologies = () => (
+		<BucketComponent
+			bucket = {{ id: "Technologies", values: VAL.technologies }}
+			isVertical={false}
+			DisplayItem={(props) => <>{props.item.value}</>}
+			DisplayItems={(props) => <DelimitedList delimiter=", " {...props} />}
+		/>
+	)
+
+	const Summary = () => (
+		<DragDropItem
+			item = {{
+				id: "summary",
+				value: VAL.summary
+			}}
+		/>
+	)
+
+	// ----------------- RENDER -----------------
 
 	if (!props.cv) return null;
 	return (
@@ -132,7 +176,7 @@ export const CVEditor = forwardRef((
 
 					<div id="div-links">
 						{VAL.links.map((l) => (
-							<Link url={l.url.value} icon={l.icon.value} text={l.text} />
+							<Link url={l.url} icon={l.icon} text={l.text} />
 						))}
 					</div>
 
@@ -142,37 +186,26 @@ export const CVEditor = forwardRef((
 
 				<div className="columns">
 
+					{/* ---------- COL 1 ---------- */}
+
 					<Section head="SUMMARY" id="section-summary">
-						<TextEditDiv tv={VAL.summary} id="summary" />
+						{/* <TextEditDiv tv={VAL.summary} id="summary" /> */}
+						<Summary />
 					</Section>
+
+					{/* ---------- COL 2 ---------- */}
 
 					<Section head="SKILLS" id="section-skills">
 
 						<div className="sub-sec">
 							<div className="sub-sec-head">Languages:</div>
-							<div className="delimited-list">
-								{
-									VAL.languages.map((lang: TrackVal<string>) => (
-										<>
-											<TextEditDiv tv={lang} />
-											<span>, </span>
-										</>
-									))
-								}
-							</div>
+							<Languages />
 						</div>
 
 						<div className="sub-sec">
 							<div className="sub-sec-head">Technology:</div>
 							<div className="delimited-list">
-								{
-									VAL.technologies.map((tech: TrackVal<string>) => (
-										<>
-											<TextEditDiv tv={tech} />
-											<span>, </span>
-										</>
-									))
-								}
+								<Technologies />
 							</div>
 						</div>
 

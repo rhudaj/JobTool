@@ -1,20 +1,21 @@
-import { useEffect, useState, forwardRef, useImperativeHandle, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
-import { SubSection } from "./components/SubSection/SubSection";
 import { Section } from "./components/Section/Section";
-import { CustomTable } from "./components/CustomTable/customTable";
-import { CV, JobInfo, WordOccurences } from "shared";
+import { CV, JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
 import { CVEditor } from "./components/CVEditor/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";
-import { printReactComponentAsPdf } from "./components/PagePrint/component2pdf";
+import { printReactComponentAsPdf } from "./hooks/component2pdf";
 import { InfoPad } from "./components/infoPad/infoPad";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useLogger } from "./hooks/logger";
 
 function App() {
+
+    const log = useLogger("App");
 
     const [jobText, setJobText] = useState("");
     const [CL, setCL] = useState<string[]>(null);
@@ -63,10 +64,10 @@ function App() {
 
         if (!cvName) {
             // Can't save a CV without a valid name
-            console.log("User cancelled the prompt.");
+            log("User cancelled the prompt.");
             return;
         } else {
-            console.log(`User entered CV name: ${cvName}`);
+            log(`User entered CV name: ${cvName}`);
         }
 
         // Save the named CV to the backend
@@ -80,7 +81,7 @@ function App() {
         // Get all saved CVs
         BackendAPI.getCVs()
         .then(cvs => {
-            console.log("CVs from backend:", cvs.map(cv => cv.name));
+            log("CVs from backend:", cvs.map(cv => cv.name));
             if (cvs.length > 0) {
                 setCVs(cvs);
                 setCV(cvs[0].data); // set the first CV as the default
@@ -89,7 +90,7 @@ function App() {
         // Get the cv info
         BackendAPI.getCVinfo()
         .then(cv_info => {
-            console.log("CV info from backend:", cv_info);
+            log("CV info from backend:", cv_info);
             setCVInfo(cv_info);
         })
     }, []);

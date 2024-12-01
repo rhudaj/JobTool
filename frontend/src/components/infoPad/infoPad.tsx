@@ -50,10 +50,10 @@ export function InfoPad(props: { cv_info: any} ) {
         <div id="info-pad">
             {infoBuckets.map((bucket: Bucket, i: number) => (
                 <div key={i}>
-                    <h2>{bucket.id}</h2>
+                    <h3>{bucket.id}</h3>
                     <BucketComponent
                         bucket={bucket}
-                        isVertical={true}
+                        isVertical={false}
                         DisplayItem={displayItem}
                         DisplayItems={DisplayItems}
                     />

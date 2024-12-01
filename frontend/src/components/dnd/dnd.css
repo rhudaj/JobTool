@@ -1,6 +1,20 @@
-.drag-item-wrapper.droppable > * {
+.drag-item-wrapper {
+    width: min-content;
+    height: max-content;
+}
+
+.drag-item-wrapper.droppable {
     background-color: lightgreen;
 }
+
+
+/* ITEM -- DRAGGING */
+
+.dragging:active {
+    opacity: 0.1;
+}
+
+/* BUCKET */
 
 .bucket-wrapper.hover {
     background-color: white;

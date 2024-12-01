@@ -1,8 +1,9 @@
+// TODO: convert to a hook which can be used in any component
 /**
  *  Print a react component as a pdf
  * @param element_id of the react component you wish to print as pdf
  */
-export const printReactComponentAsPdf = (element_id: string) => {
+const printReactComponentAsPdf = (element_id: string) => {
     console.log("Printing component with id: ", element_id);
     // get the react component with id element_id
     const component2print = document.getElementById(element_id);
@@ -36,3 +37,6 @@ export const printReactComponentAsPdf = (element_id: string) => {
         iframe.remove();
     }, 300);
 };
+
+
+export { printReactComponentAsPdf };

@@ -1,6 +1,7 @@
-import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
+import { DropTargetMonitor, useDrag, useDragLayer, useDrop } from "react-dnd";
 import "./dnd.css";
-import React, { useEffect } from "react";
+import React from "react";
+import { useLogger } from "../../hooks/logger";
 
 // monitor.didDrop() only tells you if there was a nested object under. Not wether/not they returned anything from didDrop(). So its kind of useless.
 /** Unnecessary React.useEffect to Sync buckets
@@ -20,32 +21,49 @@ interface Bucket {
 
 const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
 
-function DragDrop(props: {
+
+// TODO: should be usable on its own (ie: has its own state) in the case you dont want a bucket.
+function DragDropItem(props: {
 	item: Item,
 	item_type?: string,
-	DisplayItem: (props: {item: Item}) => JSX.Element,
+	DisplayItem?: (props: {item: Item}) => JSX.Element,	// optional (has a default)
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
 	canBeTarget?: boolean // defaults to true
 }) {
 
-	const log = (...args: any) => console.log(`DragSource ${props.item.id}:\n\t`, ...args);
+	// -----------------DEFAULT VALUES-----------------
+
+	const DisplayItem = props.DisplayItem ?? ((props) => <>{props.item.value}</>);
+	const item_type = props.item_type ?? DEFAULT_ITEM_TYPE;
+
+	const log = useLogger("DragDropItem");
 
 	const ref = React.useRef(null);
 
-    const [{}, drag] = useDrag(() => ({
-		type: props.item_type ?? DEFAULT_ITEM_TYPE,
+	// -----------------DRAG FUNCTIONALITY-----------------
+
+    const [{isDragging}, drag, dragPreview] = useDrag(() => ({
+		type: item_type,
 		item: () => {
 			log("Started to drag.");
 			return props.item; 			// sent to the drop target when dropped.
 		},
 		end: (item: Item, monitor) => {
 			const dropResult: {id: any} = monitor.getDropResult();
-			props.onLetGo(item.id, dropResult.id);
+			if (!dropResult)
+				// Cancelled or invalid drop
+				return;
 			log("Drop result:", dropResult);
-		}
+			props.onLetGo(item.id, dropResult.id);
+		},
+		collect: (monitor) => ({
+			isDragging: monitor.isDragging()
+		}),
 		}), [props.item, props.onHover]
 	);
+
+	// -----------------DROP FUNCTIONALITY-----------------
 
 	const [{isDropTarget}, dropRef] = useDrop(
 		() => ({
@@ -70,17 +88,25 @@ function DragDrop(props: {
 				);
 			},
 			collect: (monitor) => ({
-				isDropTarget: monitor.canDrop() && monitor.isOver(),
+				isDropTarget: monitor.canDrop() && monitor.isOver()
 			}),
 		}),
 		[props.item, props.onHover]
 	);
 
+	// Inject the dnd props into the ref
 	drag(dropRef(ref));
 
+	// -----------------RENDER-----------------
+
+
+	// Create the custom default layer
+
+
+	const classNames = ["drag-item-wrapper", isDragging ? "dragging" : "", isDropTarget ? "droppable": ""].join(" ");
 	return (
-		<div role="Handle" ref={ref} className={`drag-item-wrapper ${isDropTarget ? "droppable" : ""}`}>
-			<props.DisplayItem item={props.item}/>
+		<div role="Handle" ref={ref} className={classNames}>
+			<DisplayItem item={props.item}/>
 		</div>
 	);
 };
@@ -92,11 +118,11 @@ const useBucket = (bucket: Bucket) => {
 
 	// -----------------HELPERS-----------------
 
+	const log = useLogger("useBucket");
+
 	const getIdx = (id: any): number => {
 		return items.findIndex((item) => item.id === id);
 	};
-
-	const log = (...args: any) => console.log(`Bucket ${bucket.id}:\n\t`, ...args);
 
 	// -----------------STATE MODIFIERS-----------------
 
@@ -145,16 +171,30 @@ const useBucket = (bucket: Bucket) => {
 };
 
 function BucketComponent(props: {
-	bucket: Bucket,
+	bucket: Bucket | {id: any, values: any[]},
 	isVertical: boolean,
-	item_type?: string,
-	DisplayItem: (props: {item: Item}) => JSX.Element,
 	DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element,
+	DisplayItem?: (props: {item: Item}) => JSX.Element,
+	item_type?: string,
 }) {
+
+	// -----------------DEFAULT VALUES-----------------
+
+	let bucket: Bucket;
+	if ("values" in props.bucket) {
+		// convert it to the Bucket format
+		bucket = {
+			id: props.bucket.id,
+			items: props.bucket.values.map((value) => ({ id: value, value: value }))
+		}
+		console.log("Warning! Setting all items to have the same id as their value.");
+	} else {
+		bucket = props.bucket;
+	}
 
 	// -----------------STATE-----------------
 
-	const { items, addItem, moveItem, removeItem, changeItemValue } = useBucket(props.bucket);
+	const { items, addItem, moveItem, removeItem, changeItemValue } = useBucket(bucket);
 
 	// -----------------DND RELATED-----------------
 
@@ -184,7 +224,9 @@ function BucketComponent(props: {
 				return true;
 			},
 			drop: (dropItem: Item, monitor: DropTargetMonitor<Item, unknown>) => {
-				// Called when an item is dropped on the component (including nested items)
+				// An item was dropped on the bucket (or a nested drop target).
+
+				console.log("BUCKET: Dropped item:", dropItem);
 
 				// drop was ON TOP of a nested item?
 				const nestedDropTarget: any = monitor.getDropResult();
@@ -234,8 +276,8 @@ function BucketComponent(props: {
 				{
 					items?.map((I: Item, i: number) => (
 						<>
-							<DropGap isActive={hoveredGap===prevGap(i)}/>
-							<DragDrop
+							{i == 0 ? <DropGap isActive={hoveredGap===prevGap(i)}/> : null}
+							<DragDropItem
 								key={i}
 								item={I}
 								item_type={props.item_type}
@@ -262,4 +304,4 @@ function BucketComponent(props: {
     );
 };
 
-export { Item, Bucket, BucketComponent}
+export { Item, Bucket, BucketComponent, DragDropItem }

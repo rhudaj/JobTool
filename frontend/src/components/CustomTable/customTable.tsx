@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
 import "./customTable.css";
+import { useLogger } from "../../hooks/logger";
 
 function CustomTable(props: {
     data: any[];
     headers?: string[];
     changeData: (newArr: any[]) => void;
 }) {
+
+    const log = useLogger("CustomTable");
+
     const [data, setData] = useState([]);
 
     useEffect(()=>{
         if( ! Array.isArray(props.data) ) {
-            console.log("WARNING: CustomTable data prop is not an array. Putting data into an array (may not be what you want)");
+            log("WARNING: CustomTable data prop is not an array. Putting data into an array (may not be what you want)");
             setData([props.data]);
         } else {
-            console.log('new props.data for table');
+            log('new props.data for table');
             setData(props.data);
         }
     }, [props.data]);
@@ -22,7 +26,7 @@ function CustomTable(props: {
 
     const removeRow = (rowNum: number) => {
         // remove entry from the data
-        console.log("Removing row # ", rowNum);
+        log("Removing row # ", rowNum);
         const newArr = data;
         newArr.splice(rowNum, 1); // in-place
         props.changeData(newArr);
@@ -30,7 +34,7 @@ function CustomTable(props: {
 
     const addRow = () => {
         // add entry to the data
-        console.log("Adding row");
+        log("Adding row");
         const newArr = data;
         const numCols = Array.isArray(data[0]) ? data[0].length : 1;
         newArr.push(new Array(numCols).fill(""));

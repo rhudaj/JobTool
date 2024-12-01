@@ -1,4 +1,5 @@
 import { CV, JobInfo } from "shared";
+import { useLogger } from "./hooks/logger";
 
 /**
  * BackendAPI class
@@ -6,14 +7,16 @@ import { CV, JobInfo } from "shared";
  * which will automatically test that the server is running.
  */
 export class BackendAPI {
-    static HOST = "http://localhost:8080";
+
+    private static HOST = "http://localhost:8080";
+    private static log = useLogger("BackendAPI");
 
     // TODO: test if server is running
 
     private static async POST(func: string, body: any): Promise<Response | null> {
         // server is running:
         const url = BackendAPI.HOST + "/" + func;
-        console.log("Attempting POST => ", url);
+        BackendAPI.log("Attempting POST => ", url);
         try {
             var resp = await fetch(url, {
                 method: "post",
@@ -23,42 +26,41 @@ export class BackendAPI {
                 body: JSON.stringify(body),
             });
         } catch (err: unknown) {
-            console.log("Something went wrong with fetch @", url, "err: ", err);
+            BackendAPI.log("Something went wrong with fetch @", url, "err: ", err);
             return null;
         }
-        console.log("response status = ", resp.status);
+        BackendAPI.log("response status = ", resp.status);
         return resp.ok ? resp : null;
     };
 
     private static async GET(func: string): Promise<Response | null> {
         const url = BackendAPI.HOST + "/" + func;
-        console.log("Attempting GET => ", url);
+        BackendAPI.log("Attempting GET => ", url);
         try {
             var resp = await fetch(url);
         } catch (err: unknown) {
-            console.log("Something went wrong with fetch @", url, "err: ", err);
+            BackendAPI.log("Something went wrong with fetch @", url, "err: ", err);
             return null;
         }
-        console.log("response status = ", resp.status);
+        BackendAPI.log("response status = ", resp.status);
         return resp.ok ? resp : null;
     }
 
-
     static async getJobInfo(jobTxt: string): Promise<JobInfo | null> {
-        console.log("BackendAPI.getJobInfo called");
+        BackendAPI.log("BackendAPI.getJobInfo called");
         const resp = await this.POST("getJobInfo", {
             job_text: jobTxt,
         });
         if (!resp) return null;
         const data = await resp.json();
-        console.log("data from backend = ", data);
+        BackendAPI.log("data from backend = ", data);
         return Object.keys(data).length === 0 ? null : data;
     };
 
     static async genCV(jobInfo: JobInfo): Promise<CV | null> {
-        console.log("BackendAPI.genCV called, jobInfo = ", jobInfo);
+        BackendAPI.log("BackendAPI.genCV called, jobInfo = ", jobInfo);
         const resp = await this.POST("genCV", jobInfo);
-        console.log("genCV response = ", resp);
+        BackendAPI.log("genCV response = ", resp);
         if (!resp) return null;
         const data: CV = await resp.json();
         return data ? data : null;

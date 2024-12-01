@@ -40,6 +40,18 @@
     row-gap: var(--cv-row-gap);
 }
 
+/* delimited-list ---------------------------- */
+
+.delimited-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.delimited-list > * {
+    flex: 0 1 auto;         /* Prevent children from expanding and ensure they fit their content */
+    white-space: nowrap;    /* Prevent wrapping */
+    white-space-collapse: preserve;
+}
 
 /* SECTION ---------------------------- */
 .sec {
@@ -90,7 +102,7 @@
                 font-weight: bold;
             }
 
-        .exp-item-list {
+        .exp-tech {
             font-family: 'Courier New', Courier, monospace;
             font-weight: 501;
         }
@@ -146,12 +158,6 @@
         .sub-sec > .sub-sec-head {
             font-weight: bold;
         }
-
-.delimited-list {
-    display: flex;
-    flex-wrap: wrap; /* => items use max content width */
-    white-space-collapse: preserve; /* for the <span> holding the delim */
-}
 
 /* ROW 3 ----------------------------*/
 

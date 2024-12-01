@@ -18,5 +18,19 @@
         "MongoDB",
         "Numpy/Pandas",
         "Express"
+    ],
+    "courses": [
+        "Databases",
+        "UI/UX", "Networks",
+        "Algorithms",
+        "Machine Learning",
+        "Data Structures",
+        "Software Engineering",
+        "Operating Systems",
+        "Computer Architecture",
+        "Cybersecurity"
+    ],
+    "summaries": [
+        "Some summary..."
     ]
 }
