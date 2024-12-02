@@ -1,5 +1,5 @@
 import React from "react";
-import "./A4-page.css"
+import "./A4-page.scss"
 
 export function PrintablePage(props: {
     children: React.ReactElement,

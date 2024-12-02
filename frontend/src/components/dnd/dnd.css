@@ -1,12 +1,11 @@
 .drag-item-wrapper {
-    width: min-content;
-    height: max-content;
+    /* width: min-content;
+    height: max-content; */
 }
 
 .drag-item-wrapper.droppable {
     background-color: lightgreen;
 }
-
 
 /* ITEM -- DRAGGING */
 

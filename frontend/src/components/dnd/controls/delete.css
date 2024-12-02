@@ -1,0 +1,10 @@
+.delete-button {
+    background-color: lightcoral;
+    border: 1rem solid black;
+    border-radius: 3rem;
+    opacity: 0.5;
+}
+
+.delete-button:hover {
+    opacity: 1;
+}

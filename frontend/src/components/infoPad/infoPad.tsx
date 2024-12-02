@@ -1,7 +1,8 @@
 import { useLogger } from '../../hooks/logger';
+import { ExperienceUI } from '../CVEditor/cveditor';
 import { Bucket, BucketComponent, Item } from '../dnd/dnd';
 import './infoPad.css';
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 let count = 0; // TODO: internalize this state
 
@@ -22,15 +23,14 @@ export function InfoPad(props: { cv_info: any} ) {
                     value: value
                 } as Item))
             } as Bucket))
-    );
-    }, [props.cv_info]);
+    )}, [props.cv_info])
 
     function displayItem(props: {item: Item}) {
         return (
             <div className="info-pad-item">
                 {props.item.value}
             </div>
-        );
+        )
     }
 
     function DisplayItems(props: {children: JSX.Element[]}) {
@@ -38,9 +38,8 @@ export function InfoPad(props: { cv_info: any} ) {
             <div className="info-pad-items">
                 {props.children}
             </div>
-        );
-    };
-
+        )
+    }
 
     // ----------------- RENDER -----------------
 
@@ -54,8 +53,14 @@ export function InfoPad(props: { cv_info: any} ) {
                     <BucketComponent
                         bucket={bucket}
                         isVertical={false}
-                        DisplayItem={displayItem}
+                        DisplayItem={
+                            bucket.id ===
+                            "projects" ?
+                            (props) => <ExperienceUI {...props.item.value} /> :
+                            displayItem
+                        }
                         DisplayItems={DisplayItems}
+                        deleteItemsDisabled
                     />
                 </div>
             ))}

@@ -32,5 +32,34 @@
     ],
     "summaries": [
         "Some summary..."
+    ],
+    "projects": [
+        {
+            "date_range": "5/24 - Pres",
+            "title": "Automated Restaurant Reservation Business",
+            "side_title": "https://github.com/rhudaj/ResyBot",
+            "points": [
+                "Fully automated system to secure sought-after reservations at world-famous restaurants for clients, generating $X,XXX a month // Developed with TypeScript and Node.js // Deployed on Google-Cloud and managed through their REST API, utilizing Scheduler for automated tasks, Task Manager for executing parallel API requests to reservation-platforms, and cloud-storage for saving transaction and listing records, ensuring a scalable and reliable system."
+            ],
+            "tech": ["TypeScript", "Node", "Google Cloud"]
+        },
+        {
+            "title": "Database Interface App",
+            "side_title": "github.com/rhudaj/DatabaseInterfaceApp",
+            "date_range": "5/23 - 7/23",
+            "points": [
+                "Created a efficient, user-friendly app to interact with a database featuring: Connection to any specified database via ODBC // Intuitive UI for table selection and data filtering, dynamically generated in real-time by efficiently handling of millions of records via Pandas, optimized display algorithms and batch querying // crash-safe via multi-threading // MVC architecture."
+            ],
+            "tech": ["Python", "SQL"]
+        },
+        {
+            "title": "Voice-to-Instrument Translator",
+            "side_title": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
+            "date_range": "1/24 - 4/24",
+            "points": [
+                "Developed an app enabling real-time translation of human voice into various musical instruments // Utilized Python (Numpy) to implement  advanced probabilistic algorithms for detecting: pitch, tempo and note-onsets // Exposed the backend as a REST API to integrate with a GUI built with React."
+            ],
+            "tech": ["Python", "React", "Express"]
+        }
     ]
 }

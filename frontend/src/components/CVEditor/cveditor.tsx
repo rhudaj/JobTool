@@ -1,4 +1,5 @@
-import "./cveditor.css";
+import "./cveditor.scss";
+import "./rowscols.scss"
 import { CV } from "shared";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
 import { forwardRef, useImperativeHandle, useState } from "react";
@@ -10,13 +11,21 @@ import { joinClassNames } from "../../hooks/joinClassNames";
 const ExperienceUI = (props: any) => {
 
 	// TODO: this is hacky, need to improve.
-	let sideTitleEl = (props.side_title as string).startsWith("http") ? (
-		<Link url={props.side_title} icon="fa fa-link" />
-	) : (
+	let sideTitleEl = (props.side_title as string).startsWith("http") ?
+		<Link url={props.side_title} icon="fa fa-link" /> :
 		<TextEditDiv tv={props.side_title} className="side-title"/>
-	);
 
-	const Tech = () => (
+	let content = (props.points.length === 1) ?
+		<TextEditDiv tv={props.points[0]} /> :
+		<ul className="exp-points">
+			{props.points.map((bullet_point: string) => (
+				<li>
+					<TextEditDiv tv={bullet_point} />
+				</li>
+			))}
+		</ul>
+
+	const tech = (
 		<BucketComponent
 			bucket={{ id: "Tech", values: props.tech }}
 			isVertical={false}
@@ -27,40 +36,22 @@ const ExperienceUI = (props: any) => {
     return (
 		<div className="experience">
 
-			{/* ------------ COLUMN 1 ------------ */}
+			{/* ------------ COLUMNS ------------ */}
 
 			<TextEditDiv tv={props.date_range} className="date-range" />
 
-			{/* ------------ COLUMN 2 ------------ */}
-
 			<div className="exp-col-2">
 
-				{/* ------------ ROW 1 ------------ */}
+				{/* ------------ ROWs ------------ */}
 
 				<div className="titles">
 					<TextEditDiv tv={props.title} className="title" />
 					{sideTitleEl}
 				</div>
 
-				{/* ------------ ROW 2 ------------ */}
+				<div className="exp-content"> {content} </div>
 
-				<div className="exp-content">
-					{ props.points.length === 1 ? (
-						<TextEditDiv tv={props.points[0]} />
-					) : (
-						<ul className="exp-points">
-							{props.points.map((bullet_point: string) => (
-								<li>
-									<TextEditDiv tv={bullet_point} />
-								</li>
-							))}
-						</ul>
-					)}
-				</div>
-
-				{/* ------------ ROW 3 ------------ */}
-
-				<Tech />
+				{tech}
 
 			</div>
 		</div>
@@ -73,7 +64,7 @@ const Section = (props: {
     children: React.ReactNode;
 }) => {
 	return (
-		<div className="sec" id={props.id}>
+		<div className="section" id={props.id}>
 			<div className="sec-head">
 				<p>{props.head}</p>
 				<hr />
@@ -114,7 +105,7 @@ function DelimitedList(props: { children: JSX.Element[], delimiter: string, clas
 
 // MAIN COMPONENT
 
-export const CVEditor = forwardRef((
+const CVEditor = forwardRef((
 	props: { cv: CV },
 	ref: React.ForwardedRef<any>
 ) => {
@@ -157,88 +148,95 @@ export const CVEditor = forwardRef((
 		/>
 	)
 
+	const Experiences = () => (
+		<BucketComponent
+			bucket = {{ id: "Experiences", values: VAL.experiences }}
+			isVertical={true}
+			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
+			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
+		/>
+	)
+
+	const Projects = () => (
+		<BucketComponent
+			bucket = {{ id: "Projects", values: VAL.projects }}
+			isVertical={true}
+			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
+			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
+		/>
+	)
+
+	const rows_cols = [
+		// ---------- ROW 1 ----------
+		[
+			// ---------- COLUMN 1 ----------
+			(
+				<div id="name-title">
+					<div id="div-full-name">ROMAN HUDAJ</div>
+					<TextEditDiv tv={VAL.personalTitle} id="div-personal-title"/>
+				</div>
+			),
+			// ---------- COLUMN 2 ----------
+			(
+				<div id="div-links">
+					{VAL.links.map((l) => (
+						<Link url={l.url} icon={l.icon} text={l.text} />
+					))}
+				</div>
+			)
+		],
+		// ---------- ROW 2 ----------
+		[
+			// ---------- COLUMN 1 ----------
+			(
+				<Section head="SUMMARY" id="section-summary">
+					<Summary />
+				</Section>
+			),
+			// ---------- COLUMN 2 ----------
+			(
+				<Section head="SKILLS" id="section-skills">
+					<div className="sub-sec">
+						<div className="sub-sec-head">Languages:</div>
+						<Languages />
+					</div>
+					<div className="sub-sec">
+						<div className="sub-sec-head">Technology:</div>
+						<Technologies />
+					</div>
+				</Section>
+			)
+		],
+		(
+			<Section head="EXPERIENCES" id="experiences">
+				<Experiences />
+			</Section>
+		),
+		(
+			<Section head="PROJECTS" id="projects">
+				<Projects />
+			</Section>
+		),
+		(
+			<Section head="EDUCATION" id="education">
+				<ExperienceUI {...VAL.education} />
+			</Section>
+		)
+	]
+
 	// ----------------- RENDER -----------------
 
 	if (!props.cv) return null;
 	return (
 		<div id="cv-editor">
-
-			<div className="rows">
-
-				{/* ---------- ROW 1 ---------- */}
-
-				<div className="columns">
-
-					<div id="name-title">
-						<div id="div-full-name">ROMAN HUDAJ</div>
-						<TextEditDiv tv={VAL.personalTitle} id="div-personal-title"/>
-					</div>
-
-					<div id="div-links">
-						{VAL.links.map((l) => (
-							<Link url={l.url} icon={l.icon} text={l.text} />
-						))}
-					</div>
-
-				</div>
-
-				{/* ---------- ROW 2 ---------- */}
-
-				<div className="columns">
-
-					{/* ---------- COL 1 ---------- */}
-
-					<Section head="SUMMARY" id="section-summary">
-						{/* <TextEditDiv tv={VAL.summary} id="summary" /> */}
-						<Summary />
-					</Section>
-
-					{/* ---------- COL 2 ---------- */}
-
-					<Section head="SKILLS" id="section-skills">
-
-						<div className="sub-sec">
-							<div className="sub-sec-head">Languages:</div>
-							<Languages />
-						</div>
-
-						<div className="sub-sec">
-							<div className="sub-sec-head">Technology:</div>
-							<div className="delimited-list">
-								<Technologies />
-							</div>
-						</div>
-
-					</Section>
-
-				</div>
-
-				{/* ---------- ROW 3 ---------- */}
-
-				<Section head="EXPERIENCES" id="experiences">
-					{VAL.experiences.map((exp) => (
-						<ExperienceUI {...exp} />
-					))}
-				</Section>
-
-				{/* ---------- ROW 4 ---------- */}
-
-				<Section head="PROJECTS" id="projects">
-					{
-						VAL.projects.map((proj: any) => (
-							<ExperienceUI {...proj}/>
-						))
-					}
-				</Section>
-
-			{/* ---------- ROW 5 ---------- */}
-
-				<Section head="EDUCATION" id="education">
-					<ExperienceUI {...VAL.education} />
-				</Section>
-
-			</div>
-
+			{rows_cols.map(row => (
+				Array.isArray(row) ?
+					<div className="columns">{row}</div> :
+					row
+			))}
 		</div>
 	);
 });
+
+
+export { CVEditor, ExperienceUI }

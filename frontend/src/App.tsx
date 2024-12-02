@@ -12,6 +12,7 @@ import { InfoPad } from "./components/infoPad/infoPad";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useLogger } from "./hooks/logger";
+import { SplitView } from "./components/SplitView/splitview";
 
 function App() {
 
@@ -151,14 +152,13 @@ function App() {
                 {/* WRAP IN DND PROVIDER TO ENABLE DRAG/DROP */}
 
                 <DndProvider backend={HTML5Backend}>
-                    <div className="cv-playground">
-
+                    <SplitView>
                         <PrintablePage page_id="cv-page">
                             { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
                         </PrintablePage>
 
                         <InfoPad cv_info={cvInfo}/>
-                    </div>
+                    </SplitView>
                 </DndProvider>
 
             </Section>

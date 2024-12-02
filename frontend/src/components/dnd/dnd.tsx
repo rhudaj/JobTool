@@ -2,6 +2,7 @@ import { DropTargetMonitor, useDrag, useDragLayer, useDrop } from "react-dnd";
 import "./dnd.css";
 import React from "react";
 import { useLogger } from "../../hooks/logger";
+import { DeleteButton } from "./controls/delete";
 
 // monitor.didDrop() only tells you if there was a nested object under. Not wether/not they returned anything from didDrop(). So its kind of useless.
 /** Unnecessary React.useEffect to Sync buckets
@@ -21,7 +22,6 @@ interface Bucket {
 
 const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
 
-
 // TODO: should be usable on its own (ie: has its own state) in the case you dont want a bucket.
 function DragDropItem(props: {
 	item: Item,
@@ -29,17 +29,22 @@ function DragDropItem(props: {
 	DisplayItem?: (props: {item: Item}) => JSX.Element,	// optional (has a default)
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
+	onDelete?: (id: any) => void,
 	canBeTarget?: boolean // defaults to true
 }) {
 
 	// -----------------DEFAULT VALUES-----------------
 
 	const DisplayItem = props.DisplayItem ?? ((props) => <>{props.item.value}</>);
+
 	const item_type = props.item_type ?? DEFAULT_ITEM_TYPE;
+
+	// ----------------- STATE / HELPERS-----------------
 
 	const log = useLogger("DragDropItem");
 
 	const ref = React.useRef(null);
+
 
 	// -----------------DRAG FUNCTIONALITY-----------------
 
@@ -99,15 +104,17 @@ function DragDropItem(props: {
 
 	// -----------------RENDER-----------------
 
-
 	// Create the custom default layer
 
-
 	const classNames = ["drag-item-wrapper", isDragging ? "dragging" : "", isDropTarget ? "droppable": ""].join(" ");
+
 	return (
-		<div role="Handle" ref={ref} className={classNames}>
-			<DisplayItem item={props.item}/>
-		</div>
+		<>
+			<div ref={ref} className={classNames}>
+				<DisplayItem item={props.item}/>
+			</div>
+			{ props.onDelete && <DeleteButton ref={ref} onDelete={()=>props.onDelete(props.item.id)}/> }
+		</>
 	);
 };
 
@@ -170,24 +177,30 @@ const useBucket = (bucket: Bucket) => {
 	return { items, addItem, moveItem, removeItem, changeItemValue };
 };
 
+
+// TODO: should extract items from child component (instead of passing DisplayItems, pass it as a child component)
+
+let count = 0; // for assigning unique ids to items
 function BucketComponent(props: {
 	bucket: Bucket | {id: any, values: any[]},
 	isVertical: boolean,
 	DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element,
 	DisplayItem?: (props: {item: Item}) => JSX.Element,
 	item_type?: string,
+	// toggle options:
+	deleteItemsDisabled?: boolean,
 }) {
 
 	// -----------------DEFAULT VALUES-----------------
 
+	// If item ids are not provided (only values), use the value as the id.
 	let bucket: Bucket;
 	if ("values" in props.bucket) {
-		// convert it to the Bucket format
+		console.log("Warning! Setting all items to have the same id as their value.");
 		bucket = {
 			id: props.bucket.id,
-			items: props.bucket.values.map((value) => ({ id: value, value: value }))
+			items: props.bucket.values.map((value) => ({ id: count++, value: value }))
 		}
-		console.log("Warning! Setting all items to have the same id as their value.");
 	} else {
 		bucket = props.bucket;
 	}
@@ -283,6 +296,7 @@ function BucketComponent(props: {
 								item_type={props.item_type}
 								DisplayItem={props.DisplayItem}
 								canBeTarget={true}
+								onDelete={!props.deleteItemsDisabled && removeItem}
 								onHover={ (dragId, isBelow, isRight) => {
 									// What's considered next/prev item depends on orientation
 									const isPastHalf = props.isVertical ? isBelow : isRight;

@@ -1,6 +1,7 @@
 import React from "react";
 import "./texteditdiv.css";
 import { TrackVal } from "../../hooks/trackable";
+import { joinClassNames } from "../../hooks/joinClassNames";
 
 export function TextEditDiv(props: {
     tv: string|TrackVal<string>,
@@ -8,7 +9,16 @@ export function TextEditDiv(props: {
     className?: string,
 }) {
 
+    // ----------------- STATE -----------------
+
+    /**
+     * Whether the div is currently being edited.
+     * Enabled <= onDoubleClick
+     * Disabled <= onBlur */
+    const [isEditing, setIsEditing] = React.useState(false);
+
     const onPaste = (e: React.ClipboardEvent) => {
+        // prevent default paste behavior (which copies styles)
         e.preventDefault();
         // 1 - Get text representation of clipboard:
         const txt = e.clipboardData.getData("text/plain");
@@ -22,19 +32,25 @@ export function TextEditDiv(props: {
     };
 
     const onBlur = (e: React.FocusEvent) => {
+        setIsEditing(false);
 		// assert tv as type TrackVal<string>:
         if (typeof props.tv === "string") return;
         // fires when an element has lost focus
 		props.tv.value = e.target.textContent;
 	};
 
+    // ----------------- RENDER -----------------
+
+    const classNames = joinClassNames("text-edit-div", props.className, isEditing ? "editing" : "");
+
     return (
         <div
-            className={`text-edit-div ${props.className}`}
+            className={classNames}
             id={props.id}
-            contentEditable={true}
+            contentEditable={isEditing}
             onPaste={onPaste}
             onBlur={onBlur}
+            onDoubleClick={()=>setIsEditing(true)}
         >
             { typeof props.tv === "string" ? props.tv : props.tv.value }
         </div>
