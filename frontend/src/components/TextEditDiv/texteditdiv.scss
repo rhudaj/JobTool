@@ -1,0 +1,5 @@
+.text-edit-div:hover:not(.editing) {
+    &:hover:not(.editing) {
+        outline: 1rem dashed blue;  /* outline (not border) => prevent jitter*/
+    }
+}

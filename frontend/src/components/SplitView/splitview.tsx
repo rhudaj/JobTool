@@ -1,5 +1,5 @@
 import { ReactElement, useState } from "react";
-import "./splitview.css"
+import "./splitview.scss"
 
 export function SplitView(props: {
     children: [ReactElement, ReactElement];
@@ -19,23 +19,31 @@ export function SplitView(props: {
         const onMouseUp = () => {
             document.removeEventListener("mousemove", onMouseMove);
             document.removeEventListener("mouseup", onMouseUp);
+            // make sure to re-enable text selection
             document.body.style.userSelect = "auto";
         };
 
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
-        document.body.style.userSelect = "none"; // disable text selection
+
+        // disable text selection while dragging (otherwise it's annoying)
+        document.body.style.userSelect = "none";
     }
+
+    // -------------- RENDER --------------
+
+    const L_STYLE = { width: `${WRatio}%` };
+    const R_STYLE = { width: `${100 - WRatio}%` };
 
     return (
         <div className="split-view">
-            <div id="view-left" style={{ width: `${WRatio}%` }}>
+            <div className="view-left" style={L_STYLE}>
                 {props.children[0]}
             </div>
-            <div id="width-drag" onMouseDown={onMouseDown}>
+            <div className="width-drag" onMouseDown={onMouseDown}>
                 ||
             </div>
-            <div id="view-right" style={{ width: `${100 - WRatio}%` }}>
+            <div className="view-right" style={R_STYLE}>
             {props.children[1]}
             </div>
         </div>

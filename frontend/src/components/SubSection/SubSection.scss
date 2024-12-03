@@ -7,13 +7,14 @@
 	display: flex;
 	flex-direction: column;
 	gap: 15rem;
-}
- 	.sub-section > .sub-sec-head {
+
+	& > .sub-sec-head {
 		font-size: 16rem;
 	}
 
-	.sub-section > .content {
+	& > .content {
 		font-size: 12rem;
 		color:rgb(234, 234, 234);
 		overflow-y: scroll;
 	}
+}

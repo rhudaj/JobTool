@@ -1,4 +1,4 @@
-import "./Section.css";
+import "./section.scss";
 import { ReactElement } from "react";
 
 export function Section(props: {

@@ -1,5 +1,5 @@
 import React from "react";
-import "./texteditdiv.css";
+import "./texteditdiv.scss";
 import { TrackVal } from "../../hooks/trackable";
 import { joinClassNames } from "../../hooks/joinClassNames";
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./customTable.css";
+import "./customTable.scss";
 import { useLogger } from "../../hooks/logger";
 
 function CustomTable(props: {

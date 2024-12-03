@@ -1,0 +1,17 @@
+.split-view {
+    display: flex;
+    flex-direction: row;
+
+    & .width-drag {
+        // fixed width
+        flex: 0 0 15em;
+
+        margin: 0 5em 0 5em;
+
+        cursor: col-resize;
+
+        background-color: rgb(48, 48, 48);
+        border: 1px solid black;
+    }
+
+}

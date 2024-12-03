@@ -1,4 +1,5 @@
-import "./sectioncontainer.css"
+import { joinClassNames } from "../../hooks/joinClassNames";
+import "./sectioncontainer.scss"
 
 export function SectionContainer(props: {
     hasPrev: boolean;
@@ -9,11 +10,10 @@ export function SectionContainer(props: {
     children: React.ReactNode;
 }) {
     const ChangeSection = (P: { dirIsNext: boolean, enabled: boolean }) => {
+        const classNames = joinClassNames("change-section-button", P.enabled ? "" : "disabled")
         return (
             <button
-                className={`change-section-button ${
-                    P.enabled ? "" : "disabled"
-                }`}
+                className={classNames}
                 onClick={() => props.onChangeSection(P.dirIsNext)}
             >
                 {P.dirIsNext ? "→" : "←"}

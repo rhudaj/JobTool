@@ -1,7 +1,8 @@
+import './infoPad.scss';
+
 import { useLogger } from '../../hooks/logger';
 import { ExperienceUI } from '../CVEditor/cveditor';
 import { Bucket, BucketComponent, Item } from '../dnd/dnd';
-import './infoPad.css';
 import React from "react";
 
 let count = 0; // TODO: internalize this state

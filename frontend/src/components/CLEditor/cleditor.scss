@@ -1,13 +1,15 @@
+$base-font-size: 0.25cqw;
+
 /* FOR DISPLAY */
 #cl-editor {
     color: black;
 
-    font-size: calc(8 * var(--base-font-size));
-    padding: calc(38 * var(--base-font-size));
+    font-size: calc(8 * $base-font-size);
+    padding: calc(38 * $base-font-size);
 
     display: grid;
     grid-auto-rows: min-content;
-    row-gap: calc(8 * var(--base-font-size));
+    row-gap: calc(8 * $base-font-size);
 
     font-family: 'Arial Narrow Bold', sans-serif;;
 }

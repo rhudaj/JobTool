@@ -1,10 +1,10 @@
 import "./cveditor.scss";
-import "./rowscols.scss"
 import { CV } from "shared";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { BucketComponent, DragDropItem } from "../dnd/dnd";
 import { joinClassNames } from "../../hooks/joinClassNames";
+import { Grid } from "./grid";
 
 // CUSTOM SUB COMPONENTS
 
@@ -228,13 +228,7 @@ const CVEditor = forwardRef((
 
 	if (!props.cv) return null;
 	return (
-		<div id="cv-editor">
-			{rows_cols.map(row => (
-				Array.isArray(row) ?
-					<div className="columns">{row}</div> :
-					row
-			))}
-		</div>
+		<Grid id="cv-editor" rows_cols={rows_cols}/>
 	);
 });
 

@@ -1,6 +1,9 @@
 /* APP SECTIONs --------------------- */
 
 .AppSection {
+	/*	[heading]
+		[content] */
+
 	display: flex;
 	flex-direction: column;
 	background-color: grey;
@@ -8,23 +11,17 @@
 	border-radius: var(--main-border-radius);
 
 	height: min-content;
-}
 
-	/* heading */
-	.AppSection > .app-sec-head {
+	& > .app-sec-head {
 		font-size: 25em;
 		margin-bottom: 10rem;
 		border-bottom: 4rem solid rgb(35, 35, 35);
 	}
 
-	/* section content */
-	.AppSection > .section-content {
-		/* 2 rows:
-			[heading]
-			[content]
-		 */
+	& > .section-content {
 		overflow-y: scroll;
 		display: flex;
 		flex-direction: column;
 		gap: 30rem;
 	}
+}

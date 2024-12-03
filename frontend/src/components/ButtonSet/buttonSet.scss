@@ -4,10 +4,10 @@
     gap: 20rem;
     padding: 10rem;
     height: min-content;
-}
 
-.button-set > * {
-    height: min-content;
-    width: max-content;
-    padding: 5rem 12rem;
+    & > * {
+        height: min-content;
+        width: max-content;
+        padding: 5rem 12rem;
+    }
 }

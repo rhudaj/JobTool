@@ -1,0 +1,44 @@
+.disabled {
+    filter: blur(2rem);
+    pointer-events: none;
+}
+
+.section-container {
+	/* 3 rows:
+		[ChangeSection]
+		[AppSection]
+		[ChangeSection]
+	*/
+	display: flex;
+	flex-direction: column;
+	gap: 20rem;
+
+	& #section-select {
+		height: min-content;
+		display: flex;
+		flex-direction: row;
+		gap: 5%;
+		align-items: center;
+		justify-content: center;
+
+		& .change-section-button {
+			flex-basis: min-content;
+
+			background-color: white;
+			padding: 10rem;
+			font-size: x-large;
+			font-weight: bold;
+
+			& :hover {
+				transform: scale(1.1);
+				background-color: lightcoral;
+				transition: 0.3s;
+			}
+		}
+	}
+
+	& #skip-button {
+		width: min-content;
+		padding: 0px 2rem 0px 2rem;
+	}
+}

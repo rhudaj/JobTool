@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import "./buttonSet.css"
+import "./buttonSet.scss"
 
 export function ButtonSet(props: {
     children: React.ReactNode | ReactElement[]

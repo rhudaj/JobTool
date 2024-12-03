@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
-import "./cleditor.css"
+import "./cleditor.scss"
 import { TrackVal, wrapTrackable } from "../../hooks/trackable";
 
 export function CLEditor(props: {

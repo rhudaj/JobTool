@@ -1,5 +1,5 @@
 import { DropTargetMonitor, useDrag, useDragLayer, useDrop } from "react-dnd";
-import "./dnd.css";
+import "./dnd.scss";
 import React from "react";
 import { useLogger } from "../../hooks/logger";
 import { DeleteButton } from "./controls/delete";

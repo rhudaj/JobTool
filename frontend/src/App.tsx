@@ -1,6 +1,6 @@
+import "./App.scss";
 import { useEffect, useState, useRef } from "react";
-import "./App.css";
-import { Section } from "./components/Section/Section";
+import { Section } from "./components/Section/section";
 import { CV, JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
 import { CVEditor } from "./components/CVEditor/cveditor";

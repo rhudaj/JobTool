@@ -1,4 +1,4 @@
-import "./SubSection.css"
+import "./SubSection.scss"
 
 export function SubSection(props: {
     id: string;

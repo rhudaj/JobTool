@@ -1,4 +1,4 @@
-import './delete.css';
+import './delete.scss';
 import React from "react";
 
 /**
