@@ -1,0 +1,2 @@
+query,numJobs
+"{""keyword"":""software"",""location"":""Canada"",""jobType"":""internship"",""sortMethod"":""recent""}",200

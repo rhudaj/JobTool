@@ -125,7 +125,7 @@ const CVEditor = forwardRef((
 		<BucketComponent
 			bucket = {{ id: "Languages", values: VAL.languages }}
 			isVertical={false}
-			DisplayItem={(props) => <>{props.item.value}</>}
+			DisplayItem={(props) => <TextEditDiv tv={props.item.value}/>}
 			DisplayItems={(props) => <DelimitedList delimiter=", " {...props} />}
 		/>
 	)
@@ -134,7 +134,7 @@ const CVEditor = forwardRef((
 		<BucketComponent
 			bucket = {{ id: "Technologies", values: VAL.technologies }}
 			isVertical={false}
-			DisplayItem={(props) => <>{props.item.value}</>}
+			DisplayItem={(props) => <TextEditDiv tv={props.item.value}/>}
 			DisplayItems={(props) => <DelimitedList delimiter=", " {...props} />}
 		/>
 	)

@@ -1,10 +1,17 @@
-.drag-item-wrapper {
-    .droppable {
-        background-color: lightgreen;
+.drag-drop-wrapper {
+    & .can-drag:hover {
+        outline: 2rem solid red;
+        background-color: lightblue;
     }
-    .dragging:active {
+    & .dragging:active {
         opacity: 0.1;
     }
+}
+
+// *** if you put the below inside the .drag-drop-wrapper styles above, they will not work
+
+.drag-drop-wrapper.droppable {
+    background-color: lightgreen;
 }
 
 .bucket-wrapper.hover {

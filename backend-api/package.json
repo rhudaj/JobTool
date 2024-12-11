@@ -4,7 +4,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "node --env-file=../.env dist/api.js",
-    "start": "npm run build && npm run dev"
+    "start": "npm run build && npm run dev",
+    "get-jobs": "node dist/FindJobs/LinkedIn/getJobs.js"
   },
   "dependencies": {
     "@types/blob-stream": "^0.1.33",

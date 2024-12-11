@@ -3,6 +3,7 @@ import "./dnd.scss";
 import React from "react";
 import { useLogger } from "../../hooks/logger";
 import { DeleteButton } from "./controls/delete";
+import { joinClassNames } from "../../hooks/joinClassNames";
 
 // monitor.didDrop() only tells you if there was a nested object under. Not wether/not they returned anything from didDrop(). So its kind of useless.
 /** Unnecessary React.useEffect to Sync buckets
@@ -30,7 +31,8 @@ function DragDropItem(props: {
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
 	onDelete?: (id: any) => void,
-	canBeTarget?: boolean // defaults to true
+	canDrag?: boolean		// defaults to true
+	canBeTarget?: boolean 	// defaults to true
 }) {
 
 	// -----------------DEFAULT VALUES-----------------
@@ -50,6 +52,7 @@ function DragDropItem(props: {
 
     const [{isDragging}, drag, dragPreview] = useDrag(() => ({
 		type: item_type,
+		canDrag: props.canDrag != false,
 		item: () => {
 			log("Started to drag.");
 			return props.item; 			// sent to the drop target when dropped.
@@ -106,7 +109,11 @@ function DragDropItem(props: {
 
 	// Create the custom default layer
 
-	const classNames = ["drag-item-wrapper", isDragging ? "dragging" : "", isDropTarget ? "droppable": ""].join(" ");
+	const classNames = joinClassNames(
+		"drag-drop-wrapper",
+		isDragging ? "dragging" : "", isDropTarget ? "droppable": "",
+		props.canDrag == false ? "no-drag" : "can-drag"
+	)
 
 	return (
 		<>

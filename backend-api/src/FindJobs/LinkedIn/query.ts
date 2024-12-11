@@ -1,4 +1,3 @@
-import ""
 const dateSincePosted = {
     "past month": "r2592000",
     "past week": "r604800",

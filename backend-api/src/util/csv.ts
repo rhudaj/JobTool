@@ -1,9 +1,12 @@
 import * as fs from "fs"
 /** File Description
  * @purpose Output list of objects (ie: job list) to csv
-*/
-
+ * File does not need to exist yet.
+ * */
 function Append2Csv<T>(PATH: string, rowObjects: T[]) {
+
+    PATH = `public/${PATH}`;
+
     const csv_rows: string[] = [];
     const KEYS: string[] = Object.keys(rowObjects[0]);
 
@@ -13,6 +16,7 @@ function Append2Csv<T>(PATH: string, rowObjects: T[]) {
 
         if(new_file) {
             // <- file doesn't exist or is empty.
+            console.log(`Append2Csv:\n\tfile ${PATH} does not exist yet or is empty.`)
             const headers = KEYS.join(',');
             csv_rows.push(headers);
         }
@@ -41,7 +45,9 @@ function Append2Csv<T>(PATH: string, rowObjects: T[]) {
 
     // Append to the file
 
-        fs.writeFile(PATH, new_lines, { flag: 'a' }, (err) => console.log(err));
+        console.log(`Append2Csv:\n\tOutputting ${new_lines.length} rows to file ${PATH}`);
+
+        fs.writeFileSync(PATH, new_lines, { flag: 'a' });
 };
 
 export { Append2Csv }

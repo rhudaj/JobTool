@@ -112,6 +112,8 @@ function App() {
                 <textarea id="job-info-input"/>
             </Section>
 
+            
+
             {/* --------------- COVER LETTER --------------- */}
 
             <Section id="section-cl" heading="Cover Letter">
