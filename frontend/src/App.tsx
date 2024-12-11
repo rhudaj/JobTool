@@ -294,14 +294,9 @@ function App() {
                 </ButtonSet>
 
                 <DndProvider backend={HTML5Backend}>
-                    <div className="cv-playground">
-
-                        <PrintablePage page_id="cv-page">
-                            { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
-                        </PrintablePage>
-
-                        <InfoPad cv_info={cvInfo}/>
-                    </div>
+                    <PrintablePage page_id="cv-page">
+                        { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
+                    </PrintablePage>
                 </DndProvider>
 
             </Section>

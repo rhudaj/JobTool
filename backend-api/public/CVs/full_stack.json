@@ -67,7 +67,7 @@
         },
         {
             "title": "Database Interface App",
-            "side_title": "github.com/rhudaj/DatabaseInterfaceApp",
+            "side_title": "https://github.com/rhudaj/DatabaseInterfaceApp",
             "date_range": "5/23 - 7/23",
             "points": [
                 "Created a efficient, user-friendly app to interact with a database featuring: Connection to any specified database via ODBC // Intuitive UI for table selection and data filtering, dynamically generated in real-time by efficiently handling of millions of records via Pandas, optimized display algorithms and batch querying // crash-safe via multi-threading // MVC architecture."
@@ -111,7 +111,7 @@
             "text": "rhudaj@uwaterloo.ca"
         },
         {
-            "url": "https://www.linkedin.com/rhudaj",
+            "url": "www.linkedin.com/in/rhudaj",
             "icon": "fa fa-linkedin",
             "text": "/in/rhudaj"
         }

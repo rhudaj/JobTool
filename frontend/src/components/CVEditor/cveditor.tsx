@@ -90,16 +90,17 @@ const Link = (props: {
 	);
 };
 
-const DelimitedList = (props: { items: TrackVal<string>[], delimiter: string }) => (
-	<div className="delimited-list">
-		{props.items.map((item: TrackVal<string>, i: number) => (
-			<>
-				<TextEditDiv tv={item} />
-				{ i === props.items.length-1 ? null : <span>{props.delimiter}</span> }
-			</>
-		))}
-	</div>
-);
+const DelimitedList = (props: { items: TrackVal<string>[], delimiter: string, className?: any }) => {
+
+	const txt = props.items.map((item) => item.value).join(props.delimiter);
+	const tv = wrapTrackable(txt);
+
+	return (
+		<div className={`delimited-list ${props.className}`}>
+			<TextEditDiv tv={tv} />
+		</div>
+	);
+}
 
 // MAIN COMPONENT
 
@@ -151,30 +152,12 @@ export const CVEditor = forwardRef((
 
 						<div className="sub-sec">
 							<div className="sub-sec-head">Languages:</div>
-							<div className="delimited-list">
-								{
-									VAL.languages.map((lang: TrackVal<string>) => (
-										<>
-											<TextEditDiv tv={lang} />
-											<span>, </span>
-										</>
-									))
-								}
-							</div>
+								<DelimitedList items={VAL.languages} delimiter=", " />
 						</div>
 
 						<div className="sub-sec">
 							<div className="sub-sec-head">Technology:</div>
-							<div className="delimited-list">
-								{
-									VAL.technologies.map((tech: TrackVal<string>) => (
-										<>
-											<TextEditDiv tv={tech} />
-											<span>, </span>
-										</>
-									))
-								}
-							</div>
+							<DelimitedList items={VAL.technologies} delimiter=", " />
 						</div>
 
 					</Section>
