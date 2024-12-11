@@ -2,9 +2,7 @@
 /**
  * TODO:
  * Since every TrackVal is placed inside of a TextEditDiv,
- * the 2 things should be coupled together.
- */
-
+ * the 2 things should be coupled together. */
 class TrackVal<T> extends String {
     private _value: T;
     private listeners: Set<(newValue: T) => void> = new Set();

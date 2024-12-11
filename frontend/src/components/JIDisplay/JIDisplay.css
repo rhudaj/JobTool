@@ -1,0 +1,7 @@
+#job-info-display {
+	display: grid;
+	grid-template-rows: min-content;
+	row-gap: 10em;
+	height: 100%;
+	overflow: scroll;
+}

@@ -1,5 +1,5 @@
 import "./grid.scss"
-import { joinClassNames } from "../../hooks/joinClassNames";
+import { joinClassNames } from "../../../hooks/joinClassNames";
 
 function Grid(props: {
     rows_cols: (any | any[])[],

@@ -1,7 +1,7 @@
 import './infoPad.scss';
 
 import { useLogger } from '../../hooks/logger';
-import { ExperienceUI } from '../CVEditor/cveditor';
+import { ExperienceUI } from '../CVEditor/v2/cveditor';
 import { Bucket, BucketComponent, Item } from '../dnd/dnd';
 import React from "react";
 

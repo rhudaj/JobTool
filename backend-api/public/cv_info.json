@@ -44,6 +44,15 @@
             "tech": ["TypeScript", "Node", "Google Cloud"]
         },
         {
+            "date_range": "8/24 - Pres",
+            "title": "Job Application Tool",
+            "side_title": "https://github.com/rhudaj/JobTool",
+            "points": [
+                "Developed a full-stack app with React, TypeScript and Express  that streamlines the job application process // The frontend features interactive tools to create, edit, and save tailored resumes dynamically, enhancing the efficiency and personalization of job applications // A backend exposed as a RESTful API with Express, stores templates and connects to an NER model that extracts key information from job descriptions."
+            ],
+            "tech": ["React", "TypeScript", "Express", "Python"]
+        },
+        {
             "title": "Database Interface App",
             "side_title": "github.com/rhudaj/DatabaseInterfaceApp",
             "date_range": "5/23 - 7/23",

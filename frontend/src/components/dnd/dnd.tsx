@@ -216,6 +216,10 @@ function BucketComponent(props: {
 
 	const { items, addItem, moveItem, removeItem, changeItemValue } = useBucket(bucket);
 
+	React.useEffect(()=>{
+		console.log(`Bucket ${bucket.id} just got new items:`, items)
+	}, [items])
+
 	// -----------------DND RELATED-----------------
 
 	const [hoveredGap, setHoveredGap] = React.useState<number|undefined>(undefined);

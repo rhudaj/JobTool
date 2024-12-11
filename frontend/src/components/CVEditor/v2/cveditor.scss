@@ -1,3 +1,26 @@
+/* delimited-list ---------------------------- */
+
+.delimited-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.delimited-list {
+    & > * {
+        flex: 0 1 auto;         /* Prevent children from expanding and ensure they fit their content */
+        white-space: nowrap;    /* Prevent wrapping */
+        white-space-collapse: preserve;
+    }
+}
+
+.bucket-or-text {
+    &:hover {
+        background-color: lightblue;
+    }
+}
+
+/* cv ---------------------------- */
+
 $base-font-size: 0.25cqw;
 
 $page-padding:          calc(20 * $base-font-size);

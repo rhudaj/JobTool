@@ -11,16 +11,3 @@
     grid-auto-rows: min-content; /* same as repeat(N, min-content), where N = # rows */
     row-gap: var(--cv-row-gap);
 }
-
-/* delimited-list ---------------------------- */
-
-.delimited-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.delimited-list > * {
-    flex: 0 1 auto;         /* Prevent children from expanding and ensure they fit their content */
-    white-space: nowrap;    /* Prevent wrapping */
-    white-space-collapse: preserve;
-}

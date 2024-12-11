@@ -7,6 +7,7 @@ export function TextEditDiv(props: {
     tv: string|TrackVal<string>,
     id?: string,
     className?: string,
+    onUpdate?: (newVal: string) => void
 }) {
 
     // ----------------- STATE -----------------
@@ -34,9 +35,12 @@ export function TextEditDiv(props: {
     const onBlur = (e: React.FocusEvent) => {
         setIsEditing(false);
 		// assert tv as type TrackVal<string>:
-        if (typeof props.tv === "string") return;
-        // fires when an element has lost focus
-		props.tv.value = e.target.textContent;
+        if (typeof props.tv === "string") {
+            props.onUpdate(e.target.textContent)
+        } else {
+            // fires when an element has lost focus
+		    props.tv.value = e.target.textContent;
+        }
 	};
 
     // ----------------- RENDER -----------------

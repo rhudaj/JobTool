@@ -1,0 +1,173 @@
+#cv-editor {
+    /* PAGE PADDING */
+    --page-padding:         calc(20 * var(--base-font-size));
+    /* GAPS */
+    --cv-row-gap:           calc(5 * var(--base-font-size));
+    --cv-col-gap:           calc(5 * var(--base-font-size));
+    --experiences-gap:      calc(5 * var(--base-font-size));
+    --exp-row-gap:          calc(5 * var(--base-font-size));
+    --exp-col-gap:          calc(5 * var(--base-font-size));
+    --exp-head-content-gap: calc(5 * var(--base-font-size));
+    --sec-row-gap:          calc(6 * var(--base-font-size));
+    --sec-head-line-gap:    calc(3 * var(--base-font-size));
+    --sec-head-line-height: calc(0.5 * var(--base-font-size));
+    --link-col-gap:         calc(3 * var(--base-font-size));
+    --skills-col-gap:       calc(3 * var(--base-font-size));
+    --bullet-point-gap:     calc(2 * var(--base-font-size));
+    /* FONT SIZES */
+    --p-font:               calc(6 * var(--base-font-size));
+    --name-font:            calc(12 * var(--base-font-size));
+    --title-font:           calc(8 * var(--base-font-size));
+
+    padding: var(--page-padding);
+
+    /* FONT STYLE */
+    color: black;
+    font-family: 'Arial Narrow Bold', sans-serif;;
+}
+
+/* HIGH LEVEL LAYOUT (irrespective to content) ---------------------------- */
+
+.columns {
+    grid-template-columns: 1fr 1fr;
+    display: grid;
+    column-gap: var(--cv-col-gap);
+}
+
+.rows {
+    display: grid;
+    grid-auto-rows: min-content; /* same as repeat(N, min-content), where N = # rows */
+    row-gap: var(--cv-row-gap);
+}
+
+
+/* SECTION ---------------------------- */
+.sec {
+    display: grid;
+    font-size: var(--p-font);
+    grid-template-rows: repeat(2, min-content);
+    row-gap: var(--sec-row-gap);
+}
+
+    .sec-head {
+        font-weight: bold;
+
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        column-gap: var(--sec-head-line-gap);
+    }
+        .sec-head > hr {
+            /* HORIZONTAL LINE ACROSS CENTER OF DIV */
+            border: none;
+            height: var(--sec-head-line-height);
+            border-bottom: 0.5rem solid black;
+            align-self: center;
+        }
+
+/* EXPERIENCE ----------------------------*/
+
+.experience {
+    /* [ date-range col-2 ] */
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--exp-head-content-gap) var(--exp-col-gap);
+}
+    .exp-col-2 {
+        /*
+            [ [title] [side_title] ]
+            [ content              ]
+            [ item_list            ]
+        */
+        display: grid;
+        grid-auto-rows: min-content;
+        row-gap: var(--exp-row-gap);
+    }
+        .titles {
+            display: grid;
+            grid-template-columns: 1fr max-content;
+        }
+            .title, .side-title {
+                font-weight: bold;
+            }
+
+        .exp-item-list {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 501;
+        }
+
+/* LINK ----------------------------*/
+
+.link {
+    display: grid;
+    white-space: nowrap;
+    grid-template-columns: min-content 1fr;
+    column-gap: var(--link-col-gap);
+}
+
+    .link > a {
+        text-decoration: none;
+        color: black;
+    }
+
+/* ROW 1 ----------------------------*/
+
+#name-title {
+    display: grid;
+}
+    #div-full-name {
+        font-size: var(--name-font);
+        white-space: nowrap;
+        font-weight: bolder;
+    }
+    #div-personal-title {
+        font-size: var(--title-font);
+    }
+
+#div-links {
+    font-size: var(--p-font);
+    display: grid;
+    /* ASSUMES EXACTLY 4 LINKS */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+/* ROW 2 ----------------------------*/
+
+#section-skills > .sec-content {
+    display: grid;
+    grid-template-rows: repeat(2, min-content);
+    row-gap: 1fr;
+}
+    .sub-sec {
+        display: grid;
+        grid-template-columns: 0.35fr 1fr;
+        column-gap: var(--skills-col-gap);
+    }
+        .sub-sec > .sub-sec-head {
+            font-weight: bold;
+        }
+
+.delimited-list {
+    display: flex;
+    flex-wrap: wrap; /* => items use max content width */
+    white-space-collapse: preserve; /* for the <span> holding the delim */
+}
+
+/* ROW 3 ----------------------------*/
+
+#experiences > .sec-content {
+    /* LIST OF EXPERIENCES */
+    display: grid;
+    row-gap: var(--experiences-gap);
+}
+    .exp-points {
+        display: grid;
+        row-gap: var(--bullet-point-gap);
+    }
+
+/* ROW 4 ----------------------------*/
+
+#projects > .sec-content {
+    display: grid;
+    row-gap: var(--experiences-gap);
+}

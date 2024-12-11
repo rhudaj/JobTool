@@ -1,9 +1,9 @@
 import "./cveditor.scss";
 import { CV } from "shared";
-import { TextEditDiv } from "../TextEditDiv/texteditdiv";
-import { forwardRef, useImperativeHandle } from "react";
-import { BucketComponent, DragDropItem } from "../dnd/dnd";
-import { joinClassNames } from "../../hooks/joinClassNames";
+import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
+import React, { forwardRef, useImperativeHandle } from "react";
+import { BucketComponent, DragDropItem } from "../../dnd/dnd";
+import { joinClassNames } from "../../../hooks/joinClassNames";
 import { Grid } from "./grid";
 
 // CUSTOM SUB COMPONENTS
@@ -90,6 +90,7 @@ const Link = (props: {
 	);
 };
 
+// For displaying bucket items
 function DelimitedList(props: { children: JSX.Element[], delimiter: string, className?: string }) {
 	return (
 		<div className={joinClassNames("delimited-list", props.className)}>
@@ -103,15 +104,43 @@ function DelimitedList(props: { children: JSX.Element[], delimiter: string, clas
 	);
 };
 
-// MAIN COMPONENT
 
+// TODO: this is only a (poor) temporary solution.
+function BucketOrText(props: { id: string, values: string[], onUpdate?: (newVals: string[]) => void }) {
+
+	// true => bucket, false => text
+	const [mode, setMode] = React.useState(true);
+
+	const DELIM = ", ";
+
+	return (
+		<div className="bucket-or-text" onDoubleClick={()=>setMode(false)} onBlur={()=> setMode(true)}>
+			{
+				mode ?
+				<BucketComponent
+					bucket = {{ id: props.id, values: props.values }}
+					isVertical={false}
+					DisplayItem={(props) => <TextEditDiv tv={props.item.value}/>}
+					DisplayItems={(props) => <DelimitedList delimiter={DELIM} {...props} />}
+				/> :
+				<TextEditDiv tv={props.values.join(DELIM)} onUpdate={(val)=>props.onUpdate(val.split(DELIM))}/>
+			}
+		</div>
+	)
+};
+
+// MAIN COMPONENT
 const CVEditor = forwardRef((
 	props: { cv: CV },
 	ref: React.ForwardedRef<any>
 ) => {
 
 	// Keep track each value in the CV
-	const VAL: CV = props.cv;
+	const [VAL, setVAL] = React.useState(props.cv);
+
+	React.useEffect(()=>{
+		console.log(`CVEditor new VAL <- `, VAL);
+	}, [VAL])
 
 	// give the parent 'App' access to localJI
 	useImperativeHandle(ref, () => ({
@@ -122,21 +151,19 @@ const CVEditor = forwardRef((
 	// ----------------- SUB COMPONENTS -----------------
 
 	const Languages = () => (
-		<BucketComponent
-			bucket = {{ id: "Languages", values: VAL.languages }}
-			isVertical={false}
-			DisplayItem={(props) => <TextEditDiv tv={props.item.value}/>}
-			DisplayItems={(props) => <DelimitedList delimiter=", " {...props} />}
-		/>
+		<BucketOrText id="Languages" values={VAL.languages} onUpdate={(vals)=> setVAL(prev => {
+			let copy = structuredClone(prev)
+			copy.languages = vals
+			return copy
+		})} />
 	)
 
 	const Technologies = () => (
-		<BucketComponent
-			bucket = {{ id: "Technologies", values: VAL.technologies }}
-			isVertical={false}
-			DisplayItem={(props) => <TextEditDiv tv={props.item.value}/>}
-			DisplayItems={(props) => <DelimitedList delimiter=", " {...props} />}
-		/>
+		<BucketOrText id="Technologies" values={VAL.technologies} onUpdate={(vals)=> setVAL(prev => {
+			let copy = structuredClone(prev)
+			copy.technologies = vals
+			return copy
+		})}/>
 	)
 
 	const Summary = () => (

@@ -1,9 +1,9 @@
 import "./App.scss";
 import { useEffect, useState, useRef } from "react";
-import { Section } from "./components/Section/section";
+import { Section } from "./components/Section/Section";
 import { CV, JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
-import { CVEditor } from "./components/CVEditor/cveditor";
+import { CVEditor } from "./components/CVEditor/v2/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";
@@ -13,6 +13,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useLogger } from "./hooks/logger";
 import { SplitView } from "./components/SplitView/splitview";
+import { JIDisplay } from "./components/JIDisplay/JIDisplay";
 
 function App() {
 
@@ -27,6 +28,41 @@ function App() {
     const CVEditorRef = useRef(null);
 
     const [cvInfo, setCVInfo] = useState<any>([]);
+
+    const JIRef = useRef(null);
+    const [jobInfo, setJobInfo] = useState({} as JobInfo);
+
+    useEffect(() => {
+        // Get all saved CVs
+        BackendAPI.getCVs()
+        .then(cvs => {
+            log("CVs from backend:", cvs.map(cv => cv.name));
+            if (cvs.length > 0) {
+                setCVs(cvs);
+                setCV(cvs[0].data); // set the first CV as the default
+            }
+        })
+        // Get the cv info
+        BackendAPI.getCVinfo()
+        .then(cv_info => {
+            log("CV info from backend:", cv_info);
+            setCVInfo(cv_info);
+        })
+    }, []);
+
+    const getJobInfo = () => {
+        if(!jobText) {
+            console.log("No job text to extract from.");
+            return;
+        }
+        console.log("Extracting Job Info...");
+        // 2 - Backend extracts the job info from the text
+        // Does not stall UI, by using .then(...)
+        BackendAPI.getJobInfo(jobText).then((jobInfo: JobInfo | null) => {
+            if (jobInfo === null) console.log("Job Info is null!");
+            else setJobInfo(jobInfo);
+        });
+    };
 
     const getCL = (input: string = null) => {
         BackendAPI.genCL(input).then(setCL);
@@ -78,30 +114,12 @@ function App() {
         });
     };
 
-    useEffect(() => {
-        // Get all saved CVs
-        BackendAPI.getCVs()
-        .then(cvs => {
-            log("CVs from backend:", cvs.map(cv => cv.name));
-            if (cvs.length > 0) {
-                setCVs(cvs);
-                setCV(cvs[0].data); // set the first CV as the default
-            }
-        })
-        // Get the cv info
-        BackendAPI.getCVinfo()
-        .then(cv_info => {
-            log("CV info from backend:", cv_info);
-            setCVInfo(cv_info);
-        })
-    }, []);
-
     const saveJobText = () => {
         const jobTxt = (
             document.getElementById("job-info-input") as HTMLTextAreaElement
         ).value;
         setJobText(jobTxt);
-    }
+    };
 
     // RENDER ACTIVE SECTION
     return (
@@ -109,10 +127,16 @@ function App() {
             {/* --------------- JOB INFO --------------- */}
 
             <Section id="section-job-info" heading="Job Info">
-                <textarea id="job-info-input"/>
+                <ButtonSet>
+                    <button onClick={getJobInfo}>Extract</button>
+                </ButtonSet>
+                <SplitView>
+                    <textarea id="job-info-input" onBlur = {saveJobText} placeholder="Paste job description here..."/>
+                    <JIDisplay jobInfo={jobInfo} ref={JIRef}/>
+                </SplitView>
             </Section>
 
-            
+
 
             {/* --------------- COVER LETTER --------------- */}
 
@@ -138,9 +162,7 @@ function App() {
             <Section id="section-cv" heading="Resume">
 
                 <ButtonSet>
-                    <button onClick={() => { saveJobText(); getCV() }}>
-                        Generate
-                    </button>
+                    <button onClick={() => { saveJobText(); getCV() }}>Generate</button>
                     <select onChange={e => changeCV(e.target.value)}>
                         { CVs?.map(cv => <option value={cv.name}>{cv.name}</option>) }
                     </select>

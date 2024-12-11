@@ -160,13 +160,13 @@ export async function extractFromJobDesc(jobTxt: string) {
         const words = getWords(jobTxt);
     // 2 - Get assistant response
         let assResp: JobExtractResponse;
-        if (Number(process.env.TEST) === 1) {
-            await delay(500);
-            console.log('extractFromJobDesc (testing mode)');
-            assResp = TEST_response;
-        } else {
-            assResp = await jobExtractAssistant(jobTxt);
-        }
+        // if (Number(process.env.TEST) === 1) {
+        //     await delay(500);
+        //     console.log('extractFromJobDesc (testing mode)');
+        //     assResp = TEST_response;
+        // } else {
+        //     assResp = await jobExtractAssistant(jobTxt);
+        // }
     // Return
         return {
             ...assResp,

@@ -789,6 +789,17 @@ const language_list = [
     "ZPL",
 ].map((w) => w.toLowerCase());
 
+const tech_list = [
+    "React",
+    "ReactJS",
+    "React Native",
+    "Angular",
+    "AngularJS",
+    "Vue",
+    "VueJS",
+    "Svelte",
+].map((w) => w.toLowerCase());
+
 /**
  * seperate words by: space | new line | punctuation followed by a space
  */
