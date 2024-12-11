@@ -13,6 +13,11 @@ The project features a frontend implementing the core features and a frontend fo
 * [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)
 * [![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=fff)](#)
 
+
+## Video Demo
+
+[![Watch the video](https://raw.githubusercontent.com/rhudaj/JobTool/dnd/readme-assets/thumbnail.png)](https://raw.githubusercontent.com/rhudaj/JobTool/dnd/readme-assets/demo.mp4)
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
