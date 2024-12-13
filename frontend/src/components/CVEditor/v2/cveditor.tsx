@@ -136,11 +136,7 @@ const CVEditor = forwardRef((
 ) => {
 
 	// Keep track each value in the CV
-	const [VAL, setVAL] = React.useState(props.cv);
-
-	React.useEffect(()=>{
-		console.log(`CVEditor new VAL <- `, VAL);
-	}, [VAL])
+	const [CV, setCV] = React.useState(props.cv);
 
 	// give the parent 'App' access to localJI
 	useImperativeHandle(ref, () => ({
@@ -151,7 +147,7 @@ const CVEditor = forwardRef((
 	// ----------------- SUB COMPONENTS -----------------
 
 	const Languages = () => (
-		<BucketOrText id="Languages" values={VAL.languages} onUpdate={(vals)=> setVAL(prev => {
+		<BucketOrText id="Languages" values={CV.languages} onUpdate={(vals)=> setCV(prev => {
 			let copy = structuredClone(prev)
 			copy.languages = vals
 			return copy
@@ -159,7 +155,7 @@ const CVEditor = forwardRef((
 	)
 
 	const Technologies = () => (
-		<BucketOrText id="Technologies" values={VAL.technologies} onUpdate={(vals)=> setVAL(prev => {
+		<BucketOrText id="Technologies" values={CV.technologies} onUpdate={(vals)=> setCV(prev => {
 			let copy = structuredClone(prev)
 			copy.technologies = vals
 			return copy
@@ -170,14 +166,14 @@ const CVEditor = forwardRef((
 		<DragDropItem
 			item = {{
 				id: "summary",
-				value: VAL.summary
+				value: CV.summary
 			}}
 		/>
 	)
 
 	const Experiences = () => (
 		<BucketComponent
-			bucket = {{ id: "Experiences", values: VAL.experiences }}
+			bucket = {{ id: "Experiences", values: CV.experiences }}
 			isVertical={true}
 			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
 			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
@@ -186,7 +182,7 @@ const CVEditor = forwardRef((
 
 	const Projects = () => (
 		<BucketComponent
-			bucket = {{ id: "Projects", values: VAL.projects }}
+			bucket = {{ id: "Projects", values: CV.projects }}
 			isVertical={true}
 			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
 			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
@@ -196,17 +192,16 @@ const CVEditor = forwardRef((
 	const rows_cols = [
 		// ---------- ROW 1 ----------
 		[
-			// ---------- COLUMN 1 ----------
+			// ---------- COLUMNS ----------
 			(
 				<div id="name-title">
 					<div id="div-full-name">ROMAN HUDAJ</div>
-					<TextEditDiv tv={VAL.personalTitle} id="div-personal-title"/>
+					<TextEditDiv tv={CV.personalTitle} id="div-personal-title"/>
 				</div>
 			),
-			// ---------- COLUMN 2 ----------
 			(
 				<div id="div-links">
-					{VAL.links.map((l) => (
+					{CV.links.map((l) => (
 						<Link url={l.url} icon={l.icon} text={l.text} />
 					))}
 				</div>
@@ -246,7 +241,7 @@ const CVEditor = forwardRef((
 		),
 		(
 			<Section head="EDUCATION" id="education">
-				<ExperienceUI {...VAL.education} />
+				<ExperienceUI {...CV.education} />
 			</Section>
 		)
 	]

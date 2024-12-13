@@ -35,6 +35,15 @@
     ],
     "projects": [
         {
+            "date_range": "9/21 - 9/22",
+            "title": "Portfolio Website",
+            "side_title": "https://github.com/rhudaj/personal-website-v2",
+            "points": [
+                "Developed a dynamic personal website to showcase my resume, projects, coursework, and artwork, with content automatically updated via APIs and web scraping // Built with React, TypeScript, Express.js, HTML, and CSS // Integrated data sources like social media APIs for artwork, GitHub readmes for project details, and web-crawled university course listings // Implemented React Router for seamless navigation and hosted the site on a custom domain // Added a contact form with email functionality to enhance engagement."
+            ],
+            "tech": ["React", "TypeScript", "Express", "HTML", "CSS"]
+        },
+        {
             "date_range": "5/24 - Pres",
             "title": "Automated Restaurant Reservation Business",
             "side_title": "https://github.com/rhudaj/ResyBot",
