@@ -1,12 +1,12 @@
 import "./grid.scss"
-import { joinClassNames } from "../../../hooks/joinClassNames";
+import { joinClassNames } from "../../hooks/joinClassNames";
 
 function Grid(props: {
     rows_cols: (any | any[])[],
     className?: string,
     id?: string
 }) {
-    const classNames = joinClassNames("grid", props.className);
+    const classNames = joinClassNames("grid-rows", props.className);
     return (
         <div className={classNames} id={props.id ?? ""}>
             {props.rows_cols.map((row, i) => (

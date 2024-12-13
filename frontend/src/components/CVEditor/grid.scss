@@ -1,0 +1,16 @@
+@import "./cveditor.scss"; // to get the $base-font-size
+
+$cv-row-gap: calc(5 * $base-font-size);
+$cv-col-gap: calc(5 * $base-font-size);
+
+.grid-rows {
+    display: grid;
+    grid-auto-rows: min-content; /* same as repeat(N, min-content), where N = # rows */
+    row-gap: $cv-row-gap;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: $cv-col-gap;
+}

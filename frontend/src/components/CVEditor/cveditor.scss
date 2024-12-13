@@ -1,34 +1,12 @@
-/* delimited-list ---------------------------- */
-
-.delimited-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.delimited-list {
-    & > * {
-        flex: 0 1 auto;         /* Prevent children from expanding and ensure they fit their content */
-        white-space: nowrap;    /* Prevent wrapping */
-        white-space-collapse: preserve;
-    }
-}
-
-.bucket-or-text {
-    &:hover {
-        background-color: lightblue;
-    }
-}
-
-/* cv ---------------------------- */
-
-$base-font-size: 0.25cqw;
+$base-font-size: 0.26cqw;
 
 $page-padding:          calc(20 * $base-font-size);
-$cv-row-gap:            calc(5 * $base-font-size);
-$cv-col-gap:            calc(5 * $base-font-size);
+
 $experiences-gap:       calc(5 * $base-font-size);
+
 $exp-row-gap:           calc(5 * $base-font-size);
 $exp-col-gap:           calc(5 * $base-font-size);
+
 $exp-head-content-gap:  calc(5 * $base-font-size);
 $sec-row-gap:           calc(6 * $base-font-size);
 $sec-head-line-gap:     calc(3 * $base-font-size);
@@ -42,13 +20,26 @@ $p-font:                calc(6 * $base-font-size);
 $name-font:             calc(12 * $base-font-size);
 $title-font:            calc(8 * $base-font-size);
 
+
+/* delimited-list ---------------------------- */
+
+.delimited-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    & > * {
+        flex: 0 1 auto;                     /* Prevent children from expanding and ensure they fit their content */
+        white-space: wrap;                  /* Prevent wrapping */
+        white-space-collapse: preserve;
+    }
+}
+
+/* CV-EDITOR ---------------------------- */
+
 #cv-editor {
     padding: $page-padding;
     color: black;
     font-family: 'Arial Narrow Bold', sans-serif;
-
-    display: grid;
-    row-gap: $cv-row-gap;
 }
 
 /* SECTION ------------------  */
@@ -179,9 +170,11 @@ $title-font:            calc(8 * $base-font-size);
 
 /* ROW 3 --------------- */
 
-.experience-list {
-    display: grid;
-    row-gap: $experiences-gap;
+#experiences {
+    .sec-content {
+        display: grid;
+        row-gap: $experiences-gap;
+    }
 }
 
 /* ROW 4 --------------- */

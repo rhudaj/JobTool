@@ -4,7 +4,7 @@ import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import React from "react";
 import { BucketComponent, DragDropItem } from "../../dnd/dnd";
 import { joinClassNames } from "../../../hooks/joinClassNames";
-import { Grid } from "./grid";
+import { Grid } from "../grid";
 
 // CUSTOM SUB COMPONENTS
 

@@ -1,8 +1,11 @@
-import "./cveditor_v1.css";
+import "../cveditor.scss";
 import { CV } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { TrackVal, wrapTrackable, unwrapTrackable } from "../../../hooks/trackable";
+import { Grid } from "../grid";
+import { joinClassNames } from "../../../hooks/joinClassNames";
+
 
 // CUSTOM SUB COMPONENTS
 
@@ -64,7 +67,7 @@ const Section = (props: {
     children: React.ReactNode;
 }) => {
 	return (
-		<div className="sec" id={props.id}>
+		<div className="section" id={props.id}>
 			<div className="sec-head">
 				<p>{props.head}</p>
 				<hr />
@@ -97,8 +100,10 @@ const DelimitedList = (props: { items: TrackVal<string>[], delimiter: string, cl
 	const txt = props.items.map((item) => item.value).join(props.delimiter);
 	const tv = wrapTrackable(txt);
 
+	const classNames = joinClassNames("delimited-list", props.className);
+
 	return (
-		<div className={`delimited-list ${props.className ?? ""}`}>
+		<div className={classNames}>
 			<TextEditDiv tv={tv} />
 		</div>
 	);
@@ -119,81 +124,70 @@ const CVEditor = forwardRef((
 		getCV: () => unwrapTrackable(VAL)
 	}));
 
-	if (!props.cv) return null;
-	return (
-		<div id="cv-editor">
-
-			<div className="rows">
-
-				{/* ---------- ROW 1 ---------- */}
-
-				<div className="columns">
-
-					<div id="name-title">
-						<div id="div-full-name">ROMAN HUDAJ</div>
-						<TextEditDiv tv={VAL.personalTitle} id="div-personal-title"/>
-					</div>
-
-					<div id="div-links">
-						{VAL.links.map((l) => (
-							<Link url={l.url.value} icon={l.icon.value} text={l.text} />
-						))}
-					</div>
-
+	const rows_cols = [
+		[
+		(
+				<div id="name-title">
+					<div id="div-full-name">ROMAN HUDAJ</div>
+					<TextEditDiv tv={VAL.personalTitle} id="div-personal-title"/>
 				</div>
-
-				{/* ---------- ROW 2 ---------- */}
-
-				<div className="columns">
-
-					<Section head="SUMMARY" id="section-summary">
-						<TextEditDiv tv={VAL.summary} id="summary" />
-					</Section>
-
-					<Section head="SKILLS" id="section-skills">
-
-						<div className="sub-sec">
-							<div className="sub-sec-head">Languages:</div>
-								<DelimitedList items={VAL.languages} delimiter=", " />
-						</div>
-
-						<div className="sub-sec">
-							<div className="sub-sec-head">Technology:</div>
-							<DelimitedList items={VAL.technologies} delimiter=", " />
-						</div>
-
-					</Section>
-
-				</div>
-
-				{/* ---------- ROW 3 ---------- */}
-
-				<Section head="EXPERIENCES" id="experiences">
-					{VAL.experiences.map((exp) => (
-						<ExperienceUI {...exp} />
+			),
+			(
+				<div id="div-links">
+					{VAL.links.map((l) => (
+						<Link url={l.url.value} icon={l.icon.value} text={l.text} />
 					))}
+				</div>
+			),
+		],
+		[
+			(
+				<Section head="SUMMARY" id="section-summary">
+					<TextEditDiv tv={VAL.summary} id="summary" />
 				</Section>
+			),
+			(
+				<Section head="SKILLS" id="section-skills">
 
-				{/* ---------- ROW 4 ---------- */}
+					<div className="sub-sec">
+						<div className="sub-sec-head">Languages:</div>
+							<DelimitedList items={VAL.languages} delimiter=", " />
+					</div>
 
-				<Section head="PROJECTS" id="projects">
-					{
-						VAL.projects.map((proj: any) => (
-							<ExperienceUI {...proj}/>
-						))
-					}
+					<div className="sub-sec">
+						<div className="sub-sec-head">Technology:</div>
+						<DelimitedList items={VAL.technologies} delimiter=", " />
+					</div>
+
 				</Section>
+			)
+		],
+		(
+			<Section head="EXPERIENCES" id="experiences">
+				{VAL.experiences.map((exp) => (
+					<ExperienceUI {...exp} />
+				))}
+			</Section>
+		),
+		(
+			<Section head="PROJECTS" id="projects">
+			{
+				VAL.projects.map((proj: any) => (
+					<ExperienceUI {...proj}/>
+				))
+			}
+			</Section>
+		),
+		(
+			<Section head="EDUCATION" id="education">
+			<ExperienceUI {...VAL.education} />
+			</Section>
+		)
 
-			{/* ---------- ROW 5 ---------- */}
+	];
 
-				<Section head="EDUCATION" id="education">
-					<ExperienceUI {...VAL.education} />
-				</Section>
-
-			</div>
-
-		</div>
-	);
+	if (props.cv) return <Grid id="cv-editor" rows_cols={rows_cols}/>;
+	else return null;
 });
 
 
