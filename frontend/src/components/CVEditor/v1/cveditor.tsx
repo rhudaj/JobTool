@@ -163,7 +163,7 @@ const CVEditor = forwardRef((
 			)
 		],
 		(
-			<Section head="EXPERIENCES" id="experiences">
+			<Section head="EXPERIENCES" id="experience">
 				{VAL.experiences.map((exp) => (
 					<ExperienceUI {...exp} />
 				))}

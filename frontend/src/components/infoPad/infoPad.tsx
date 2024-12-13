@@ -1,15 +1,17 @@
 import './infoPad.scss';
 
 import { useLogger } from '../../hooks/logger';
-import { ExperienceUI } from '../CVEditor/v2/cveditor';
-import { Bucket, BucketComponent, Item } from '../dnd/dnd';
+import { BucketComponent } from '../dnd/dnd';
 import React from "react";
 
-let count = 0; // TODO: internalize this state
+import { BucketTypes, CVInfoPadMap } from '../dnd/types/types';
 
 export function InfoPad(props: { cv_info: any} ) {
 
     const log = useLogger("InfoPad");
+
+    // ----------------- STATE -----------------
+
     const [infoBuckets, setInfoBuckets] = React.useState([]);
 
     // Convert into [{id: string, values: any[]}]
@@ -21,48 +23,32 @@ export function InfoPad(props: { cv_info: any} ) {
                 values: entry[1]
             }))
         )
-    }, [props.cv_info])
+    }, [props.cv_info]);
 
-    function displayItem(props: {item: Item}) {
-        return (
-            <div className="info-pad-item">
-                {props.item.value}
-            </div>
-        )
-    }
+    // ----------------- RENDER -----------------
 
-    function DisplayItems(props: {children: JSX.Element[]}) {
+    const InfoPadComponents = infoBuckets.map((bucket, i: number) => {
+        const bucketType = BucketTypes[CVInfoPadMap[bucket.id]];
         return (
-            <div className="info-pad-items">
-                {props.children}
+            <div key={i}>
+                <h3>{bucket.id}</h3>
+                <BucketComponent
+                    key={i}
+                    id={bucket.id}
+                    values={bucket.values}
+                    isVertical={bucketType.isVertical}
+                    DisplayItem={bucketType.DisplayItem}
+                    DisplayItems={bucketType.DisplayItems}
+                    deleteItemsDisabled
+                />
             </div>
-        )
-    }
+        );
+    });
 
     // ----------------- RENDER -----------------
 
     if(infoBuckets.length === 0)
         return <div id="info-pad">no cv-info found</div>;
-    else return (
-        <div id="info-pad">
-            {infoBuckets.map((bucket, i: number) => (
-                <div key={i}>
-                    <h3>{bucket.id}</h3>
-                    <BucketComponent
-                        id={bucket.id}
-                        values={bucket.values}
-                        item_type={bucket.id}
-                        isVertical={false}
-                        DisplayItem={
-                            bucket.id === "projects" ?
-                            (props) => <ExperienceUI {...props.item.value} /> :
-                            displayItem
-                        }
-                        DisplayItems={DisplayItems}
-                        deleteItemsDisabled
-                    />
-                </div>
-            ))}
-        </div>
-    );
+    else
+        return <div id="info-pad">{InfoPadComponents}</div>;
 };

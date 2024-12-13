@@ -124,7 +124,7 @@ function BucketOrText(props: {
 					values={props.values}
 					item_type={props.id}
 					isVertical={false}
-					DisplayItem={displayProps => <TextEditDiv tv={displayProps.item.value}/>}
+					DisplayItem={displayProps => <TextEditDiv tv={displayProps.value}/>}
 					DisplayItems={displayProps => <DelimitedList delimiter={props.delim} {...displayProps} />}
 					onUpdate={props.onUpdate}
 				/> :
@@ -173,7 +173,7 @@ function CVEditor(props: { cv: CV }) {
 			values={CV.experiences}
 			item_type="experiences"
 			isVertical={true}
-			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
+			DisplayItem={(props) => <ExperienceUI {...props.value} />}
 			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
 			onUpdate={(newVals) => setCV(prev => {
 				let copy = structuredClone(prev)
@@ -189,7 +189,7 @@ function CVEditor(props: { cv: CV }) {
 			values={CV.projects }
 			item_type="projects"
 			isVertical={true}
-			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
+			DisplayItem={(props) => <ExperienceUI {...props.value} />}
 			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
 		/>
 	)

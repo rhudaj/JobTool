@@ -27,7 +27,7 @@ const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
 function DragDropItem(props: {
 	item: Item,
 	item_type?: string,
-	DisplayItem?: (props: {item: Item}) => JSX.Element,	// optional (has a default)
+	DisplayItem?: (props: Item) => JSX.Element,	// optional (has a default)
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
 	onDelete?: (id: any) => void,
@@ -37,7 +37,7 @@ function DragDropItem(props: {
 
 	// -----------------DEFAULT VALUES-----------------
 
-	const DisplayItem = props.DisplayItem ?? ((props) => <>{props.item.value}</>);
+	const DisplayItem = props.DisplayItem ?? ((props: Item) => <>{props.value}</>);
 
 	// ----------------- STATE / HELPERS-----------------
 
@@ -115,7 +115,7 @@ function DragDropItem(props: {
 	return (
 		<>
 			<div ref={ref} className={classNames}>
-				<DisplayItem item={props.item}/>
+				<DisplayItem {...props.item}/>
 			</div>
 			{ props.onDelete && <DeleteButton ref={ref} onDelete={()=>props.onDelete(props.item.id)}/> }
 		</>
@@ -190,7 +190,7 @@ function BucketComponent(props: {
 	values: any[],
 	isVertical: boolean,
 	DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element,
-	DisplayItem?: (props: {item: Item}) => JSX.Element,
+	DisplayItem?: (props: Item) => JSX.Element,
 	item_type?: string,
 	// callback for when state changes
 	onUpdate?: (newValues: any[]) => void
