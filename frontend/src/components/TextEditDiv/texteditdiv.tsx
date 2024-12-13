@@ -36,7 +36,7 @@ export function TextEditDiv(props: {
         setIsEditing(false);
 		// assert tv as type TrackVal<string>:
         if (typeof props.tv === "string") {
-            props.onUpdate(e.target.textContent)
+            if (props.onUpdate) props.onUpdate(e.target.textContent)
         } else {
             // fires when an element has lost focus
 		    props.tv.value = e.target.textContent;

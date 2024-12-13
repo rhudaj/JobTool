@@ -1,4 +1,5 @@
 #cv-editor {
+    --base-font-size: 0.26cqw;
     /* PAGE PADDING */
     --page-padding:         calc(20 * var(--base-font-size));
     /* GAPS */
@@ -149,10 +150,14 @@
 
 .delimited-list {
     display: flex;
-    flex-wrap: wrap; /* => items use max content width */
-    white-space-collapse: preserve; /* for the <span> holding the delim */
+    flex-wrap: wrap;
 }
 
+.delimited-list > * {
+    flex: 0 1 auto;         /* Prevent children from expanding and ensure they fit their content */
+    white-space: wrap;    /* Prevent wrapping */
+    white-space-collapse: preserve;
+}
 /* ROW 3 ----------------------------*/
 
 #experiences > .sec-content {

@@ -1,14 +1,14 @@
-import "./cveditor.scss";
-import { CV } from "shared";
+// import "./cveditor.scss";
+import { CV, Experience } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
-import React, { forwardRef, useImperativeHandle } from "react";
+import React from "react";
 import { BucketComponent, DragDropItem } from "../../dnd/dnd";
 import { joinClassNames } from "../../../hooks/joinClassNames";
 import { Grid } from "./grid";
 
 // CUSTOM SUB COMPONENTS
 
-const ExperienceUI = (props: any) => {
+const ExperienceUI = (props: Experience & { onUpdate?: (newExp: Experience) => void }) => {
 
 	// TODO: this is hacky, need to improve.
 	let sideTitleEl = (props.side_title as string).startsWith("http") ?
@@ -24,14 +24,6 @@ const ExperienceUI = (props: any) => {
 				</li>
 			))}
 		</ul>
-
-	const tech = (
-		<BucketComponent
-			bucket={{ id: "Tech", values: props.tech }}
-			isVertical={false}
-			DisplayItems={(props) => <DelimitedList delimiter=" / " className="exp-tech" {...props} />}
-		/>
-	);
 
     return (
 		<div className="experience">
@@ -51,7 +43,14 @@ const ExperienceUI = (props: any) => {
 
 				<div className="exp-content"> {content} </div>
 
-				{tech}
+				{/* ----------- TECH ---------- */}
+
+				<BucketOrText
+					id="Tech"
+					delim=" / "
+					values={props.tech}
+					onUpdate={vals => props.onUpdate({ ...props, tech: vals })}
+				/>
 
 			</div>
 		</div>
@@ -106,56 +105,53 @@ function DelimitedList(props: { children: JSX.Element[], delimiter: string, clas
 
 
 // TODO: this is only a (poor) temporary solution.
-function BucketOrText(props: { id: string, values: string[], onUpdate?: (newVals: string[]) => void }) {
+function BucketOrText(props: {
+	id: string,
+	values: string[],
+	delim: string,
+	onUpdate?: (newVals: string[]) => void
+}) {
 
 	// true => bucket, false => text
 	const [mode, setMode] = React.useState(true);
 
-	const DELIM = ", ";
-
 	return (
-		<div className="bucket-or-text" onDoubleClick={()=>setMode(false)} onBlur={()=> setMode(true)}>
+		<div className="bucket-or-text" onDoubleClick={()=>setMode(false)} onBlur={()=>setMode(true)}>
 			{
 				mode ?
 				<BucketComponent
-					bucket = {{ id: props.id, values: props.values }}
+					id={props.id}
+					values={props.values}
+					item_type={props.id}
 					isVertical={false}
-					DisplayItem={(props) => <TextEditDiv tv={props.item.value}/>}
-					DisplayItems={(props) => <DelimitedList delimiter={DELIM} {...props} />}
+					DisplayItem={displayProps => <TextEditDiv tv={displayProps.item.value}/>}
+					DisplayItems={displayProps => <DelimitedList delimiter={props.delim} {...displayProps} />}
+					onUpdate={props.onUpdate}
 				/> :
-				<TextEditDiv tv={props.values.join(DELIM)} onUpdate={(val)=>props.onUpdate(val.split(DELIM))}/>
+				<TextEditDiv tv={props.values.join(props.delim)} onUpdate={(val)=>props.onUpdate(val.split(props.delim))}/>
 			}
 		</div>
 	)
 };
 
 // MAIN COMPONENT
-const CVEditor = forwardRef((
-	props: { cv: CV },
-	ref: React.ForwardedRef<any>
-) => {
+function CVEditor(props: { cv: CV }) {
 
 	// Keep track each value in the CV
 	const [CV, setCV] = React.useState(props.cv);
 
-	// give the parent 'App' access to localJI
-	useImperativeHandle(ref, () => ({
-		// NOTE: no purpose.
-		getCV: () => props.cv
-	}));
-
 	// ----------------- SUB COMPONENTS -----------------
 
 	const Languages = () => (
-		<BucketOrText id="Languages" values={CV.languages} onUpdate={(vals)=> setCV(prev => {
+		<BucketOrText id="languages" values={CV.languages} delim=", " onUpdate={(vals)=> setCV(prev => {
 			let copy = structuredClone(prev)
 			copy.languages = vals
 			return copy
-		})} />
+		})}/>
 	)
 
 	const Technologies = () => (
-		<BucketOrText id="Technologies" values={CV.technologies} onUpdate={(vals)=> setCV(prev => {
+		<BucketOrText id="technologies" values={CV.technologies} delim=", " onUpdate={(vals)=> setCV(prev => {
 			let copy = structuredClone(prev)
 			copy.technologies = vals
 			return copy
@@ -173,16 +169,25 @@ const CVEditor = forwardRef((
 
 	const Experiences = () => (
 		<BucketComponent
-			bucket = {{ id: "Experiences", values: CV.experiences }}
+			id="experiences"
+			values={CV.experiences}
+			item_type="experiences"
 			isVertical={true}
 			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
 			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
+			onUpdate={(newVals) => setCV(prev => {
+				let copy = structuredClone(prev)
+				copy.experiences = newVals
+				return copy
+			})}
 		/>
 	)
 
 	const Projects = () => (
 		<BucketComponent
-			bucket = {{ id: "Projects", values: CV.projects }}
+			id="projects"
+			values={CV.projects }
+			item_type="projects"
 			isVertical={true}
 			DisplayItem={(props) => <ExperienceUI {...props.item.value} />}
 			DisplayItems={(props) => <div className="experience-list">{props.children}</div>}
@@ -248,11 +253,11 @@ const CVEditor = forwardRef((
 
 	// ----------------- RENDER -----------------
 
-	if (!props.cv) return null;
+	if (!CV) return null;
 	return (
 		<Grid id="cv-editor" rows_cols={rows_cols}/>
 	);
-});
+};
 
 
 export { CVEditor, ExperienceUI }

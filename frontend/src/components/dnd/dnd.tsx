@@ -39,19 +39,16 @@ function DragDropItem(props: {
 
 	const DisplayItem = props.DisplayItem ?? ((props) => <>{props.item.value}</>);
 
-	const item_type = props.item_type ?? DEFAULT_ITEM_TYPE;
-
 	// ----------------- STATE / HELPERS-----------------
 
 	const log = useLogger("DragDropItem");
 
 	const ref = React.useRef(null);
 
-
 	// -----------------DRAG FUNCTIONALITY-----------------
 
-    const [{isDragging}, drag, dragPreview] = useDrag(() => ({
-		type: item_type,
+    const [{isDragging}, drag] = useDrag(() => ({
+		type: props.item_type ?? DEFAULT_ITEM_TYPE,
 		canDrag: props.canDrag != false,
 		item: () => {
 			log("Started to drag.");
@@ -75,7 +72,7 @@ function DragDropItem(props: {
 
 	const [{isDropTarget}, dropRef] = useDrop(
 		() => ({
-			accept: "DRAG-ITEM",
+			accept: props.item_type ?? DEFAULT_ITEM_TYPE,
 			canDrop: (dropItem: Item) => {
 				return (props.canBeTarget != false) && (dropItem.id !== props.item.id);
 			},
@@ -189,11 +186,14 @@ const useBucket = (bucket: Bucket) => {
 
 let count = 0; // for assigning unique ids to items
 function BucketComponent(props: {
-	bucket: Bucket | {id: any, values: any[]},
+	id: any,
+	values: any[],
 	isVertical: boolean,
 	DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element,
 	DisplayItem?: (props: {item: Item}) => JSX.Element,
 	item_type?: string,
+	// callback for when state changes
+	onUpdate?: (newValues: any[]) => void
 	// toggle options:
 	deleteItemsDisabled?: boolean,
 }) {
@@ -201,23 +201,20 @@ function BucketComponent(props: {
 	// -----------------DEFAULT VALUES-----------------
 
 	// If item ids are not provided (only values), use the value as the id.
-	let bucket: Bucket;
-	if ("values" in props.bucket) {
-		console.log("Warning! Setting all items to have the same id as their value.");
-		bucket = {
-			id: props.bucket.id,
-			items: props.bucket.values.map((value) => ({ id: count++, value: value }))
-		}
-	} else {
-		bucket = props.bucket;
-	}
+	let bucket: Bucket = {
+		id: props.id,
+		items: props.values.map(v => ({ id: count++, value: v }))
+	};
 
 	// -----------------STATE-----------------
 
 	const { items, addItem, moveItem, removeItem, changeItemValue } = useBucket(bucket);
 
+	// Called whenever INTERNAL state changes:
 	React.useEffect(()=>{
-		console.log(`Bucket ${bucket.id} just got new items:`, items)
+		const newValues = items.map(I=>I.value);
+		// Only call the callback if the values have changed
+		if (props.onUpdate && items != bucket.items) props.onUpdate(newValues);
 	}, [items])
 
 	// -----------------DND RELATED-----------------
@@ -243,7 +240,7 @@ function BucketComponent(props: {
 
     const [{isHovered}, dropRef] = useDrop(
 		() => ({
-			accept: "DRAG-ITEM",
+			accept: props.item_type ?? DEFAULT_ITEM_TYPE,
 			canDrop: (item: Item) => {
 				return true;
 			},
@@ -278,7 +275,7 @@ function BucketComponent(props: {
 				if (hoveredGap !== undefined) setHoveredGap(undefined);
 
 				// (optional) returned item will be the 'dropResult' and available in 'endDrag'
-				return { id: props.bucket.id };
+				return { id: props.id };
 			},
 			collect: (monitor) => ({
 				isHovered: monitor.isOver()
@@ -315,7 +312,7 @@ function BucketComponent(props: {
 								}}
 								onLetGo={(dragId: any, bucketId: any) => {
 									// Remove the item if it was dropped on a different bucket
-									if (bucketId !== props.bucket.id)
+									if (bucketId !== props.id)
 										removeItem(dragId);
 								}}
 							/>

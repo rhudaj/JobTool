@@ -1,4 +1,4 @@
-import "./cveditor.css";
+import "./cveditor_v1.css";
 import { CV } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import { forwardRef, useImperativeHandle, useState } from "react";
@@ -92,13 +92,13 @@ const Link = (props: {
 
 const DelimitedList = (props: { items: TrackVal<string>[], delimiter: string, className?: any }) => {
 
-	// TODO: does not work when saving values 
+	// TODO: does not work when saving values
 
 	const txt = props.items.map((item) => item.value).join(props.delimiter);
 	const tv = wrapTrackable(txt);
 
 	return (
-		<div className={`delimited-list ${props.className}`}>
+		<div className={`delimited-list ${props.className ?? ""}`}>
 			<TextEditDiv tv={tv} />
 		</div>
 	);
@@ -106,7 +106,7 @@ const DelimitedList = (props: { items: TrackVal<string>[], delimiter: string, cl
 
 // MAIN COMPONENT
 
-export const CVEditor = forwardRef((
+const CVEditor = forwardRef((
 	props: { cv: CV },
 	ref: React.ForwardedRef<any>
 ) => {
@@ -195,3 +195,6 @@ export const CVEditor = forwardRef((
 		</div>
 	);
 });
+
+
+export { CVEditor, ExperienceUI }

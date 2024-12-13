@@ -1,9 +1,10 @@
 import "./App.scss";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, createContext } from "react";
 import { Section } from "./components/Section/Section";
 import { CV, JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
-import { CVEditor } from "./components/CVEditor/v2/cveditor";
+// import { CVEditor } from "./components/CVEditor/v2/cveditor";
+import { CVEditor } from "./components/CVEditor/v1/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";
@@ -15,6 +16,8 @@ import { useLogger } from "./hooks/logger";
 import { SplitView } from "./components/SplitView/splitview";
 import { JIDisplay } from "./components/JIDisplay/JIDisplay";
 
+export const CVContext = createContext(null);
+
 function App() {
 
     const log = useLogger("App");
@@ -24,8 +27,8 @@ function App() {
 
     const [CVs, setCVs] = useState<{name: string, data: CV}[]>(null);
 
+    const cvref = useRef(null);
     const [CV, setCV] = useState(null);
-    const CVEditorRef = useRef(null);
 
     const [cvInfo, setCVInfo] = useState<any>([]);
 
@@ -107,10 +110,14 @@ function App() {
             log(`User entered CV name: ${cvName}`);
         }
 
+        // get CV from the cvref:
+
+        const newCV = cvref.current.getCV();
+
         // Save the named CV to the backend
-        BackendAPI.saveCV(cvName, CVEditorRef.current.getCV())
+        BackendAPI.saveCV(cvName, newCV)
         .then((isSuccess) => {
-            alert(`CV was ${isSuccess ? "" : "not"} saved successfully`);
+            alert(`CV was ${isSuccess ? "" : "NOT"} saved successfully`);
         });
     };
 
@@ -178,9 +185,8 @@ function App() {
                 <DndProvider backend={HTML5Backend}>
                     <SplitView>
                         <PrintablePage page_id="cv-page">
-                            { CV ? <CVEditor cv={CV} ref={CVEditorRef}/> : null }
+                            { CV ? <CVEditor cv={CV} ref={cvref} /> : null }
                         </PrintablePage>
-
                         <InfoPad cv_info={cvInfo}/>
                     </SplitView>
                 </DndProvider>

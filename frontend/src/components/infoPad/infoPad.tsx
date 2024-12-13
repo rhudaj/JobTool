@@ -10,21 +10,18 @@ let count = 0; // TODO: internalize this state
 export function InfoPad(props: { cv_info: any} ) {
 
     const log = useLogger("InfoPad");
-    const [infoBuckets, setInfoBuckets] = React.useState<Bucket[]>([]);
+    const [infoBuckets, setInfoBuckets] = React.useState([]);
 
-    // Convert into Bucket[] format
+    // Convert into [{id: string, values: any[]}]
     React.useEffect(() => {
         log("props.cv_info:", props.cv_info);
         setInfoBuckets(prev =>
-            Object.entries(props.cv_info)
-            .map((entry: [string, any[]]) => ({
+            Object.entries(props.cv_info).map((entry: [string, any[]]) => ({
                 id: entry[0],
-                items: entry[1].map(value => ({
-                    id: count++,
-                    value: value
-                } as Item))
-            } as Bucket))
-    )}, [props.cv_info])
+                values: entry[1]
+            }))
+        )
+    }, [props.cv_info])
 
     function displayItem(props: {item: Item}) {
         return (
@@ -48,15 +45,16 @@ export function InfoPad(props: { cv_info: any} ) {
         return <div id="info-pad">no cv-info found</div>;
     else return (
         <div id="info-pad">
-            {infoBuckets.map((bucket: Bucket, i: number) => (
+            {infoBuckets.map((bucket, i: number) => (
                 <div key={i}>
                     <h3>{bucket.id}</h3>
                     <BucketComponent
-                        bucket={bucket}
+                        id={bucket.id}
+                        values={bucket.values}
+                        item_type={bucket.id}
                         isVertical={false}
                         DisplayItem={
-                            bucket.id ===
-                            "projects" ?
+                            bucket.id === "projects" ?
                             (props) => <ExperienceUI {...props.item.value} /> :
                             displayItem
                         }
