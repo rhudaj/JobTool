@@ -170,18 +170,15 @@ $title-font:            calc(8 * $base-font-size);
 
 /* ROW 3 --------------- */
 
-#experiences {
-    .sec-content {
-        display: grid;
-        row-gap: $experiences-gap;
-    }
+// NOTE: this is selecting the <DisplayItems /> component for all experiences (projects, work, education)
+.experiences {
+    display: grid;
+    row-gap: $experiences-gap;
 }
 
 /* ROW 4 --------------- */
 
-#projects {
-    .sec-content {
-        display: grid;
-        row-gap: $experiences-gap;
-    }
+#projects > .sec-content {
+    display: grid;
+    row-gap: $experiences-gap;
 }

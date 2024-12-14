@@ -1,4 +1,4 @@
-import { ExperienceUI } from "../../CVEditor/v2/cveditor";
+import { ExperienceUI } from "../../CVEditor/v1/cveditor";
 import { Item } from "../dnd"
 
 interface BucketType {

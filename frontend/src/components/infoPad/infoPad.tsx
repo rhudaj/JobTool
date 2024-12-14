@@ -17,8 +17,8 @@ export function InfoPad(props: { cv_info: any} ) {
     // Convert into [{id: string, values: any[]}]
     React.useEffect(() => {
         log("props.cv_info:", props.cv_info);
-        setInfoBuckets(prev =>
-            Object.entries(props.cv_info).map((entry: [string, any[]]) => ({
+        setInfoBuckets(
+            Object.entries(props.cv_info).map(entry => ({
                 id: entry[0],
                 values: entry[1]
             }))
@@ -28,7 +28,7 @@ export function InfoPad(props: { cv_info: any} ) {
     // ----------------- RENDER -----------------
 
     const InfoPadComponents = infoBuckets.map((bucket, i: number) => {
-        const bucketType = BucketTypes[CVInfoPadMap[bucket.id]];
+        const bt = BucketTypes[CVInfoPadMap[bucket.id]];
         return (
             <div key={i}>
                 <h3>{bucket.id}</h3>
@@ -36,9 +36,10 @@ export function InfoPad(props: { cv_info: any} ) {
                     key={i}
                     id={bucket.id}
                     values={bucket.values}
-                    isVertical={bucketType.isVertical}
-                    DisplayItem={bucketType.DisplayItem}
-                    DisplayItems={bucketType.DisplayItems}
+                    item_type={bt.item_type}
+                    isVertical={bt.isVertical}
+                    DisplayItem={bt.DisplayItem}
+                    DisplayItems={bt.DisplayItems}
                     deleteItemsDisabled
                 />
             </div>

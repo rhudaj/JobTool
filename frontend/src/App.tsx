@@ -3,7 +3,6 @@ import { useEffect, useState, useRef, createContext } from "react";
 import { Section } from "./components/Section/Section";
 import { CV, JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
-// import { CVEditor } from "./components/CVEditor/v2/cveditor";
 import { CVEditor } from "./components/CVEditor/v1/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
@@ -76,8 +75,9 @@ function App() {
     };
 
     const changeCV = (name: string) => {
-        const cv = CVs.find(cv => cv.name === name);
-        setCV(cv.data);
+        const new_cv = CVs.find(cv => cv.name === name);
+        console.log("Changing CV to:", new_cv.name);
+        setCV(new_cv.data);
     };
 
     const saveCV = () => {
