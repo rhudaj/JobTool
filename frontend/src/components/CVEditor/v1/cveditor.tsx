@@ -5,6 +5,8 @@ import { forwardRef, useImperativeHandle, useState } from "react";
 import { TrackVal, wrapTrackable, unwrapTrackable } from "../../../hooks/trackable";
 import { Grid } from "../grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
+import { BucketComponent } from "../../dnd/dnd";
+import { BucketTypes } from "../../dnd/types/types";
 
 
 // CUSTOM SUB COMPONENTS
@@ -18,6 +20,16 @@ const ExperienceUI = (props: any) => {
 		<TextEditDiv tv={props.side_title} className="side-title"/>
 	);
 
+	let content = (props.points.length === 1) ?
+		<TextEditDiv tv={props.points[0]} /> :
+		<ul className="exp-points">
+			{props.points.map(p => (
+				<li>
+					<TextEditDiv tv={p} />
+				</li>
+			))}
+		</ul>
+
     return (
 		<div className="experience">
 
@@ -29,30 +41,14 @@ const ExperienceUI = (props: any) => {
 
 			<div className="exp-col-2">
 
-				{/* ------------ ROW 1 ------------ */}
+				{/* ------------ ROWS ------------ */}
 
 				<div className="titles">
 					<TextEditDiv tv={props.title} className="title" />
 					{sideTitleEl}
 				</div>
 
-				{/* ------------ ROW 2 ------------ */}
-
-				<div className="exp-content">
-					{ props.points.length === 1 ? (
-						<TextEditDiv tv={props.points[0]} />
-					) : (
-						<ul className="exp-points">
-							{props.points.map((p: TrackVal<string>) => (
-								<li>
-									<TextEditDiv tv={p} />
-								</li>
-							))}
-						</ul>
-					)}
-				</div>
-
-				{/* ------------ ROW 3 ------------ */}
+				<div className="exp-content">{content}</div>
 
 				<DelimitedList items={props.tech} delimiter=" / " />
 
@@ -117,11 +113,11 @@ const CVEditor = forwardRef((
 ) => {
 
 	// Keep track each value in the CV
-	const VAL = useState(wrapTrackable(props.cv))[0];
+	const CV = useState(wrapTrackable(props.cv))[0];
 
 	// give the parent 'App' access to localJI
 	useImperativeHandle(ref, () => ({
-		getCV: () => unwrapTrackable(VAL)
+		getCV: () => unwrapTrackable(CV)
 	}));
 
 	const rows_cols = [
@@ -129,12 +125,12 @@ const CVEditor = forwardRef((
 		(
 				<div id="name-title">
 					<div id="div-full-name">ROMAN HUDAJ</div>
-					<TextEditDiv tv={VAL.personalTitle} id="div-personal-title"/>
+					<TextEditDiv tv={CV.personalTitle} id="div-personal-title"/>
 				</div>
 			),
 			(
 				<div id="div-links">
-					{VAL.links.map((l) => (
+					{CV.links.map((l) => (
 						<Link url={l.url.value} icon={l.icon.value} text={l.text} />
 					))}
 				</div>
@@ -143,7 +139,7 @@ const CVEditor = forwardRef((
 		[
 			(
 				<Section head="SUMMARY" id="section-summary">
-					<TextEditDiv tv={VAL.summary} id="summary" />
+					<TextEditDiv tv={CV.summary} id="summary" />
 				</Section>
 			),
 			(
@@ -151,12 +147,12 @@ const CVEditor = forwardRef((
 
 					<div className="sub-sec">
 						<div className="sub-sec-head">Languages:</div>
-							<DelimitedList items={VAL.languages} delimiter=", " />
+							<DelimitedList items={CV.languages} delimiter=", " />
 					</div>
 
 					<div className="sub-sec">
 						<div className="sub-sec-head">Technology:</div>
-						<DelimitedList items={VAL.technologies} delimiter=", " />
+						<DelimitedList items={CV.technologies} delimiter=", " />
 					</div>
 
 				</Section>
@@ -164,7 +160,7 @@ const CVEditor = forwardRef((
 		],
 		(
 			<Section head="EXPERIENCES" id="experience">
-				{VAL.experiences.map((exp) => (
+				{CV.experiences.map((exp) => (
 					<ExperienceUI {...exp} />
 				))}
 			</Section>
@@ -172,7 +168,7 @@ const CVEditor = forwardRef((
 		(
 			<Section head="PROJECTS" id="projects">
 			{
-				VAL.projects.map((proj: any) => (
+				CV.projects.map((proj: any) => (
 					<ExperienceUI {...proj}/>
 				))
 			}
@@ -180,14 +176,15 @@ const CVEditor = forwardRef((
 		),
 		(
 			<Section head="EDUCATION" id="education">
-			<ExperienceUI {...VAL.education} />
+				<ExperienceUI {...CV.education} />
 			</Section>
 		)
-
 	];
 
-	if (props.cv) return <Grid id="cv-editor" rows_cols={rows_cols}/>;
-	else return null;
+	if (props.cv)
+		return <Grid id="cv-editor" rows_cols={rows_cols} rowGapPct="1" colGapPct="2"/>;
+	else
+		return null;
 });
 
 

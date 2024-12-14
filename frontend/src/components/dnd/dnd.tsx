@@ -76,9 +76,7 @@ function DragDropItem(props: {
 			canDrop: (dropItem: Item) => {
 				return (props.canBeTarget != false) && (dropItem.id !== props.item.id);
 			},
-			drop: (dragItem: Item, monitor) => {
-				return props.item;
-			},
+			drop: () => props.item,
 			hover: (dragItem: Item, monitor) => {
 
 				if ( !props.onHover || dragItem.id === props.item.id )
@@ -241,9 +239,6 @@ function BucketComponent(props: {
     const [{isHovered}, dropRef] = useDrop(
 		() => ({
 			accept: props.item_type ?? DEFAULT_ITEM_TYPE,
-			canDrop: (item: Item) => {
-				return true;
-			},
 			drop: (dropItem: Item, monitor: DropTargetMonitor<Item, unknown>) => {
 				// An item was dropped on the bucket (or a nested drop target).
 
@@ -297,9 +292,9 @@ function BucketComponent(props: {
 				{
 					items?.map((I: Item, i: number) => (
 						<>
-							{i == 0 ? <DropGap isActive={hoveredGap===prevGap(i)}/> : null}
+							{i == 0 && <DropGap isActive={hoveredGap===prevGap(i)}/>}
 							<DragDropItem
-								key={i}
+								key={`item-${i}`}
 								item={I}
 								item_type={props.item_type}
 								DisplayItem={props.DisplayItem}
@@ -316,7 +311,7 @@ function BucketComponent(props: {
 										removeItem(dragId);
 								}}
 							/>
-							<DropGap isActive={hoveredGap===nextGap(i)}/>
+							<DropGap key={`drop-gap-${i}`} isActive={hoveredGap===nextGap(i)} />
 						</>
 					))
 				}
