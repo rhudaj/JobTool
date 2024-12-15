@@ -17,6 +17,7 @@ export function InfoPad(props: { cv_info: any} ) {
     // Convert into [{id: string, values: any[]}]
     React.useEffect(() => {
         log("props.cv_info:", props.cv_info);
+        if (!props.cv_info) return;
         setInfoBuckets(
             Object.entries(props.cv_info).map(entry => ({
                 id: entry[0],
@@ -25,7 +26,14 @@ export function InfoPad(props: { cv_info: any} ) {
         )
     }, [props.cv_info]);
 
+
     // ----------------- RENDER -----------------
+
+
+    if (infoBuckets.length === 0) {
+        log("No cv_info passed in props");
+        return <div id="info-pad">no cv-info found</div>;
+    }
 
     const InfoPadComponents = infoBuckets.map((bucket, i: number) => {
         const bt = BucketTypes[CVInfoPadMap[bucket.id]];

@@ -39,8 +39,8 @@ function App() {
         // Get all saved CVs
         BackendAPI.getCVs()
         .then(cvs => {
-            log("CVs from backend:", cvs.map(cv => cv.name));
-            if (cvs.length > 0) {
+            if (cvs && cvs.length > 0) {
+                log("CVs from backend:", cvs.map(cv => cv.name));
                 setCVs(cvs);
                 setCV(cvs[0].data); // set the first CV as the default
             }

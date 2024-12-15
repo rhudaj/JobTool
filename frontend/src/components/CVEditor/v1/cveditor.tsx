@@ -1,10 +1,11 @@
 import "../cveditor.scss";
 import { CV, Experience, Link } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
+import { useImmer } from "use-immer";
 import { Grid } from "../grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
-import { BucketComponent, Item } from "../../dnd/dnd";
+import { BucketComponent } from "../../dnd/dnd";
 import { BucketTypes } from "../../dnd/types/types";
 
 
@@ -138,21 +139,15 @@ const CVEditor = forwardRef((
 
 	// -------------- STATE --------------
 
-	const [CV, setCV] = useState<CV>(props.cv);
-
-	useEffect(()=>{
-		setCV(props.cv);
-	}, [props.cv])
-
-	const updateCV = (newCV: CV) => {
-		const copy = structuredClone(newCV);
-		setCV(copy);
-	};
+	// Split up the CV to make it easier to manage
+	const [CV, setCV] = useImmer<CV>(props.cv);
 
 	// give the parent 'App' access to localJI
 	useImperativeHandle(ref, () => ({
 		getCV: () => CV
 	}));
+
+	if (!CV) return null;
 
 	const bt = BucketTypes["experiences"];
 
@@ -163,9 +158,11 @@ const CVEditor = forwardRef((
 			(
 				<div id="name-title">
 					<div id="div-full-name">ROMAN HUDAJ</div>
-					<TextEditDiv tv={CV.personalTitle} id="div-personal-title" onUpdate={val => setCV(
-						{ ...CV, personalTitle: val }
-					)}/>
+					<TextEditDiv tv={CV.personalTitle} id="div-personal-title" onUpdate={val => {
+						setCV(draft => {
+							draft.personalTitle = val
+						})
+					}}/>
 				</div>
 			),
 			(
@@ -179,40 +176,48 @@ const CVEditor = forwardRef((
 		[
 			(
 				<Section head="SUMMARY" id="section-summary">
-					<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => setCV(
-						{ ...CV, summary: val }
-					)}/>
+					<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => {
+						setCV(draft => {
+							draft.summary = val
+						})
+					}}/>
 				</Section>
 			),
 			(
 				<Section head="SKILLS" id="section-skills">
 					<div className="sub-sec">
 						<div className="sub-sec-head">Languages:</div>
-						<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=>updateCV(
-							{ ...CV, languages: vals }
-						)} />
+						<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=> {
+							setCV(draft => {
+								draft.languages = vals
+							})
+						}}/>
 					</div>
 					<div className="sub-sec">
 						<div className="sub-sec-head">Technology:</div>
-						<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=>updateCV(
-							{...CV, technologies: vals}
-						)} />
+						<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=> {
+							setCV(draft => {
+								draft.technologies = vals
+							})
+						}}/>
 					</div>
 				</Section>
 			)
 		],
 		(
-			<Section head="EXPERIENCES">
+			<Section head="EXPERIENCE">
 				<BucketComponent
-					id="experiences"
+					id="jobs"
 					values={CV.experiences["jobs"]}
 					item_type={bt.item_type}
 					isVertical={bt.isVertical}
 					DisplayItem={bt.DisplayItem}
 					DisplayItems={bt.DisplayItems}
-					onUpdate={(newItems) => updateCV(
-						{ ...CV, experiences: { ...CV.experiences, jobs: newItems } }
-					)}
+					onUpdate={(newItems) => {
+						setCV(draft => {
+							draft.experiences.jobs = newItems
+						})
+					}}
 				/>
 			</Section>
 		),
@@ -226,16 +231,20 @@ const CVEditor = forwardRef((
 					DisplayItem={bt.DisplayItem}
 					DisplayItems={bt.DisplayItems}
 					onUpdate={(newItems) => {
-						updateCV({ ...CV, experiences: { ...CV.experiences, projects: newItems } });
+						setCV(draft => {
+							draft.experiences.projects = newItems
+						})
 					}}
 				/>
 			</Section>
 		),
 		(
 			<Section head="EDUCATION">
-				<ExperienceUI {...CV.experiences["education"][0]} onUpdate={newExp => setCV(
-					{ ...CV, experiences: { ...CV.experiences, education: [ newExp ] } }
-				)} />
+				<ExperienceUI {...CV.experiences["education"][0]} onUpdate={newExp => {
+					setCV(draft => {
+						draft.experiences.education = [ newExp ]
+					})
+				}} />
 			</Section>
 		)
 	];

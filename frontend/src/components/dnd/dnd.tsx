@@ -1,6 +1,7 @@
 import { DropTargetMonitor, useDrag, useDragLayer, useDrop } from "react-dnd";
 import "./dnd.scss";
 import React from "react";
+import { useImmer } from "use-immer";
 import { useLogger } from "../../hooks/logger";
 import { DeleteButton } from "./controls/delete";
 import { joinClassNames } from "../../hooks/joinClassNames";
@@ -123,7 +124,7 @@ function DragDropItem(props: {
 
 const useBucket = (bucket: Bucket) => {
 
-	const [items, setItems] = React.useState<Item[]>(bucket.items);
+	const [items, setItems] = useImmer<Item[]>(bucket.items);
 
 	// -----------------HELPERS-----------------
 
@@ -140,39 +141,31 @@ const useBucket = (bucket: Bucket) => {
 	 */
 	const addItem = (item: Item, atIndex?: number) => {
 		log("Adding item:", item);
-		setItems(prev => {
-			const copy = structuredClone(prev);
-			if (atIndex) 	copy.splice(atIndex, 0, item);
-			else 			copy.push(item);
-			return copy
+		setItems(draft => {
+			if (atIndex) 	draft.splice(atIndex, 0, item);
+			else 			draft.push(item);
 		})
 	};
 
 	const moveItem = (indexBefore: number, indexAfter: number) => {
 		log(`Moving item from ${indexBefore} to ${indexAfter}`);
-		setItems(prev => {
-			const copy = structuredClone(prev);
-			const [movedItem] = copy.splice(indexBefore, 1);
-			copy.splice(indexAfter, 0, movedItem);
-			return copy;
+		setItems(draft => {
+			const [movedItem] = draft.splice(indexBefore, 1);
+			draft.splice(indexAfter, 0, movedItem);
 		});
 	};
 
 	const removeItem = (id: any) => {
 		log("Removing item:", id);
-		setItems(prev => {
-			const copy = structuredClone(prev);
-			copy.splice(getIdx(id), 1);
-			return copy;
+		setItems(draft => {
+			draft.splice(getIdx(id), 1);
 		});
 	};
 
 	const changeItemValue = (id: any, newValue: any) => {
 		log("Changing item value:", id);
-		setItems(prev => {
-			const copy = structuredClone(prev);
-			copy[getIdx(id)].value = newValue;
-			return copy;
+		setItems(draft => {
+			draft[getIdx(id)].value = newValue;
 		});
 	};
 
