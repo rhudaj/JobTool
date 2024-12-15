@@ -1,16 +1,10 @@
 import { DropTargetMonitor, useDrag, useDragLayer, useDrop } from "react-dnd";
 import "./dnd.scss";
-import React from "react";
+import React, { useEffect } from "react";
 import { useImmer } from "use-immer";
 import { useLogger } from "../../hooks/logger";
 import { DeleteButton } from "./controls/delete";
 import { joinClassNames } from "../../hooks/joinClassNames";
-
-// monitor.didDrop() only tells you if there was a nested object under. Not wether/not they returned anything from didDrop(). So its kind of useless.
-/** Unnecessary React.useEffect to Sync buckets
- * a useEffect re-initializing state every time props change might cause unintended side effects.
- * This reinitialization isn't needed if you want the state to evolve independently of the initial buckets prop.
- * */
 
 interface Item {
 	id: any;
@@ -27,8 +21,8 @@ const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
 // TODO: should be usable on its own (ie: has its own state) in the case you dont want a bucket.
 function DragDropItem(props: {
 	item: Item,
+	children: JSX.Element,
 	item_type?: string,
-	DisplayItem?: (props: Item) => JSX.Element,	// optional (has a default)
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
 	onDelete?: (id: any) => void,
@@ -36,13 +30,10 @@ function DragDropItem(props: {
 	canBeTarget?: boolean 	// defaults to true
 }) {
 
-	// -----------------DEFAULT VALUES-----------------
-
-	const DisplayItem = props.DisplayItem ?? ((props: Item) => <>{props.value}</>);
-
-	// ----------------- STATE / HELPERS-----------------
 
 	const log = useLogger("DragDropItem");
+
+	// -------------------- STATE ---------------------
 
 	const ref = React.useRef(null);
 
@@ -114,7 +105,7 @@ function DragDropItem(props: {
 	return (
 		<>
 			<div ref={ref} className={classNames}>
-				<DisplayItem {...props.item}/>
+				{props.children}
 			</div>
 			{ props.onDelete && <DeleteButton ref={ref} onDelete={()=>props.onDelete(props.item.id)}/> }
 		</>
@@ -122,9 +113,9 @@ function DragDropItem(props: {
 };
 
 
-const useBucket = (bucket: Bucket) => {
+const useBucket = (bucket?: Bucket) => {
 
-	const [items, setItems] = useImmer<Item[]>(bucket.items);
+	const [items, setItems] = useImmer<Item[]>(bucket?.items);
 
 	// -----------------HELPERS-----------------
 
@@ -169,43 +160,48 @@ const useBucket = (bucket: Bucket) => {
 		});
 	};
 
-	return { items, addItem, moveItem, removeItem, changeItemValue };
+	return { items, setItems, addItem, moveItem, removeItem, changeItemValue };
 };
-
-
-// TODO: should extract items from child component (instead of passing DisplayItems, pass it as a child component)
 
 let count = 0; // for assigning unique ids to items
 function BucketComponent(props: {
 	id: any,
 	values: any[],
+	children: JSX.Element[],
 	isVertical: boolean,
 	DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element,
-	DisplayItem?: (props: Item) => JSX.Element,
 	item_type?: string,
-	// callback for when state changes
 	onUpdate?: (newValues: any[]) => void
-	// toggle options:
 	deleteItemsDisabled?: boolean,
 }) {
 
-	// -----------------DEFAULT VALUES-----------------
-
-	// If item ids are not provided (only values), use the value as the id.
-	let bucket: Bucket = {
-		id: props.id,
-		items: props.values.map(v => ({ id: count++, value: v }))
-	};
+	useEffect(() => {
+		console.log(`BucketComponent ${props.id} new values:`, props.values);
+	}, [props.values]);
 
 	// -----------------STATE-----------------
 
-	const { items, addItem, moveItem, removeItem, changeItemValue } = useBucket(bucket);
+	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket({
+		id: props.id,
+		items: props.values.map(v => ({ id: count++, value: v }))
+	});
+
+	React.useEffect(() => {
+		// If item ids are not provided (only values), use the value as the id.
+		let bucket: Bucket = {
+			id: props.id,
+			items: props.values.map(v => ({ id: count++, value: v }))
+		};
+		setItems(bucket.items);
+	}, [props.values])
 
 	// Called whenever INTERNAL state changes:
 	React.useEffect(()=>{
 		const newValues = items.map(I=>I.value);
 		// Only call the callback if the values have changed
-		if (props.onUpdate && items != bucket.items) props.onUpdate(newValues);
+		if (JSON.stringify(newValues) === JSON.stringify(props.values))	// shallow comparison
+			return;
+		if (props.onUpdate) props.onUpdate(newValues); // && items != bucket.items
 	}, [items])
 
 	// -----------------DND RELATED-----------------
@@ -281,7 +277,6 @@ function BucketComponent(props: {
 		return <div className="drop-gap" hidden={!props.isActive}/>
 	};
 
-
 	const classNames = joinClassNames("bucket-wrapper", isHovered ? "hover" : "");
 
     return (
@@ -292,10 +287,9 @@ function BucketComponent(props: {
 						<>
 							{i == 0 && <DropGap isActive={hoveredGap===prevGap(i)}/>}
 							<DragDropItem
-								key={`item-${i}`}
+								key={i}
 								item={I}
 								item_type={props.item_type}
-								DisplayItem={props.DisplayItem}
 								canBeTarget={true}
 								onDelete={!props.deleteItemsDisabled && removeItem}
 								onHover={ (dragId, isBelow, isRight) => {
@@ -308,7 +302,9 @@ function BucketComponent(props: {
 									if (bucketId !== props.id)
 										removeItem(dragId);
 								}}
-							/>
+							>
+								{ props.children[i] }
+							</DragDropItem>
 							<DropGap key={`drop-gap-${i}`} isActive={hoveredGap===nextGap(i)} />
 						</>
 					))

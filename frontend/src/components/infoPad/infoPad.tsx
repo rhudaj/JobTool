@@ -29,35 +29,35 @@ export function InfoPad(props: { cv_info: any} ) {
 
     // ----------------- RENDER -----------------
 
+    return <></>
+    // if (infoBuckets.length === 0) {
+    //     log("No cv_info passed in props");
+    //     return <div id="info-pad">no cv-info found</div>;
+    // }
 
-    if (infoBuckets.length === 0) {
-        log("No cv_info passed in props");
-        return <div id="info-pad">no cv-info found</div>;
-    }
+    // const InfoPadComponents = infoBuckets.map((bucket, i: number) => {
+    //     const bt = BucketTypes[CVInfoPadMap[bucket.id]];
+    //     return (
+    //         <div key={i}>
+    //             <h3>{bucket.id}</h3>
+    //             <BucketComponent
+    //                 key={i}
+    //                 id={bucket.id}
+    //                 values={bucket.values}
+    //                 item_type={bt.item_type}
+    //                 isVertical={bt.isVertical}
+    //                 DisplayItem={bt.DisplayItem}
+    //                 DisplayItems={bt.DisplayItems}
+    //                 deleteItemsDisabled
+    //             />
+    //         </div>
+    //     );
+    // });
 
-    const InfoPadComponents = infoBuckets.map((bucket, i: number) => {
-        const bt = BucketTypes[CVInfoPadMap[bucket.id]];
-        return (
-            <div key={i}>
-                <h3>{bucket.id}</h3>
-                <BucketComponent
-                    key={i}
-                    id={bucket.id}
-                    values={bucket.values}
-                    item_type={bt.item_type}
-                    isVertical={bt.isVertical}
-                    DisplayItem={bt.DisplayItem}
-                    DisplayItems={bt.DisplayItems}
-                    deleteItemsDisabled
-                />
-            </div>
-        );
-    });
+    // // ----------------- RENDER -----------------
 
-    // ----------------- RENDER -----------------
-
-    if(infoBuckets.length === 0)
-        return <div id="info-pad">no cv-info found</div>;
-    else
-        return <div id="info-pad">{InfoPadComponents}</div>;
+    // if(infoBuckets.length === 0)
+    //     return <div id="info-pad">no cv-info found</div>;
+    // else
+    //     return <div id="info-pad">{InfoPadComponents}</div>;
 };

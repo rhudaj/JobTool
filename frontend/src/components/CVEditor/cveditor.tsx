@@ -1,25 +1,22 @@
 import "./cveditor.scss";
 import { CV, Experience, Link } from "shared";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
 import { Grid } from "./grid";
 import { joinClassNames } from "../../hooks/joinClassNames";
-import { BucketComponent } from "../dnd/dnd";
+import { BucketComponent, Item } from "../dnd/dnd";
 import { BucketTypes } from "../dnd/types";
 
-const ExperienceUI = (
-	props: Experience
-	& { onUpdate?: (newExp: Experience) => void }
-) => {
+const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
 	const handleUpdate = (field: keyof Experience, value: any) => {
-		if (props.onUpdate) {
-			props.onUpdate({ ...props, [field]: value });
-		}
+		props.onUpdate({ ...props, [field]: value });
 	};
 
 	// Map each entry in the Experience object to a <TextEditDiv> component:
+
+	if (!props) return null;
 
 	let sideTitleEl;
 	let content;
@@ -138,6 +135,10 @@ const CVEditor = forwardRef((
 
 	const [CV, setCV] = useImmer<CV>(props.cv);
 
+	useEffect(() => {
+		console.log("CVEditor: new CV:", CV);
+	}, [CV]);
+
 	useImperativeHandle(ref, () => ({
 		getCV: () => CV
 	}));
@@ -156,14 +157,21 @@ const CVEditor = forwardRef((
 					values={CV.experiences[category]}
 					item_type={bt.item_type}
 					isVertical={bt.isVertical}
-					DisplayItem={bt.DisplayItem}
 					DisplayItems={bt.DisplayItems}
 					onUpdate={(newItems) => {
 						setCV(draft => {
 							draft.experiences[category] = newItems
 						})
 					}}
-				/>
+				>
+					{CV.experiences[category].map((exp, i) => (
+						<ExperienceUI key={i} {...exp} onUpdate={exp => {
+							setCV(draft => {
+								draft.experiences[category][i] = exp
+							})
+						}} />
+					))}
+				</BucketComponent>
 			</Section>
 		);
 	}
