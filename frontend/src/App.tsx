@@ -3,7 +3,7 @@ import { useEffect, useState, useRef, createContext } from "react";
 import { Section } from "./components/Section/Section";
 import { CV, JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
-import { CVEditor } from "./components/CVEditor/v1/cveditor";
+import { CVEditor } from "./components/CVEditor/cveditor";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";

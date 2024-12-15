@@ -4,7 +4,7 @@ import { useLogger } from '../../hooks/logger';
 import { BucketComponent } from '../dnd/dnd';
 import React from "react";
 
-import { BucketTypes, CVInfoPadMap } from '../dnd/types/types';
+import { BucketTypes, CVInfoPadMap } from '../dnd/types';
 
 export function InfoPad(props: { cv_info: any} ) {
 

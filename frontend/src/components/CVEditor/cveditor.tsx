@@ -1,15 +1,12 @@
-import "../cveditor.scss";
+import "./cveditor.scss";
 import { CV, Experience, Link } from "shared";
-import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
+import { TextEditDiv } from "../TextEditDiv/texteditdiv";
 import React, { forwardRef, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
-import { Grid } from "../grid";
-import { joinClassNames } from "../../../hooks/joinClassNames";
-import { BucketComponent } from "../../dnd/dnd";
-import { BucketTypes } from "../../dnd/types/types";
-
-
-// CUSTOM SUB COMPONENTS
+import { Grid } from "./grid";
+import { joinClassNames } from "../../hooks/joinClassNames";
+import { BucketComponent } from "../dnd/dnd";
+import { BucketTypes } from "../dnd/types";
 
 const ExperienceUI = (
 	props: Experience
@@ -185,9 +182,7 @@ const CVEditor = forwardRef((
 			),
 			(
 				<div id="div-links">
-					{CV.links.map(link => (
-						<LinkUI {...link} />
-					))}
+					{CV.links.map(link => <LinkUI {...link} /> )}
 				</div>
 			),
 		],
@@ -226,10 +221,7 @@ const CVEditor = forwardRef((
 		...bucket_sections
 	];
 
-	if (props.cv)
-		return <Grid id="cv-editor" rows_cols={rows_cols} rowGapPct="1" colGapPct="2"/>;
-	else
-		return null;
+	return <Grid id="cv-editor" rows_cols={rows_cols} rowGapPct="1" colGapPct="2"/>;
 });
 
 
