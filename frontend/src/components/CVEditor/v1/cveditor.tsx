@@ -1,5 +1,5 @@
 import "../cveditor.scss";
-import { CV, Experience } from "shared";
+import { CV, Experience, Link } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Grid } from "../grid";
@@ -23,23 +23,32 @@ const ExperienceUI = (
 
 	// Map each entry in the Experience object to a <TextEditDiv> component:
 
-	let sideTitleEl = (props.side_title as string).startsWith("http") ?
-		<Link url={props.side_title} icon="fa fa-link" /> :
-		<TextEditDiv tv={props.side_title} className="side-title" onUpdate={(val) => handleUpdate('side_title', val)} />
+	let sideTitleEl;
+	let content;
 
-	let content = (props.points.length === 1) ?
-		<TextEditDiv tv={props.points[0]} onUpdate={(val) => handleUpdate('points', [val])} /> :
-		<ul className="exp-points">
-			{ props.points.map((p, index) => (
-				<li key={index}>
-					<TextEditDiv tv={p} onUpdate={(val) => {
-						const newPoints = [...props.points];
-						newPoints[index] = val;
-						handleUpdate('points', newPoints);
-					}} />
-				</li>
-			)) }
-		</ul>
+	if (typeof props.side_title === "string") {
+		sideTitleEl = <TextEditDiv tv={props.side_title} onUpdate={val => handleUpdate('side_title', val)} />
+	} else {
+		sideTitleEl = <LinkUI {...props.side_title} />
+	}
+
+	if (props.points.length === 1) {
+		content = <TextEditDiv tv={props.points[0]} onUpdate={(val) => handleUpdate('points', [val])} />
+	} else {
+		content = (
+			<ul className="exp-points">
+				{ props.points.map((p, index) => (
+					<li key={index}>
+						<TextEditDiv tv={p} onUpdate={(val) => {
+							const newPoints = [...props.points];
+							newPoints[index] = val;
+							handleUpdate('points', newPoints);
+						}} />
+					</li>
+				)) }
+			</ul>
+		)
+	}
 
 	return (
 		<div className="experience">
@@ -84,17 +93,13 @@ const Section = (props: {
 	)
 };
 
-const Link = (props: {
-	url: string,
-	icon: string,
-	text?: string // only the link-text is editable
-}) => {
+const LinkUI = (props: Link) => {
 
 	return (
 		<div className="link">
 			<a className="link" href={props.url}>
 				<i className={props.icon} />
-				{ props.text ? <TextEditDiv tv={props.text} id="link-text" /> : null }
+				{ props.text && <TextEditDiv tv={props.text} id="link-text" /> }
 			</a>
 		</div>
 	);
@@ -165,8 +170,8 @@ const CVEditor = forwardRef((
 			),
 			(
 				<div id="div-links">
-					{CV.links.map((l) => (
-						<Link url={l.url} icon={l.icon} text={l.text} />
+					{CV.links.map(link => (
+						<LinkUI {...link} />
 					))}
 				</div>
 			),
@@ -200,14 +205,14 @@ const CVEditor = forwardRef((
 			<Section head="EXPERIENCES">
 				<BucketComponent
 					id="experiences"
-					values={CV.experiences}
+					values={CV.experiences["jobs"]}
 					item_type={bt.item_type}
 					isVertical={bt.isVertical}
 					DisplayItem={bt.DisplayItem}
 					DisplayItems={bt.DisplayItems}
-					onUpdate={(newItems) => {
-						updateCV({ ...CV, experiences: newItems });
-					}}
+					onUpdate={(newItems) => updateCV(
+						{ ...CV, experiences: { ...CV.experiences, jobs: newItems } }
+					)}
 				/>
 			</Section>
 		),
@@ -215,21 +220,21 @@ const CVEditor = forwardRef((
 			<Section head="PROJECTS">
 				<BucketComponent
 					id="projects"
-					values={CV.projects}
+					values={CV.experiences["projects"]}
 					item_type={bt.item_type}
 					isVertical={bt.isVertical}
 					DisplayItem={bt.DisplayItem}
 					DisplayItems={bt.DisplayItems}
 					onUpdate={(newItems) => {
-						updateCV({ ...CV, projects: newItems });
+						updateCV({ ...CV, experiences: { ...CV.experiences, projects: newItems } });
 					}}
 				/>
 			</Section>
 		),
 		(
 			<Section head="EDUCATION">
-				<ExperienceUI {...CV.education} onUpdate={newExp => setCV(
-					{ ...CV, education: newExp }
+				<ExperienceUI {...CV.experiences["education"][0]} onUpdate={newExp => setCV(
+					{ ...CV, experiences: { ...CV.experiences, education: [ newExp ] } }
 				)} />
 			</Section>
 		)

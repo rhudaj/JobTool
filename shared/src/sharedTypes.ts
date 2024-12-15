@@ -32,6 +32,7 @@ interface JobInfo {
     howToApply: string;
     coverLetter: string;
 }
+
 interface CoverLetterResponse {
     intro: string;
     transition: string;
@@ -45,15 +46,15 @@ interface CoverLetterResponse {
 interface Experience {
     date_range: string;
     title: string;
-    side_title: string;     // TODO: this can be a link (e.g. for projects)
+    side_title: string|Link;     // TODO: this can be a link (e.g. for projects)
     points: string[];
     tech: string[];
 }
 
 interface Link {
     icon: string;
-    text: string;
     url: string;
+    text?: string;
 }
 
 interface CV {
@@ -62,9 +63,7 @@ interface CV {
     languages: string[];
     technologies: string[];
     links: Link[];
-    experiences: Experience[];
-    projects: Experience[];     // same format as Experience
-    education: Experience;
+    experiences: {[category: string]: Experience[]};
 }
 
 interface TailorCVInfo {
@@ -77,7 +76,7 @@ interface TailorCVInfo {
     languages: string[];
     technologies: string[];
 }
-interface GenCLInfo extends TailorCVInfo {
-}
+
+interface GenCLInfo extends TailorCVInfo {}
 
 export type { CV, CoverLetterResponse, GenCLInfo, Experience, Link, JobExtractResponse, JobInfo, TailorCVInfo, WordOccurences };

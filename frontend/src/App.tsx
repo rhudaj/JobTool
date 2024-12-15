@@ -158,8 +158,11 @@ function App() {
                         Get Template
                     </button>
                 </ButtonSet>
+
                 <ButtonSet>
-                    <button className="download-button" onClick={() => printReactComponentAsPdf("cl-page")}> Download PDF </button>
+                    <button className="download-button" onClick={() => printReactComponentAsPdf("cl-page")}>
+                        Download PDF
+                    </button>
                 </ButtonSet>
 
                 <PrintablePage page_id="cl-page">

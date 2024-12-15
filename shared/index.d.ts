@@ -39,14 +39,14 @@ interface CoverLetterResponse {
 interface Experience {
     date_range: string;
     title: string;
-    side_title: string;
+    side_title: string | Link;
     points: string[];
     tech: string[];
 }
 interface Link {
     icon: string;
-    text: string;
     url: string;
+    text?: string;
 }
 interface CV {
     personalTitle: string;
@@ -54,9 +54,9 @@ interface CV {
     languages: string[];
     technologies: string[];
     links: Link[];
-    experiences: Experience[];
-    projects: Experience[];
-    education: Experience;
+    experiences: {
+        [category: string]: Experience[];
+    };
 }
 interface TailorCVInfo {
     company: string;
@@ -71,4 +71,4 @@ interface TailorCVInfo {
 interface GenCLInfo extends TailorCVInfo {
 }
 
-export type { CV, CoverLetterResponse, Experience, GenCLInfo, JobExtractResponse, JobInfo, TailorCVInfo, WordOccurences };
+export type { CV, CoverLetterResponse, Experience, GenCLInfo, JobExtractResponse, JobInfo, Link, TailorCVInfo, WordOccurences };
