@@ -26,8 +26,8 @@ function DragDropItem(props: {
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
 	onDelete?: (id: any) => void,
-	canDrag?: boolean		// defaults to true
-	canBeTarget?: boolean 	// defaults to true
+	disableDrag?: boolean		// defaults to true
+	disableReplace?: boolean 	// defaults to true
 }) {
 
 
@@ -41,7 +41,7 @@ function DragDropItem(props: {
 
     const [{isDragging}, drag] = useDrag(() => ({
 		type: props.item_type ?? DEFAULT_ITEM_TYPE,
-		canDrag: props.canDrag != false,
+		canDrag: props.disableDrag !== true,
 		item: () => {
 			log("Started to drag.");
 			return props.item; 			// sent to the drop target when dropped.
@@ -66,7 +66,7 @@ function DragDropItem(props: {
 		() => ({
 			accept: props.item_type ?? DEFAULT_ITEM_TYPE,
 			canDrop: (dropItem: Item) => {
-				return (props.canBeTarget != false) && (dropItem.id !== props.item.id);
+				return props.disableReplace !== true && dropItem.id !== props.item.id;
 			},
 			drop: () => props.item,
 			hover: (dragItem: Item, monitor) => {
@@ -99,7 +99,7 @@ function DragDropItem(props: {
 	const classNames = joinClassNames(
 		"drag-drop-wrapper",
 		isDragging ? "dragging" : "", isDropTarget ? "droppable": "",
-		props.canDrag == false ? "no-drag" : "can-drag"
+		props.disableDrag === true ? "no-drag" : "can-drag"
 	)
 
 	return (
@@ -113,9 +113,9 @@ function DragDropItem(props: {
 };
 
 
-const useBucket = (bucket?: Bucket) => {
+const useBucket = (values?: Item[]) => {
 
-	const [items, setItems] = useImmer<Item[]>(bucket?.items);
+	const [items, setItems] = useImmer<Item[]>(values);
 
 	// -----------------HELPERS-----------------
 
@@ -163,6 +163,10 @@ const useBucket = (bucket?: Bucket) => {
 	return { items, setItems, addItem, moveItem, removeItem, changeItemValue };
 };
 
+function DropGap(props: {isActive: boolean}) {
+	return <div className="drop-gap" hidden={!props.isActive}/>
+};
+
 let count = 0; // for assigning unique ids to items
 function BucketComponent(props: {
 	id: any,
@@ -172,27 +176,27 @@ function BucketComponent(props: {
 	displayItemsClass?: string,
 	item_type?: string,
 	onUpdate?: (newValues: any[]) => void
+	// OPTIONS (all default to false)
 	deleteItemsDisabled?: boolean,
+	disableItemDrag?: boolean
+	disableItemReplace?: boolean
 }) {
 
 	useEffect(() => {
 		console.log(`BucketComponent ${props.id} new values:`, props.values);
 	}, [props.values]);
 
-	// -----------------STATE-----------------
+	// ----------------- STATE -----------------
 
-	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket({
-		id: props.id,
-		items: props.values.map(v => ({ id: count++, value: v }))
-	});
+	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket(
+		props.values.map(v => ({ id: count++, value: v }))
+	);
 
 	React.useEffect(() => {
 		// If item ids are not provided (only values), use the value as the id.
-		let bucket: Bucket = {
-			id: props.id,
-			items: props.values.map(v => ({ id: count++, value: v }))
-		};
-		setItems(bucket.items);
+		setItems(
+			props.values.map(v => ({ id: count++, value: v }))
+		);
 	}, [props.values])
 
 	// Called whenever INTERNAL state changes:
@@ -204,7 +208,7 @@ function BucketComponent(props: {
 		if (props.onUpdate) props.onUpdate(newValues); // && items != bucket.items
 	}, [items])
 
-	// -----------------DND RELATED-----------------
+	// ----------------- DND RELATED -----------------
 
 	const [hoveredGap, setHoveredGap] = React.useState<number|undefined>(undefined);
 
@@ -271,10 +275,6 @@ function BucketComponent(props: {
 
 	// -----------------RENDER-----------------
 
-	function DropGap(props: {isActive: boolean}) {
-		return <div className="drop-gap" hidden={!props.isActive}/>
-	};
-
 	const wrapperClassNames = joinClassNames("bucket-wrapper", isHovered ? "hover" : "");
 
     return (
@@ -288,7 +288,7 @@ function BucketComponent(props: {
 								key={i}
 								item={I}
 								item_type={props.item_type}
-								canBeTarget={true}
+								disableReplace={props.disableItemReplace}
 								onDelete={!props.deleteItemsDisabled && removeItem}
 								onHover={ (dragId, isBelow, isRight) => {
 									// What's considered next/prev item depends on orientation

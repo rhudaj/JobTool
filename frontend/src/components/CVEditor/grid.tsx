@@ -1,7 +1,8 @@
 import { joinClassNames } from "../../hooks/joinClassNames";
+import React from "react";
 
 function Grid(props: {
-    rows_cols: (any | any[])[],
+    rows_cols: (JSX.Element | JSX.Element[])[],
     rowGapPct?: string,
     colGapPct?: string,
     className?: string,
@@ -24,8 +25,11 @@ function Grid(props: {
     return (
         <div className={classNames} style={rowsCSS} id={props.id ?? ""}>
             {props.rows_cols.map((row, i) => (
-                !Array.isArray(row) ? row :
-                    <div className="columns" style={columnsCSS}>{row}</div>
+                !Array.isArray(row) ?
+                    React.cloneElement(row, { key: i }) :
+                    <div key={i} className="columns" style={columnsCSS}>
+                        {row.map((col, j) => React.cloneElement(col, { key: j }))}
+                    </div>
             ))}
         </div>
     );

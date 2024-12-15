@@ -8,16 +8,3 @@
     flex-direction: column;
     gap: 10rem;
 }
-
-.info-pad-item {
-    border: 0.5rem dashed black;
-    padding: 2rem;
-    width: max-content;
-}
-
-.info-pad-items {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5em;
-}

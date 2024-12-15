@@ -1,7 +1,7 @@
 import './JIDisplay.css'
 import { useEffect, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import { CV, JobInfo, WordOccurences } from "shared";
-import { CustomTable } from "../CustomTable/customTable";
+import { CustomTable } from "./CustomTable/customTable"
 import { SubSection } from "../SubSection/SubSection";
 
 
@@ -134,8 +134,9 @@ export const JIDisplay = forwardRef((
                     />
                 ),
             },
-        ].map((sec) => (
+        ].map((sec,i) => (
             <SubSection
+                key={i}
                 id={`${sec.name.replaceAll(" ", "-").toLowerCase()}-section`}
                 heading={sec.name}
             >

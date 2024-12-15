@@ -184,7 +184,7 @@ function App() {
                 <ButtonSet>
                     <button onClick={() => { saveJobText(); getCV() }}>Generate</button>
                     <select onChange={e => changeCV(e.target.value)}>
-                        { CVs?.map(cv => <option value={cv.name}>{cv.name}</option>) }
+                        { CVs?.map((cv,i) => <option key={i} value={cv.name}>{cv.name}</option>) }
                     </select>
                 </ButtonSet>
 

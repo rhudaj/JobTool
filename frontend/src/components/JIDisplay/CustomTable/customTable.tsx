@@ -44,7 +44,7 @@ function CustomTable(props: {
             key='header-row'
             id="header-row"
         >
-            { props.headers.map(h => <td>{h}</td>) }
+            { props.headers.map((h,i) => <td key={i}>{h}</td>) }
         </tr>
     );
 
@@ -88,7 +88,7 @@ function CustomTable(props: {
             <tr key={`row-${rowP.rowNum}`}>
                 {
                     rowData.map((rowItem: any, i: number) =>
-                        <Col colData={rowItem} colNum={i}/>
+                        <Col key={i} colData={rowItem} colNum={i}/>
                     )
                 }
                 <RowRemovalCol/>
@@ -116,6 +116,7 @@ function CustomTable(props: {
                     // Map each item of data to a row
                     data.map((rowData: any, rowNum: number) => (
                         <DataRow
+                            key={rowNum}
                             rowData={
                                 // ensure <item> is an array if not already
                                 Array.isArray(rowData) ? rowData : [rowData]

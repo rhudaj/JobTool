@@ -4,3 +4,16 @@
     display: grid;
     row-gap: $experiences-gap;
 }
+
+.text-item {
+    border: 0.5rem dashed black;
+    padding: 2rem;
+    width: max-content;
+}
+
+.text-item-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}

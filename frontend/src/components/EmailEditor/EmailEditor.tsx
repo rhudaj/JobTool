@@ -11,9 +11,7 @@ export function EmailEditor() {
 
     return (
         <div id="email-editor">
-            <textarea id="email-text" contentEditable>
-                {email.join("\n\n")}
-            </textarea>
+            <textarea id="email-text"  defaultValue={email.join("\n\n")}/>
         </div>
     );
 }

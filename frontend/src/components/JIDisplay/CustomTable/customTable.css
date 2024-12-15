@@ -1,0 +1,55 @@
+
+.custom-table {
+    overflow-x: hidden;
+}
+
+.custom-table, tr, td {
+    border: 1rem solid black;
+    border-collapse: collapse;
+}
+
+td {
+    text-align:left;
+    vertical-align:top;
+    width: min-content; /* IMPORTANT */
+    overflow-x: hidden;
+    padding: 5rem;
+}
+
+
+/* ROW ADDER */
+
+    #row-adder > td {
+        background-color: lightblue;
+        height: 35rem;
+        font-weight: bolder;
+        text-align: center;
+    }
+
+    #row-adder:hover {
+        font-size: 1.3em; /* scale up*/
+    }
+
+/* HEADER ROW */
+
+    #header-row {
+        background-color:#282c34;
+    }
+
+/* DATA COL */
+
+.data-col.hover {
+    background-color:darkcyan;
+}
+
+/* ROW REMOVAL COL */
+
+    .row-removal-col {
+        border-right: hidden;
+        border-bottom: hidden;
+        border-top: hidden;
+    }
+
+    .row-removal-col:hover {
+        background-color:lightcoral;
+    }

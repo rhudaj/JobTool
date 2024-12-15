@@ -5,7 +5,7 @@ import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
 import { Grid } from "./grid";
 import { joinClassNames } from "../../hooks/joinClassNames";
-import { BucketComponent, Item } from "../dnd/dnd";
+import { BucketComponent } from "../dnd/dnd";
 import { BucketTypes } from "../dnd/types";
 
 const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
@@ -16,7 +16,7 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
 	// Map each entry in the Experience object to a <TextEditDiv> component:
 
-	if (!props) return null;
+	if (!props.title) return null;
 
 	let sideTitleEl;
 	let content;
@@ -60,7 +60,7 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
 				<div className="titles">
 					<TextEditDiv tv={props.title} className="title" onUpdate={val => handleUpdate('title', val)} />
-					{sideTitleEl}
+					<div className="side-title">{sideTitleEl}</div>
 				</div>
 
 				<div className="exp-content">{content}</div>
@@ -89,7 +89,6 @@ const Section = (props: {
 };
 
 const LinkUI = (props: Link) => {
-
 	return (
 		<div className="link">
 			<a className="link" href={props.url}>
@@ -165,9 +164,9 @@ const CVEditor = forwardRef((
 					}}
 				>
 					{CV.experiences[category].map((exp, i) => (
-						<ExperienceUI key={i} {...exp} onUpdate={exp => {
+						<ExperienceUI key={i} {...exp} onUpdate={(newExp: Experience) => {
 							setCV(draft => {
-								draft.experiences[category][i] = exp
+								draft.experiences[category][i] = newExp
 							})
 						}} />
 					))}
@@ -180,8 +179,8 @@ const CVEditor = forwardRef((
 		[
 			(
 				<div id="name-title">
-					<div id="div-full-name">ROMAN HUDAJ</div>
-					<TextEditDiv id="div-personal-title" tv={CV.personalTitle} onUpdate={val => {
+					<div key={"name"} id="div-full-name">ROMAN HUDAJ</div>
+					<TextEditDiv key={"pt"} id="div-personal-title" tv={CV.personalTitle} onUpdate={val => {
 						setCV(draft => {
 							draft.personalTitle = val
 						})
@@ -190,7 +189,7 @@ const CVEditor = forwardRef((
 			),
 			(
 				<div id="div-links">
-					{CV.links.map(link => <LinkUI {...link} /> )}
+					{CV.links.map((link,i) => <LinkUI key={i} {...link} /> )}
 				</div>
 			),
 		],

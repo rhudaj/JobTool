@@ -13,7 +13,7 @@ export function CLEditor(props: {
         <div id="cl-editor">
             {
                 VAL.map((pgraph_tv: TrackVal<string>, i: number)=>(
-                    <TextEditDiv id={`cl-row-${i}`} tv={pgraph_tv}/>
+                    <TextEditDiv key={i} id={`cl-row-${i}`} tv={pgraph_tv}/>
                 ))
             }
         </div>
