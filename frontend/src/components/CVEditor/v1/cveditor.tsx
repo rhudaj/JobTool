@@ -139,26 +139,44 @@ const CVEditor = forwardRef((
 
 	// -------------- STATE --------------
 
-	// Split up the CV to make it easier to manage
 	const [CV, setCV] = useImmer<CV>(props.cv);
 
-	// give the parent 'App' access to localJI
 	useImperativeHandle(ref, () => ({
 		getCV: () => CV
 	}));
 
+	// -------------- RENDER --------------
+
 	if (!CV) return null;
 
 	const bt = BucketTypes["experiences"];
-
-	// -------------- RENDER --------------
+	const bucket_sections = [];
+	for (const category in CV.experiences) {
+		bucket_sections.push(
+			<Section head={category.toUpperCase()}>
+				<BucketComponent
+					id={category}
+					values={CV.experiences[category]}
+					item_type={bt.item_type}
+					isVertical={bt.isVertical}
+					DisplayItem={bt.DisplayItem}
+					DisplayItems={bt.DisplayItems}
+					onUpdate={(newItems) => {
+						setCV(draft => {
+							draft.experiences[category] = newItems
+						})
+					}}
+				/>
+			</Section>
+		);
+	}
 
 	const rows_cols = [
 		[
 			(
 				<div id="name-title">
 					<div id="div-full-name">ROMAN HUDAJ</div>
-					<TextEditDiv tv={CV.personalTitle} id="div-personal-title" onUpdate={val => {
+					<TextEditDiv id="div-personal-title" tv={CV.personalTitle} onUpdate={val => {
 						setCV(draft => {
 							draft.personalTitle = val
 						})
@@ -204,49 +222,8 @@ const CVEditor = forwardRef((
 				</Section>
 			)
 		],
-		(
-			<Section head="EXPERIENCE">
-				<BucketComponent
-					id="jobs"
-					values={CV.experiences["jobs"]}
-					item_type={bt.item_type}
-					isVertical={bt.isVertical}
-					DisplayItem={bt.DisplayItem}
-					DisplayItems={bt.DisplayItems}
-					onUpdate={(newItems) => {
-						setCV(draft => {
-							draft.experiences.jobs = newItems
-						})
-					}}
-				/>
-			</Section>
-		),
-		(
-			<Section head="PROJECTS">
-				<BucketComponent
-					id="projects"
-					values={CV.experiences["projects"]}
-					item_type={bt.item_type}
-					isVertical={bt.isVertical}
-					DisplayItem={bt.DisplayItem}
-					DisplayItems={bt.DisplayItems}
-					onUpdate={(newItems) => {
-						setCV(draft => {
-							draft.experiences.projects = newItems
-						})
-					}}
-				/>
-			</Section>
-		),
-		(
-			<Section head="EDUCATION">
-				<ExperienceUI {...CV.experiences["education"][0]} onUpdate={newExp => {
-					setCV(draft => {
-						draft.experiences.education = [ newExp ]
-					})
-				}} />
-			</Section>
-		)
+		// LAST 3 ROWS ARE EXPERIENCES (each held in BucketComponent)
+		...bucket_sections
 	];
 
 	if (props.cv)
