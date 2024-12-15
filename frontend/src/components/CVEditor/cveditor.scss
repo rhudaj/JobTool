@@ -168,14 +168,6 @@ $title-font:            calc(8 * $base-font-size);
     }
 }
 
-/* ROW 3 --------------- */
-
-// NOTE: this is selecting the <DisplayItems /> component for all experiences (projects, work, education)
-.experiences {
-    display: grid;
-    row-gap: $experiences-gap;
-}
-
 /* ROW 4 --------------- */
 
 #projects > .sec-content {

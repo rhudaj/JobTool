@@ -157,7 +157,7 @@ const CVEditor = forwardRef((
 					values={CV.experiences[category]}
 					item_type={bt.item_type}
 					isVertical={bt.isVertical}
-					DisplayItems={bt.DisplayItems}
+					displayItemsClass={bt.displayItemsClass}
 					onUpdate={(newItems) => {
 						setCV(draft => {
 							draft.experiences[category] = newItems

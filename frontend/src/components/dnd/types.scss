@@ -1,0 +1,6 @@
+@import "../CVEditor/cveditor.scss"; // for $experiences-gap
+
+.experiences {
+    display: grid;
+    row-gap: $experiences-gap;
+}

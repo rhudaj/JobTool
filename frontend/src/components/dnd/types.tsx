@@ -1,25 +1,21 @@
-import { ExperienceUI } from "../CVEditor/cveditor";
-import { Item } from "./dnd"
+import "./types.scss";
 
 interface BucketType {
     item_type: string,
     isVertical: boolean,
-    DisplayItem: (props: Item) => JSX.Element,
-    DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element
+    displayItemsClass?: string
 }
 
 const BucketTypes: { [key: string]: BucketType } = {
     "info-pad-text-list": {
         item_type: "text",
         isVertical: false,
-        DisplayItem: (props: Item) => <div className="info-pad-item">{props.value}</div>,
-        DisplayItems: (props: {children: JSX.Element[]}) => <div className="info-pad-items">{props.children}</div>
+        displayItemsClass: "info-pad-items"
     },
     "experiences": {
         item_type: "experience",
         isVertical: true,
-        DisplayItem: (props: Item) => <ExperienceUI {...props.value} />,
-        DisplayItems: (props: {children: JSX.Element[]}) => <div className="experiences">{props.children}</div>
+        displayItemsClass:"experiences",
     }
 };
 

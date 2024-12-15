@@ -169,7 +169,7 @@ function BucketComponent(props: {
 	values: any[],
 	children: JSX.Element[],
 	isVertical: boolean,
-	DisplayItems: (props: {children: JSX.Element[]}) => JSX.Element,
+	displayItemsClass?: string,
 	item_type?: string,
 	onUpdate?: (newValues: any[]) => void
 	deleteItemsDisabled?: boolean,
@@ -269,19 +269,17 @@ function BucketComponent(props: {
 		[items, hoveredGap]
 	);
 
-	if (!isHovered && hoveredGap !== undefined) setHoveredGap(undefined);
-
 	// -----------------RENDER-----------------
 
 	function DropGap(props: {isActive: boolean}) {
 		return <div className="drop-gap" hidden={!props.isActive}/>
 	};
 
-	const classNames = joinClassNames("bucket-wrapper", isHovered ? "hover" : "");
+	const wrapperClassNames = joinClassNames("bucket-wrapper", isHovered ? "hover" : "");
 
     return (
-        <div ref={dropRef} className={classNames}>
-			<props.DisplayItems>
+        <div ref={dropRef} className={wrapperClassNames} onMouseLeave={()=>(hoveredGap !== undefined) && setHoveredGap(undefined)}>
+			<div className={props.displayItemsClass}>
 				{
 					items?.map((I: Item, i: number) => (
 						<>
@@ -309,8 +307,7 @@ function BucketComponent(props: {
 						</>
 					))
 				}
-			</props.DisplayItems>
-
+			</div>
         </div>
     );
 };
