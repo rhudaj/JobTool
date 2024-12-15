@@ -14,6 +14,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useLogger } from "./hooks/logger";
 import { SplitView } from "./components/SplitView/splitview";
 import { JIDisplay } from "./components/JIDisplay/JIDisplay";
+import { EmailEditor } from "./components/EmailEditor/EmailEditor";
 
 export const CVContext = createContext(null);
 
@@ -157,11 +158,20 @@ function App() {
                         Get Template
                     </button>
                 </ButtonSet>
+                <ButtonSet>
+                    <button className="download-button" onClick={() => printReactComponentAsPdf("cl-page")}> Download PDF </button>
+                </ButtonSet>
 
                 <PrintablePage page_id="cl-page">
                     { CL ? <CLEditor cl_paragraphs={CL}/> : null }
                 </PrintablePage>
 
+            </Section>
+
+            {/* --------------- EMAIL ? --------------- */}
+
+            <Section id="section-email" heading="Email">
+                <EmailEditor />
             </Section>
 
             {/* --------------- RESUME --------------- */}

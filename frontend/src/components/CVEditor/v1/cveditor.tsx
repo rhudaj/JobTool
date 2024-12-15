@@ -2,10 +2,9 @@ import "../cveditor.scss";
 import { CV, Experience } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { TrackVal, wrapTrackable, unwrapTrackable } from "../../../hooks/trackable";
 import { Grid } from "../grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
-import { BucketComponent } from "../../dnd/dnd";
+import { BucketComponent, Item } from "../../dnd/dnd";
 import { BucketTypes } from "../../dnd/types/types";
 
 
@@ -108,12 +107,11 @@ const DelimitedList = (props: {
 	onUpdate?: (newVals: string[]) => void
 }) => {
 
-	const txt = props.items.join(props.delimiter);
-
 	const onUpdate = (newVal: string) => {
 		if (props.onUpdate) {
-			const newItems = newVal.split(props.delimiter);
-			props.onUpdate(newItems);
+			props.onUpdate(
+				newVal.split(props.delimiter)
+			);
 		}
 	};
 
@@ -121,7 +119,7 @@ const DelimitedList = (props: {
 
 	return (
 		<div className={classNames}>
-			<TextEditDiv tv={txt} onUpdate={onUpdate} />
+			<TextEditDiv tv={props.items.join(props.delimiter)} onUpdate={onUpdate} />
 		</div>
 	);
 }
@@ -133,7 +131,8 @@ const CVEditor = forwardRef((
 	ref: React.ForwardedRef<any>
 ) => {
 
-	// Keep track each value in the CV
+	// -------------- STATE --------------
+
 	const [CV, setCV] = useState<CV>(props.cv);
 
 	useEffect(()=>{
@@ -150,91 +149,88 @@ const CVEditor = forwardRef((
 		getCV: () => CV
 	}));
 
-	const ExperienceBucket = () => {
-		const bt = BucketTypes["experiences"];
-		return (
-			<BucketComponent
-				id="experiences"
-				values={CV.experiences}
-				item_type={bt.item_type}
-				isVertical={bt.isVertical}
-				DisplayItem={bt.DisplayItem}
-				DisplayItems={bt.DisplayItems}
-				onUpdate={(newItems) => {
-					updateCV({ ...CV, experiences: newItems });
-				}}
-			/>
-		)
-	};
+	const bt = BucketTypes["experiences"];
 
-	const ProjectBucket = () => {
-		const bt = BucketTypes["experiences"];
-		return (
-			<BucketComponent
-				id="projects"
-				values={CV.projects}
-				item_type={bt.item_type}
-				isVertical={bt.isVertical}
-				DisplayItem={bt.DisplayItem}
-				DisplayItems={bt.DisplayItems}
-				onUpdate={(newItems) => {
-					updateCV({ ...CV, projects: newItems });
-				}}
-			/>
-		)
-	}
+	// -------------- RENDER --------------
 
 	const rows_cols = [
 		[
-		(
-			<div id="name-title">
-				<div id="div-full-name">ROMAN HUDAJ</div>
-				<TextEditDiv tv={CV.personalTitle} id="div-personal-title"/>
-			</div>
-		),
-		(
-			<div id="div-links">
-				{CV.links.map((l) => (
-					<Link url={l.url} icon={l.icon} text={l.text} />
-				))}
-			</div>
-		),
+			(
+				<div id="name-title">
+					<div id="div-full-name">ROMAN HUDAJ</div>
+					<TextEditDiv tv={CV.personalTitle} id="div-personal-title" onUpdate={val => setCV(
+						{ ...CV, personalTitle: val }
+					)}/>
+				</div>
+			),
+			(
+				<div id="div-links">
+					{CV.links.map((l) => (
+						<Link url={l.url} icon={l.icon} text={l.text} />
+					))}
+				</div>
+			),
 		],
 		[
 			(
 				<Section head="SUMMARY" id="section-summary">
-					<TextEditDiv tv={CV.summary} id="summary" />
+					<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => setCV(
+						{ ...CV, summary: val }
+					)}/>
 				</Section>
 			),
 			(
 				<Section head="SKILLS" id="section-skills">
-
 					<div className="sub-sec">
 						<div className="sub-sec-head">Languages:</div>
-							<DelimitedList items={CV.languages} delimiter=", " />
+						<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=>updateCV(
+							{ ...CV, languages: vals }
+						)} />
 					</div>
-
 					<div className="sub-sec">
 						<div className="sub-sec-head">Technology:</div>
-						<DelimitedList items={CV.technologies} delimiter=", " />
+						<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=>updateCV(
+							{...CV, technologies: vals}
+						)} />
 					</div>
-
 				</Section>
 			)
 		],
 		(
 			<Section head="EXPERIENCES">
-				<ExperienceBucket/>
+				<BucketComponent
+					id="experiences"
+					values={CV.experiences}
+					item_type={bt.item_type}
+					isVertical={bt.isVertical}
+					DisplayItem={bt.DisplayItem}
+					DisplayItems={bt.DisplayItems}
+					onUpdate={(newItems) => {
+						updateCV({ ...CV, experiences: newItems });
+					}}
+				/>
 			</Section>
 		),
 		(
 			<Section head="PROJECTS">
-				<ProjectBucket/>
+				<BucketComponent
+					id="projects"
+					values={CV.projects}
+					item_type={bt.item_type}
+					isVertical={bt.isVertical}
+					DisplayItem={bt.DisplayItem}
+					DisplayItems={bt.DisplayItems}
+					onUpdate={(newItems) => {
+						updateCV({ ...CV, projects: newItems });
+					}}
+				/>
 			</Section>
 		),
 		(
 			<Section head="EDUCATION">
-				<ExperienceUI {...CV.education} />
+				<ExperienceUI {...CV.education} onUpdate={newExp => setCV(
+					{ ...CV, education: newExp }
+				)} />
 			</Section>
 		)
 	];

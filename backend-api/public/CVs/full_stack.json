@@ -1,5 +1,5 @@
 {
-    "personalTitle": "CS Student ~ Software Developer",
+    "personalTitle": "CS Student ~ Software Engineer",
     "summary": "Dynamic, agile full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": [
         "Python",
@@ -31,7 +31,7 @@
                 "Created a user-friendly app with Python and Microsoft SQL Server to extract client usage data of company products from databases; provided ease of data access and analysis by non-technical teams.",
                 "Enhanced databases to monitor client usage of products/APIs to formulate an optimized product pricing strategy and ultimately increase profitability and user satisfaction."
             ],
-            "tech": ["SQL", "Alteryx", "Python", "Azure"]
+            "tech": ["SQL", "Python", "Alteryx", "Azure"]
         },
         {
             "date_range": "5/24 - 9/24",
@@ -50,9 +50,9 @@
             "side_title": "Martinrea International",
             "points": [
                 "Spearheaded a major project to optimize the flow of materials across a large facility; improved system for collecting and analyzing data to plan the project; resulted in increased output and cost efficiency.",
-                "Implemented a supply chain tracking system using SQL and advanced Excel for proactive identification of issues, enabling timely alerts to managers and achieving estimated $11,000 annual cost savings."
+                "Implemented a supply chain tracking system using Apache Spark,SQL & ETL Warehouses for proactive identification of issues, enabling timely alerts to managers and achieving estimated $11,000 annual cost savings."
             ],
-            "tech": ["SQL", "Excel"]
+            "tech": ["SQL", "Apache Spark", "ETL", "Excel"]
         }
     ],
     "projects": [

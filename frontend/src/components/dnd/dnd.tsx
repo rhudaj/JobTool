@@ -280,14 +280,19 @@ function BucketComponent(props: {
 		[items, hoveredGap]
 	);
 
+	if (!isHovered && hoveredGap !== undefined) setHoveredGap(undefined);
+
 	// -----------------RENDER-----------------
 
 	function DropGap(props: {isActive: boolean}) {
 		return <div className="drop-gap" hidden={!props.isActive}/>
 	};
 
+
+	const classNames = joinClassNames("bucket-wrapper", isHovered ? "hover" : "");
+
     return (
-        <div ref={dropRef} className={`bucket-wrapper ${isHovered ? "hover" : ""}`}>
+        <div ref={dropRef} className={classNames}>
 			<props.DisplayItems>
 				{
 					items?.map((I: Item, i: number) => (
