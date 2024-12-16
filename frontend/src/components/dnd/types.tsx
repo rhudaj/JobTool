@@ -26,12 +26,15 @@ const BucketTypes: { [key: string]: BucketType } = {
 };
 
 
-const CVInfoPadMap = {
+const InfoPadMap = {
+    // CV
     "languages":    "info-pad-text-list",
     "technologies": "info-pad-text-list",
     "courses":      "info-pad-text-list",
     "summaries":    "info-pad-text-list",
     "projects":     "experiences",
+    // CL
+    "paragraphs":  "info-pad-text-list"
 }
 
-export { BucketTypes, CVInfoPadMap }
+export { BucketTypes, InfoPadMap }

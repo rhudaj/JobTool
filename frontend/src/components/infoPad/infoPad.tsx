@@ -1,12 +1,12 @@
 import './infoPad.scss';
-
 import { useLogger } from '../../hooks/logger';
-import { BucketComponent, Item } from '../dnd/dnd';
+import { BucketComponent } from '../dnd/dnd';
 import React from "react";
+import { BucketTypes, InfoPadMap } from '../dnd/types';
 
-import { BucketTypes, CVInfoPadMap } from '../dnd/types';
 
-export function InfoPad(props: { cv_info: any} ) {
+
+export function InfoPad(props: { info: any} ) {
 
     const log = useLogger("InfoPad");
 
@@ -16,15 +16,15 @@ export function InfoPad(props: { cv_info: any} ) {
 
     // Convert into [{id: string, values: any[]}]
     React.useEffect(() => {
-        log("props.cv_info:", props.cv_info);
-        if (!props.cv_info) return;
+        log("props.cv_info:", props.info);
+        if (!props.info) return;
         setInfoBuckets(
-            Object.entries(props.cv_info).map(entry => ({
+            Object.entries(props.info).map(entry => ({
                 id: entry[0],
                 values: entry[1]
             }))
         )
-    }, [props.cv_info]);
+    }, [props.info]);
 
 
     // ----------------- RENDER -----------------
@@ -34,8 +34,15 @@ export function InfoPad(props: { cv_info: any} ) {
         return <div id="info-pad">no cv-info found</div>;
     }
 
+    /** TODO: improve annoying dependency
+     * As of now, when you add a new item to /public/cv_info.json or /public/cl_info.json
+     * you also have to define a bucket type.
+     * otherwise, BucketTypes[CVInfoPadMap[bucket.id]] will throw an error.
+     */
+
     const InfoPadComponents = infoBuckets.map((bucket, i: number) => {
-        const bt = BucketTypes[CVInfoPadMap[bucket.id]];
+        const type_for_bucket = InfoPadMap[bucket.id];
+        const bt = BucketTypes[type_for_bucket];
         return (
             <div key={i}>
                 <h3>{bucket.id}</h3>

@@ -182,9 +182,7 @@ function BucketComponent(props: {
 	disableItemReplace?: boolean
 }) {
 
-	useEffect(() => {
-		console.log(`BucketComponent ${props.id} new values:`, props.values);
-	}, [props.values]);
+	const log = useLogger(`BucketComponent (${props.id})`);
 
 	// ----------------- STATE -----------------
 
@@ -235,7 +233,7 @@ function BucketComponent(props: {
 			drop: (dropItem: Item, monitor: DropTargetMonitor<Item, unknown>) => {
 				// An item was dropped on the bucket (or a nested drop target).
 
-				console.log("BUCKET: Dropped item:", dropItem);
+				log("item drop:", dropItem);
 
 				// drop was ON TOP of a nested item?
 				const nestedDropTarget: any = monitor.getDropResult();

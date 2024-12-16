@@ -19,7 +19,6 @@ class TrackVal<T> extends String {
 
     // Setter to update the value and notify listeners
     set value(newValue: T) {
-      console.log(`TrackVal: new value <= ${newValue}`)
       if (newValue !== this._value) {
         this._value = newValue;
         this.listeners.forEach((callback) => callback(newValue));
@@ -74,14 +73,15 @@ const unwrapTrackable = (obj: any): any => {
     }
 };
 
-const TEST = (obj: any) => {
-	// If working correctly,
-	const wrap = wrapTrackable(obj);
-	const unwrap = unwrapTrackable(wrap);
+/*
+    const TEST = (obj: any) => {
+        // If working correctly,
+        const wrap = wrapTrackable(obj);
+        const unwrap = unwrapTrackable(wrap);
+        const failed = JSON.stringify(obj) !== JSON.stringify(unwrap);
+        console.log(`TEST ${failed ? "FAILED" : "PASSED"}`);
+    }
+*/
 
-	const failed = JSON.stringify(obj) !== JSON.stringify(unwrap);
-	console.log(`TEST ${failed ? "FAILED" : "PASSED"}`);
-}
 
-
-export { TrackVal, wrapTrackable, unwrapTrackable, TEST };
+export { TrackVal, wrapTrackable, unwrapTrackable };

@@ -62,10 +62,6 @@ const DeleteButton = React.forwardRef<HTMLElement, any>((
 		};
 	}, [ref]);
 
-	React.useEffect(() => {
-		console.log(isHovered);
-	}, [isHovered]);
-
 	if (!isHovered) return null; // Hide the button when not hovered.
 	return (
 		<div

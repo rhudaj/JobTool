@@ -1,12 +1,12 @@
-// TODO: convert to a hook which can be used in any component
 /**
  *  Print a react component as a pdf
  * @param element_id of the react component you wish to print as pdf
  */
 const printReactComponentAsPdf = (element_id: string) => {
-    console.log("Printing component with id: ", element_id);
+
     // get the react component with id element_id
     const component2print = document.getElementById(element_id);
+
     if (!component2print) {
         console.error(`Element with id ${element_id} not found`);
         return;
@@ -14,9 +14,12 @@ const printReactComponentAsPdf = (element_id: string) => {
 
     // Copy all <style> and <link type="stylesheet" /> tags from <head> inside the parent window
     const head_styles: Element[] = Array.from(document.querySelectorAll("style, link[rel='stylesheet']"));
-    console.log("Styles to be copied: ", head_styles);
 
-    // iframe
+    if (head_styles.length === 0) {
+        console.warn("printReactComponentAsPdf:\n\tNo styles to copy");
+    }
+
+    // iframe (to print the component)
     const iframe = document.createElement('iframe');
         // hide it from view (Instead of setting display: none, you can set the iframe's visibility to hidden. This way, the iframe is still rendered but not visible.)
         iframe.style.display = 'hidden';
@@ -36,6 +39,8 @@ const printReactComponentAsPdf = (element_id: string) => {
         iframe.contentWindow.print();
         iframe.remove();
     }, 300);
+
+    console.log("printReactComponentAsPdf:\n\tPrinting component with id: ", element_id);
 };
 
 

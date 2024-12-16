@@ -22,22 +22,28 @@ function App() {
 
     const log = useLogger("App");
 
+    // --------------- STATE ---------------
+
     const [jobText, setJobText] = useState("");
+
     const [CL, setCL] = useState<string[]>(null);
+    const [clInfo, setCLInfo] = useState<any>([]);
 
+    // CV Related
     const [CVs, setCVs] = useState<{name: string, data: CV}[]>(null);
-
     const cvref = useRef(null);
     const [CV, setCV] = useState(null);
-
     const [cvInfo, setCVInfo] = useState<any>([]);
 
     const JIRef = useRef(null);
     const [jobInfo, setJobInfo] = useState({} as JobInfo);
 
+    // --------------- MODIFY STATE ---------------
+
+    // Get: saved CVs, CV info and CL info
     useEffect(() => {
         // Get all saved CVs
-        BackendAPI.getCVs()
+        BackendAPI.get<{name: string, data: CV}[]>('all_cvs') // getCVs getCVinfo getCLinfo
         .then(cvs => {
             if (cvs && cvs.length > 0) {
                 log("CVs from backend:", cvs.map(cv => cv.name));
@@ -46,23 +52,30 @@ function App() {
             }
         })
         // Get the cv info
-        BackendAPI.getCVinfo()
+        BackendAPI.get<any>('cv_info')
         .then(cv_info => {
             log("CV info from backend:", cv_info);
             setCVInfo(cv_info);
+        })
+
+        // Get the cl info
+        BackendAPI.get<any>('cl_info')
+        .then(cl_info => {
+            log("CL info from backend:", cl_info);
+            setCLInfo(cl_info);
         })
     }, []);
 
     const getJobInfo = () => {
         if(!jobText) {
-            console.log("No job text to extract from.");
+            log("No job text to extract from.");
             return;
         }
-        console.log("Extracting Job Info...");
+        log("Extracting Job Info...");
         // 2 - Backend extracts the job info from the text
         // Does not stall UI, by using .then(...)
         BackendAPI.getJobInfo(jobText).then((jobInfo: JobInfo | null) => {
-            if (jobInfo === null) console.log("Job Info is null!");
+            if (jobInfo === null) log("Job Info is null!");
             else setJobInfo(jobInfo);
         });
     };
@@ -77,7 +90,7 @@ function App() {
 
     const changeCV = (name: string) => {
         const new_cv = CVs.find(cv => cv.name === name);
-        console.log("Changing CV to:", new_cv.name);
+        log("Changing CV to:", new_cv.name);
         setCV(new_cv.data);
     };
 
@@ -144,11 +157,17 @@ function App() {
                 </SplitView>
             </Section>
 
+            {/* --------------- EMAIL --------------- */}
 
+            <Section id="section-email" heading="Email">
+                <EmailEditor />
+            </Section>
 
             {/* --------------- COVER LETTER --------------- */}
 
             <Section id="section-cl" heading="Cover Letter">
+
+                {/* CONTROLS --------------------------- */}
 
                 <ButtonSet>
                     <button onClick={() => { saveJobText(); getCL(jobText) }}>
@@ -165,21 +184,24 @@ function App() {
                     </button>
                 </ButtonSet>
 
-                <PrintablePage page_id="cl-page">
-                    { CL ? <CLEditor cl_paragraphs={CL}/> : null }
-                </PrintablePage>
+                {/* VIEW ------------------------------- */}
 
-            </Section>
+                <DndProvider backend={HTML5Backend}>
+                    <SplitView>
+                        <PrintablePage page_id="cl-page">
+                            { CL ? <CLEditor cl_paragraphs={CL}/> : null }
+                        </PrintablePage>
+                        <InfoPad info={clInfo}/>
+                    </SplitView>
+                </DndProvider>
 
-            {/* --------------- EMAIL ? --------------- */}
-
-            <Section id="section-email" heading="Email">
-                <EmailEditor />
             </Section>
 
             {/* --------------- RESUME --------------- */}
 
             <Section id="section-cv" heading="Resume">
+
+                {/* CONTROLS --------------------------- */}
 
                 <ButtonSet>
                     <button onClick={() => { saveJobText(); getCV() }}>Generate</button>
@@ -187,6 +209,8 @@ function App() {
                         { CVs?.map((cv,i) => <option key={i} value={cv.name}>{cv.name}</option>) }
                     </select>
                 </ButtonSet>
+
+                {/* VIEW ------------------------------ */}
 
                 <ButtonSet>
                     <button className="download-button" onClick={() => printReactComponentAsPdf("cv-page")}> Download PDF </button>
@@ -200,7 +224,7 @@ function App() {
                         <PrintablePage page_id="cv-page">
                             { CV ? <CVEditor cv={CV} ref={cvref} /> : null }
                         </PrintablePage>
-                        <InfoPad cv_info={cvInfo}/>
+                        <InfoPad info={cvInfo}/>
                     </SplitView>
                 </DndProvider>
 

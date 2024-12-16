@@ -3,7 +3,7 @@ import { useLogger } from "./hooks/logger";
 
 /**
  * BackendAPI class
- * @note the user should have to construct one,
+ * @todo the user should have to construct one,
  * which will automatically test that the server is running.
  */
 export class BackendAPI {
@@ -31,7 +31,7 @@ export class BackendAPI {
         }
         BackendAPI.log("response status = ", resp.status);
         return resp.ok ? resp : null;
-    };
+    }
 
     private static async GET(func: string): Promise<Response | null> {
         const url = BackendAPI.HOST + "/" + func;
@@ -46,6 +46,8 @@ export class BackendAPI {
         return resp.ok ? resp : null;
     }
 
+    // ----------------- POST REQUESTS -----------------
+
     static async getJobInfo(jobTxt: string): Promise<JobInfo | null> {
         BackendAPI.log("BackendAPI.getJobInfo called");
         const resp = await this.POST("getJobInfo", {
@@ -55,7 +57,7 @@ export class BackendAPI {
         const data = await resp.json();
         BackendAPI.log("data from backend = ", data);
         return Object.keys(data).length === 0 ? null : data;
-    };
+    }
 
     static async genCV(jobInfo: JobInfo): Promise<CV | null> {
         BackendAPI.log("BackendAPI.genCV called, jobInfo = ", jobInfo);
@@ -64,7 +66,7 @@ export class BackendAPI {
         if (!resp) return null;
         const data: CV = await resp.json();
         return data ? data : null;
-    };
+    }
 
     static async genCL(jobInfo: JobInfo|string): Promise<string[] | null> {
         if(typeof jobInfo === "string") jobInfo = { "job_info": jobInfo } as any;
@@ -72,24 +74,19 @@ export class BackendAPI {
         if (!resp) return null;
         const data: string[] = await resp.json();
         return data ? data : null;
-    };
+    }
 
     static async saveCV(name: string, cv: CV): Promise<boolean> {
         const resp = await this.POST("saveCV", { name, cv });
         return resp ? resp.ok : false;
-    };
+    }
 
-    static async getCVs(): Promise<{name: string, data: CV}[] | null> {
-        const resp = await this.GET("getCVs");
+    // ----------------- GET REQUESTS -----------------
+
+    static async get<T>(endp: string): Promise<T|null> {
+        const resp = await this.GET(endp);
         if (!resp) return null;
         const data = await resp.json();
-        return data ? data : null;
-    };
-
-    static async getCVinfo(): Promise<any> {
-        const resp = await this.GET("getCVinfo");
-        if (!resp) return null;
-        const data = await resp.json();
-        return data ? data : null;
-    };
+        return data ?? null;
+    }
 }

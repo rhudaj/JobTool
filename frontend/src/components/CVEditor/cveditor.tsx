@@ -7,6 +7,7 @@ import { Grid } from "./grid";
 import { joinClassNames } from "../../hooks/joinClassNames";
 import { BucketComponent } from "../dnd/dnd";
 import { BucketTypes } from "../dnd/types";
+import { useLogger } from "../../hooks/logger";
 
 const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
@@ -130,12 +131,14 @@ const CVEditor = forwardRef((
 	ref: React.ForwardedRef<any>
 ) => {
 
+	const log = useLogger("CVEditor");
+
 	// -------------- STATE --------------
 
 	const [CV, setCV] = useImmer<CV>(props.cv);
 
 	useEffect(() => {
-		console.log("CVEditor: new CV:", CV);
+		log("new CV:", CV);
 	}, [CV]);
 
 	useImperativeHandle(ref, () => ({

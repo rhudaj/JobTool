@@ -1,13 +1,20 @@
 /**
- * cvInOut.ts
- * Defines functions for reading / outputting CV files.
+ * inOut.ts
+ * Defines functions for reading / outputting files:
+ * - getNamedCVs: reads all CVs from the 'public/CVs' directory
+ * - getCVinfo: reads the 'public/cv_info.json' file
 */
+export { getNamedCVs, getCVinfo, saveCV, getCLinfo };
 
 import fs from "fs";
 import { CV } from "shared";
 
 const public_dir = '/Users/romanhudaj/Desktop/PROJECTS/JobTool/backend-api/public';
 const cv_dir = `${public_dir}/CVs`;
+
+/* ************************************************
+*                    CV RELATED                   *
+* ************************************************/
 
 /**
  * All the CVs are located in json files (matching the CV interface )
@@ -29,7 +36,9 @@ function getNamedCVs(): { name: string, data: CV }[] | undefined {
 };
 
 function getCVinfo(): any {
-    return JSON.parse(fs.readFileSync(`${public_dir}/cv_info.json`, 'utf8'));
+    return JSON.parse(
+        fs.readFileSync(`${public_dir}/cv_info.json`, 'utf8')
+    );
 };
 
 function saveCV(name: string, cv: CV): void {
@@ -38,4 +47,12 @@ function saveCV(name: string, cv: CV): void {
     fs.writeFileSync(`${cv_dir}/${fileName}`, JSON.stringify(cv));
 };
 
-export { getNamedCVs, getCVinfo, saveCV };
+/* ************************************************
+*                    CL RELATED                   *
+* ************************************************/
+
+function getCLinfo(): any {
+    return JSON.parse(
+        fs.readFileSync(`${public_dir}/cl_info.json`, 'utf8')
+    );
+};
