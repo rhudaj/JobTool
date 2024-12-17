@@ -1,6 +1,6 @@
 import { DropTargetMonitor, useDrop } from "react-dnd";
 import "./dnd.scss";
-import React, { useId, useMemo } from "react";
+import React from "react";
 import { useLogger } from "../../hooks/logger";
 import { joinClassNames } from "../../hooks/joinClassNames";
 import { Item, DEFAULT_ITEM_TYPE } from "./types";
@@ -15,9 +15,14 @@ function DropGap(props: {isActive: boolean}) {
 	return <div className="drop-gap" hidden={!props.isActive}/>
 };
 
+// Helpers to get the get the gap index from the item index
+const prevGap = (itemIndex: number) => itemIndex;
+const nextGap = (itemIndex: number) => itemIndex + 1;
+
 /**
  * Bucket State Manager
  * @param values - initial values of the bucket
+ * items - guaranteed to be defined, but might be empty ([]).
  */
 const useBucket = (initItems: Item[]) => {
 
@@ -83,32 +88,27 @@ function ItemBucket(props: {
 
 	// ----------------- STATE -----------------
 
-	/**
-	 * Generate unique id's for each item (by value).
-	 */
-	const itemIDs = useMemo(
-		() =>
-			props.values ?
-				props.values.map((v: any) => ({ id: objectHash.sha1(v), value: v,})) :
-				[]
-		,
-		[props.values]
-	);
+	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket([]);
 
-	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket(
-		props.values ?
-			props.values.map((v,i) => ({ id: itemIDs[i], value: v })) :
-			[]
-	);
+	const [hoveredGap, setHoveredGap] = React.useState<number|undefined>(undefined);
 
+	// TODO: somehow this works with an empty dependency (meaning on first render).
 	React.useEffect(() => {
-		// If item ids are not provided (only values), use the value as the id.
+		log("NEW props.values:", props.values);
+
+		if(!props.values) {
+			setItems([]);
+			return;
+		}
+
+
 		setItems(
-			props.values ?
-				props.values?.map((v,i) => ({ id: itemIDs[i], value: v })) :
-				[]
+			props.values.map(v => ({
+				id: objectHash.sha1(v),
+				value: v
+			}))
 		);
-	}, [props.values])
+	}, [])
 
 	// Called whenever INTERNAL state changes:
 	React.useEffect(()=>{
@@ -121,12 +121,6 @@ function ItemBucket(props: {
 
 	// ----------------- DND RELATED -----------------
 
-	const [hoveredGap, setHoveredGap] = React.useState<number|undefined>(undefined);
-
-	// Helpers to get the get the gap index from the item index
-	const prevGap = (itemIndex: number) => itemIndex;
-	const nextGap = (itemIndex: number) => itemIndex + 1;
-
 	const onBucketItemHover = (hoverId: string, dragId: string, isPastHalf: boolean) => {
 		if (props.dropDisabled) return;
 		const hoveredIndex = items.findIndex((I) => I.id === hoverId);
@@ -135,8 +129,9 @@ function ItemBucket(props: {
 		const diff = dragIndex - gapIndex;
 
 		// Is the gap is around the current dragItem ?
-		if (diff == 0 || diff == -1)
+		if (diff == 0 || diff == -1) {
 			gapIndex = undefined;
+		}
 
 		setHoveredGap(gapIndex);	// Only sets the new value if they differ (by VALUE)
 	};
@@ -173,10 +168,8 @@ function ItemBucket(props: {
 				} else if (moveItem) {
 					// Its in the bucket already, and we've dropped it somewhere else inside
 					// that's not over another item. So re-order.
-
 					// CLAMP index between 0 and props.items.length-1
 					let newIndex = Math.max(Math.min(hoveredGap, items.length - 1), 0)
-
 					log(`Moving item from ${itemIndex} to ${newIndex}`);
 					moveItem(itemIndex, newIndex);
 				}
