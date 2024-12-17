@@ -67,10 +67,31 @@ This will start the frontend and backend servers. The frontend will be available
 
 <!-- ROADMAP -->
 ## Roadmap
+**General Goals:**
 - [ ] Improve training for cover-letter & resume text generation.
 - [ ] Deploy the frontend to a domain.
 - [ ] Improve UI for keyword detection.
-
+**Specifics:**
+- JobTool
+   - backend-api
+      - cvAssistant.ts
+         - [ ] Line 61: Implement functionality.
+   - frontend
+      - JIDisplay
+         - customTable.tsx
+            - [ ] Line 68: Data should not be updated until specific conditions are met.
+      - Loading
+         - loader.tsx
+            - [ ] Line 3: Convert into a hook that subscribes to state changes.
+      - dnd
+         - Item.tsx
+            - [ ] Line 9: Should be usable on its own (i.e., has its own state) when not using a bucket.
+         - ItemBucket.tsx
+            - [ ] Line 101: Ensure this works with an empty dependency (on first render).
+   - shared
+      - sharedTypes.ts
+         - [ ] Line 44: Should not require defining a resume interface; allow users to specify their own sections and contents.
+         - [ ] Line 49: Enable linking (e.g., for projects).
 
 ## Code Structure
 
