@@ -7,13 +7,22 @@ import { Item, DEFAULT_ITEM_TYPE } from "./types";
 import { useImmer } from "use-immer";
 import DNDItem from "./Item";
 
+/** HELPER COMPONENT
+ * Shows a gap between items when dragging over the bucket.
+ */
+function DropGap(props: {isActive: boolean}) {
+	return <div className="drop-gap" hidden={!props.isActive}/>
+};
+
+/**
+ * Bucket State Manager
+ * @param values - initial values of the bucket
+ */
 const useBucket = (values: Item[]) => {
 
 	const [items, setItems] = useImmer<Item[]>(values);
 
 	// -----------------HELPERS-----------------
-
-	const log = useLogger("useBucket");
 
 	const getIdx = (id: any): number => {
 		return items.findIndex((item) => item.id === id);
@@ -25,7 +34,6 @@ const useBucket = (values: Item[]) => {
 	 * Call assumes item is not already in the bucket.
 	 */
 	const addItem = (item: Item, atIndex?: number) => {
-		log("Adding item:", item);
 		setItems(draft => {
 			if (atIndex) 	draft.splice(atIndex, 0, item);
 			else 			draft.push(item);
@@ -33,7 +41,6 @@ const useBucket = (values: Item[]) => {
 	};
 
 	const moveItem = (indexBefore: number, indexAfter: number) => {
-		log(`Moving item from ${indexBefore} to ${indexAfter}`);
 		setItems(draft => {
 			const [movedItem] = draft.splice(indexBefore, 1);
 			draft.splice(indexAfter, 0, movedItem);
@@ -41,24 +48,18 @@ const useBucket = (values: Item[]) => {
 	};
 
 	const removeItem = (id: any) => {
-		log("Removing item:", id);
 		setItems(draft => {
 			draft.splice(getIdx(id), 1);
 		});
 	};
 
 	const changeItemValue = (id: any, newValue: any) => {
-		log("Changing item value:", id);
 		setItems(draft => {
 			draft[getIdx(id)].value = newValue;
 		});
 	};
 
 	return { items, setItems, addItem, moveItem, removeItem, changeItemValue };
-};
-
-function DropGap(props: {isActive: boolean}) {
-	return <div className="drop-gap" hidden={!props.isActive}/>
 };
 
 let count = 0; // for assigning unique ids to items
@@ -138,6 +139,7 @@ function ItemBucket(props: {
 				log("item drop:", dropItem);
 
 				if (items.length === 0) {
+					log("Adding item:", dropItem);
 					return addItem(dropItem, hoveredGap);
 				}
 
@@ -150,9 +152,11 @@ function ItemBucket(props: {
 
 				if( nestedDropTarget?.id !== undefined ) {
 					// => nested item handled the drop
+					log(`Changing item ${nestedDropTarget.id}'s value:`, dropItem.value);
 					changeItemValue(nestedDropTarget.id, dropItem.value);
 				} else if (notInBucket) {
 					// Not in the bucket yet, so add it.
+					log("Adding item:", dropItem);
 					addItem(dropItem, hoveredGap);
 				} else if (moveItem) {
 					// Its in the bucket already, and we've dropped it somewhere else inside
@@ -161,6 +165,7 @@ function ItemBucket(props: {
 					// CLAMP index between 0 and props.items.length-1
 					let newIndex = Math.max(Math.min(hoveredGap, items.length - 1), 0)
 
+					log(`Moving item from ${itemIndex} to ${newIndex}`);
 					moveItem(itemIndex, newIndex);
 				}
 				// after drop, no need to display the gap
@@ -200,8 +205,10 @@ function ItemBucket(props: {
 								}}
 								onLetGo={(dragId: any, bucketId: any) => {
 									// Remove the item if it was dropped on a different bucket
-									if (!props.deleteOnMoveDisabled && bucketId !== props.id)
+									if (!props.deleteOnMoveDisabled && bucketId !== props.id) {
+										log("Removing item:", dragId);
 										removeItem(dragId);
+									}
 								}}
 								disableReplace={props.replaceDisabled}
 							>
