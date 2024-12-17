@@ -9,5 +9,8 @@
     },
     "devDependencies": {
         "use-immer": "^0.11.0"
+    },
+    "dependencies": {
+        "object-hash": "^3.0.0"
     }
 }

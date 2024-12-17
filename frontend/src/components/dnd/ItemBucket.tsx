@@ -1,11 +1,12 @@
 import { DropTargetMonitor, useDrop } from "react-dnd";
 import "./dnd.scss";
-import React from "react";
+import React, { useId, useMemo } from "react";
 import { useLogger } from "../../hooks/logger";
 import { joinClassNames } from "../../hooks/joinClassNames";
 import { Item, DEFAULT_ITEM_TYPE } from "./types";
 import { useImmer } from "use-immer";
 import DNDItem from "./Item";
+import objectHash from "object-hash";
 
 /** HELPER COMPONENT
  * Shows a gap between items when dragging over the bucket.
@@ -18,9 +19,9 @@ function DropGap(props: {isActive: boolean}) {
  * Bucket State Manager
  * @param values - initial values of the bucket
  */
-const useBucket = (values: Item[]) => {
+const useBucket = (initItems: Item[]) => {
 
-	const [items, setItems] = useImmer<Item[]>(values);
+	const [items, setItems] = useImmer<Item[]>(initItems);
 
 	// -----------------HELPERS-----------------
 
@@ -62,7 +63,6 @@ const useBucket = (values: Item[]) => {
 	return { items, setItems, addItem, moveItem, removeItem, changeItemValue };
 };
 
-let count = 0; // for assigning unique ids to items
 function ItemBucket(props: {
 	id: any,
 	values: any[],
@@ -83,9 +83,21 @@ function ItemBucket(props: {
 
 	// ----------------- STATE -----------------
 
+	/**
+	 * Generate unique id's for each item (by value).
+	 */
+	const itemIDs = useMemo(
+		() =>
+			props.values ?
+				props.values.map((v: any) => ({ id: objectHash.sha1(v), value: v,})) :
+				[]
+		,
+		[props.values]
+	);
+
 	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket(
 		props.values ?
-			props.values.map(v => ({ id: count++, value: v })) :
+			props.values.map((v,i) => ({ id: itemIDs[i], value: v })) :
 			[]
 	);
 
@@ -93,7 +105,7 @@ function ItemBucket(props: {
 		// If item ids are not provided (only values), use the value as the id.
 		setItems(
 			props.values ?
-				props.values?.map(v => ({ id: count++, value: v })) :
+				props.values?.map((v,i) => ({ id: itemIDs[i], value: v })) :
 				[]
 		);
 	}, [props.values])
