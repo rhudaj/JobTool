@@ -1,5 +1,5 @@
+import "./ItemBucket.scss"
 import { DropTargetMonitor, useDrop } from "react-dnd";
-import "./dnd.scss";
 import React from "react";
 import { useLogger } from "../../hooks/logger";
 import { joinClassNames } from "../../hooks/joinClassNames";

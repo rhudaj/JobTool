@@ -1,5 +1,5 @@
+import "./Item.scss"
 import { useDrag, useDrop } from "react-dnd";
-import "./dnd.scss";
 import React from "react";
 import { useLogger } from "../../hooks/logger";
 import { DeleteButton } from "./controls/delete";
@@ -87,7 +87,7 @@ function DNDItem(props: {
     // Create the custom default layer
 
     const classNames = joinClassNames(
-        "drag-drop-wrapper",
+        "dnd-item-wrapper",
         isDragging ? "dragging" : "", isDropTarget ? "droppable": "",
         props.disableDrag === true ? "no-drag" : "can-drag"
     )

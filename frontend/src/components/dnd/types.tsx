@@ -2,8 +2,6 @@ import { Experience } from "shared";
 import { ExperienceUI } from "../CVEditor/cveditor";
 import "./types.scss";
 
-export { Item, Bucket, BucketType, DEFAULT_ITEM_TYPE, BucketTypes, InfoPadMap };
-
 const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
 
 interface Item {
@@ -55,3 +53,6 @@ const InfoPadMap = {
     // CL
     "paragraphs":  "cl-info-pad"
 }
+
+
+export { Item, Bucket, BucketType, DEFAULT_ITEM_TYPE, BucketTypes, InfoPadMap };

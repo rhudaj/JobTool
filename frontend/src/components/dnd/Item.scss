@@ -1,0 +1,17 @@
+// *** if you put the below inside the .drag-drop-wrapper styles above, they will not work
+
+.dnd-item-wrapper {
+
+    & .can-drag:hover {
+        outline: 2rem solid red;
+        background-color: lightblue;
+    }
+    & .dragging:active {
+        opacity: 0.1;
+    }
+
+    // have to do this for some reason to get the hover to work
+    & .droppable, &.droppable {
+        background-color: lightcyan;
+    }
+}

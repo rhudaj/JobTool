@@ -1,4 +1,4 @@
-import './JIDisplay.css'
+import './JIDisplay.scss'
 import { useEffect, useState, forwardRef, useImperativeHandle, useRef } from "react";
 import { CV, JobInfo, WordOccurences } from "shared";
 import { CustomTable } from "./CustomTable/customTable"

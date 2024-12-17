@@ -135,11 +135,13 @@ const CVEditor = forwardRef((
 
 	// -------------- STATE --------------
 
-	const [CV, setCV] = useImmer<CV>(props.cv);
+	const [CV, setCV] = useImmer<CV>(null);
 
 	useEffect(() => {
 		log("new CV:", CV);
-	}, [CV]);
+		setCV(props.cv);
+	}
+	, [props.cv]);
 
 	useImperativeHandle(ref, () => ({
 		getCV: () => CV

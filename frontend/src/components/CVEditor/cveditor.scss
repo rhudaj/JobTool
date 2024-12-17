@@ -2,19 +2,21 @@ $base-font-size: 0.26cqw;
 
 $page-padding:          calc(20 * $base-font-size);
 
+$hr-line-width:         0.5rem;
+
 $experiences-gap:       calc(5 * $base-font-size);
 
 $exp-row-gap:           calc(5 * $base-font-size);
 $exp-col-gap:           calc(5 * $base-font-size);
-
 $exp-head-content-gap:  calc(5 * $base-font-size);
-$sec-row-gap:           calc(6 * $base-font-size);
-$sec-head-line-gap:     calc(3 * $base-font-size);
-$sec-head-line-height:  calc(0.5 * $base-font-size);
 $link-col-gap:          calc(3 * $base-font-size);
 $skills-col-gap:        calc(3 * $base-font-size);
 $bullet-point-gap:      calc(2 * $base-font-size);
-$hr-line-width:         0.5rem;
+
+$sec-row-gap:           calc(6 * $base-font-size);
+$sec-head-line-gap:     calc(3 * $base-font-size);
+$sec-head-line-height:  calc(0.5 * $base-font-size);
+
 /* FONT SIZES */
 $p-font:                calc(6 * $base-font-size);
 $name-font:             calc(12 * $base-font-size);
@@ -40,7 +42,10 @@ $title-font:            calc(8 * $base-font-size);
     padding: $page-padding;
     color: black;
     font-family: 'Arial Narrow Bold', sans-serif;
+
+    height: 100%;
 }
+
 
 /* SECTION ------------------  */
 

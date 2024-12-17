@@ -169,9 +169,6 @@ function App() {
                     <button onClick={() => getCL()}>
                         Get Template
                     </button>
-                </ButtonSet>
-
-                <ButtonSet>
                     <button className="download-button" onClick={() => printReactComponentAsPdf("cl-page")}>
                         Download PDF
                     </button>
@@ -200,21 +197,16 @@ function App() {
                     <select onChange={e => changeCV(e.target.value)}>
                         { CVs?.map((cv,i) => <option key={i} value={cv.name}>{cv.name}</option>) }
                     </select>
-                </ButtonSet>
-
-                {/* VIEW ------------------------------ */}
-
-                <ButtonSet>
                     <button className="download-button" onClick={() => printReactComponentAsPdf("cv-page")}> Download PDF </button>
                     <button onClick={saveCV}> Save CV </button>
                 </ButtonSet>
 
-                {/* WRAP IN DND PROVIDER TO ENABLE DRAG/DROP */}
+                {/* VIEW ------------------------------ */}
 
                 <DndProvider backend={HTML5Backend}>
                     <SplitView>
                         <PrintablePage page_id="cv-page">
-                            { CV ? <CVEditor cv={CV} ref={cvref} /> : null }
+                            <CVEditor cv={CV} ref={cvref}/>
                         </PrintablePage>
                         <InfoPad info={cvInfo}/>
                     </SplitView>
