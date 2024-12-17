@@ -68,6 +68,12 @@ const useBucket = (initItems: Item[]) => {
 	return { items, setItems, addItem, moveItem, removeItem, changeItemValue };
 };
 
+/**
+ * Bucket of DND Items component
+ * @param props
+ * @returns
+ * TODO: hover and drop only works when over an item, not if there is empty space at the bottom of all items
+ */
 function ItemBucket(props: {
 	id: any,
 	values: any[],
@@ -123,6 +129,8 @@ function ItemBucket(props: {
 
 	const onBucketItemHover = (hoverId: string, dragId: string, isPastHalf: boolean) => {
 		if (props.dropDisabled) return;
+
+		// Find the index of the item being hovered over:
 		const hoveredIndex = items.findIndex((I) => I.id === hoverId);
 		let gapIndex = isPastHalf ? nextGap(hoveredIndex) : prevGap(hoveredIndex);
 		const dragIndex = items.findIndex((I) => I.id === dragId);

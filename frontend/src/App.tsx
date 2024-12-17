@@ -174,6 +174,7 @@ function App() {
                     </button>
                 </ButtonSet>
 
+
                 {/* VIEW ------------------------------- */}
 
                 <DndProvider backend={HTML5Backend}>
