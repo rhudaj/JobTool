@@ -1,119 +1,13 @@
-import { DropTargetMonitor, useDrag, useDragLayer, useDrop } from "react-dnd";
+import { DropTargetMonitor, useDrop } from "react-dnd";
 import "./dnd.scss";
-import React, { useEffect } from "react";
-import { useImmer } from "use-immer";
+import React from "react";
 import { useLogger } from "../../hooks/logger";
-import { DeleteButton } from "./controls/delete";
 import { joinClassNames } from "../../hooks/joinClassNames";
+import { Item, DEFAULT_ITEM_TYPE } from "./types";
+import { useImmer } from "use-immer";
+import DNDItem from "./Item";
 
-interface Item {
-	id: any;
-	value: any;		// can't be a JSX element. Anything else is fine.
-};
-
-interface Bucket {
-	id: any;
-	items: Item[];
-};
-
-const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
-
-// TODO: should be usable on its own (ie: has its own state) in the case you dont want a bucket.
-function DragDropItem(props: {
-	item: Item,
-	children: JSX.Element,
-	item_type?: string,
-	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
-	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
-	onDelete?: (id: any) => void,
-	disableDrag?: boolean		// defaults to false
-	disableReplace?: boolean 	// defaults to false
-}) {
-
-
-	const log = useLogger("DragDropItem");
-
-	// -------------------- STATE ---------------------
-
-	const ref = React.useRef(null);
-
-	// -----------------DRAG FUNCTIONALITY-----------------
-
-    const [{isDragging}, drag] = useDrag(() => ({
-		type: props.item_type ?? DEFAULT_ITEM_TYPE,
-		canDrag: props.disableDrag !== true,
-		item: () => {
-			log("Started to drag.");
-			return props.item; 			// sent to the drop target when dropped.
-		},
-		end: (item: Item, monitor) => {
-			const dropResult: {id: any} = monitor.getDropResult();
-			if (!dropResult)
-				// Cancelled or invalid drop
-				return;
-			log("Drop result:", dropResult);
-			props.onLetGo(item.id, dropResult.id);
-		},
-		collect: (monitor) => ({
-			isDragging: monitor.isDragging()
-		}),
-		}), [props.item, props.onHover]
-	);
-
-	// -----------------DROP FUNCTIONALITY-----------------
-
-	const [{isDropTarget}, dropRef] = useDrop(
-		() => ({
-			accept: props.item_type ?? DEFAULT_ITEM_TYPE,
-			canDrop: (dropItem: Item) => {
-				return props.disableReplace !== true && dropItem.id !== props.item.id;
-			},
-			drop: () => props.item,
-			hover: (dragItem: Item, monitor) => {
-
-				if ( !props.onHover || dragItem.id === props.item.id )
-					return;
-
-				const rect = ref.current.getBoundingClientRect();
-				const dragPos = monitor.getClientOffset();
-
-				props.onHover(dragItem.id,
-					(dragPos.y - rect.top) > (rect.bottom - rect.top)/2, 	// is it below?
-					(dragPos.x - rect.left) > (rect.right - rect.left)/2	// is it right?
-				);
-			},
-			collect: (monitor) => ({
-				isDropTarget: monitor.canDrop() && monitor.isOver()
-			}),
-		}),
-		[props.item, props.onHover]
-	);
-
-	// Inject the dnd props into the ref
-	drag(dropRef(ref));
-
-	// -----------------RENDER-----------------
-
-	// Create the custom default layer
-
-	const classNames = joinClassNames(
-		"drag-drop-wrapper",
-		isDragging ? "dragging" : "", isDropTarget ? "droppable": "",
-		props.disableDrag === true ? "no-drag" : "can-drag"
-	)
-
-	return (
-		<>
-			<div ref={ref} className={classNames}>
-				{props.children}
-			</div>
-			{ props.onDelete && <DeleteButton ref={ref} onDelete={()=>props.onDelete(props.item.id)}/> }
-		</>
-	);
-};
-
-
-const useBucket = (values?: Item[]) => {
+const useBucket = (values: Item[]) => {
 
 	const [items, setItems] = useImmer<Item[]>(values);
 
@@ -168,7 +62,7 @@ function DropGap(props: {isActive: boolean}) {
 };
 
 let count = 0; // for assigning unique ids to items
-function BucketComponent(props: {
+function ItemBucket(props: {
 	id: any,
 	values: any[],
 	children: JSX.Element[],
@@ -177,24 +71,29 @@ function BucketComponent(props: {
 	item_type?: string,
 	onUpdate?: (newValues: any[]) => void
 } & {
-	// OPTIONS (all default to false)
-	deleteItemsDisabled?: boolean,
-	disableItemReplace?: boolean,
-	disableDrop?: boolean
+	// DISABLE OPTIONS (all default to false)
+	deleteDisabled?: boolean,
+	replaceDisabled?: boolean,
+	dropDisabled?: boolean,
+	deleteOnMoveDisabled?: boolean
 }) {
 
-	const log = useLogger(`BucketComponent (${props.id})`);
+	const log = useLogger(`ItemBucket (${props.id})`);
 
 	// ----------------- STATE -----------------
 
 	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket(
-		props.values?.map(v => ({ id: count++, value: v }))
+		props.values ?
+			props.values.map(v => ({ id: count++, value: v })) :
+			[]
 	);
 
 	React.useEffect(() => {
 		// If item ids are not provided (only values), use the value as the id.
 		setItems(
-			props.values?.map(v => ({ id: count++, value: v }))
+			props.values ?
+				props.values?.map(v => ({ id: count++, value: v })) :
+				[]
 		);
 	}, [props.values])
 
@@ -216,7 +115,7 @@ function BucketComponent(props: {
 	const nextGap = (itemIndex: number) => itemIndex + 1;
 
 	const onBucketItemHover = (hoverId: string, dragId: string, isPastHalf: boolean) => {
-		if (props.disableDrop) return;
+		if (props.dropDisabled) return;
 		const hoveredIndex = items.findIndex((I) => I.id === hoverId);
 		let gapIndex = isPastHalf ? nextGap(hoveredIndex) : prevGap(hoveredIndex);
 		const dragIndex = items.findIndex((I) => I.id === dragId);
@@ -232,11 +131,15 @@ function BucketComponent(props: {
     const [{isHovered}, dropRef] = useDrop(
 		() => ({
 			accept: props.item_type ?? DEFAULT_ITEM_TYPE,
-			canDrop: () =>  props.disableDrop !== true,
+			canDrop: () =>  !props.dropDisabled,
 			drop: (dropItem: Item, monitor: DropTargetMonitor<Item, unknown>) => {
 				// An item was dropped on the bucket (or a nested drop target).
 
 				log("item drop:", dropItem);
+
+				if (items.length === 0) {
+					return addItem(dropItem, hoveredGap);
+				}
 
 				// drop was ON TOP of a nested item?
 				const nestedDropTarget: any = monitor.getDropResult();
@@ -267,7 +170,7 @@ function BucketComponent(props: {
 				return { id: props.id };
 			},
 			collect: (monitor) => ({
-				isHovered: monitor.isOver() && props.disableDrop !== true,
+				isHovered: !props.dropDisabled && monitor.isOver(),
 			}),
     	}),
 		// dependency array - if any of these values change, the above object will be recreated.
@@ -282,15 +185,14 @@ function BucketComponent(props: {
         <div ref={dropRef} className={wrapperClassNames} onMouseLeave={()=>(hoveredGap !== undefined) && setHoveredGap(undefined)}>
 			<div className={props.displayItemsClass}>
 				{
-					items?.map((I: Item, i: number) => (
+					items.map((I: Item, i: number) => (
 						<>
 							{i == 0 && <DropGap isActive={hoveredGap===prevGap(i)}/>}
-							<DragDropItem
+							<DNDItem
 								key={i}
 								item={I}
 								item_type={props.item_type}
-								disableReplace={props.disableItemReplace}
-								onDelete={!props.deleteItemsDisabled && removeItem}
+								onDelete={!props.deleteDisabled && removeItem}
 								onHover={ (dragId, isBelow, isRight) => {
 									// What's considered next/prev item depends on orientation
 									const isPastHalf = props.isVertical ? isBelow : isRight;
@@ -298,12 +200,13 @@ function BucketComponent(props: {
 								}}
 								onLetGo={(dragId: any, bucketId: any) => {
 									// Remove the item if it was dropped on a different bucket
-									if (bucketId !== props.id)
+									if (!props.deleteOnMoveDisabled && bucketId !== props.id)
 										removeItem(dragId);
 								}}
+								disableReplace={props.replaceDisabled}
 							>
 								{ props.children[i] }
-							</DragDropItem>
+							</DNDItem>
 							<DropGap key={`drop-gap-${i}`} isActive={hoveredGap===nextGap(i)} />
 						</>
 					))
@@ -313,4 +216,4 @@ function BucketComponent(props: {
     );
 };
 
-export { Item, Bucket, BucketComponent, DragDropItem }
+export default ItemBucket;

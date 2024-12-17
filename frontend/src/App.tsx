@@ -66,15 +66,24 @@ function App() {
         })
     }, []);
 
+    // INTERNALLY:
+
+    const changeCV = (name: string) => {
+        const new_cv = CVs.find(cv => cv.name === name);
+        log("Changing CV to:", new_cv.name);
+        setCV(new_cv.data);
+    };
+
+    // FROM BACKEND:
+
     const getJobInfo = () => {
         if(!jobText) {
             log("No job text to extract from.");
             return;
         }
-        log("Extracting Job Info...");
-        // 2 - Backend extracts the job info from the text
-        // Does not stall UI, by using .then(...)
-        BackendAPI.post<{job_text: string}, JobInfo>("getJobInfo", {job_text: jobText}).then((jobInfo: JobInfo|null) =>
+        BackendAPI
+        .post<{job_text: string}, JobInfo>("getJobInfo", {job_text: jobText})
+        .then((jobInfo: JobInfo|null) =>
             (jobInfo !== null) && setJobInfo(jobInfo)
         );
     };
@@ -83,12 +92,6 @@ function App() {
         BackendAPI
         .post<{ job_info: string }, string[]>("genCL", {job_info: input })
         .then(setCL);
-    };
-
-    const changeCV = (name: string) => {
-        const new_cv = CVs.find(cv => cv.name === name);
-        log("Changing CV to:", new_cv.name);
-        setCV(new_cv.data);
     };
 
     const saveCV = () => {
@@ -126,16 +129,6 @@ function App() {
 
         // Save the named CV to the backend
         BackendAPI.post<{name: string, cv: CV}, null>("saveCV", {name: cvName, cv: newCV})
-        // .then((isSuccess) => {
-        //     alert(`CV was ${isSuccess ? "" : "NOT"} saved successfully`);
-        // });
-    };
-
-    const saveJobText = () => {
-        const jobTxt = (
-            document.getElementById("job-info-input") as HTMLTextAreaElement
-        ).value;
-        setJobText(jobTxt);
     };
 
     // RENDER ACTIVE SECTION
@@ -148,7 +141,11 @@ function App() {
                     <button onClick={getJobInfo}>Extract</button>
                 </ButtonSet>
                 <SplitView>
-                    <textarea id="job-info-input" onBlur = {saveJobText} placeholder="Paste job description here..."/>
+                    <textarea
+                        id="job-info-input"
+                        onBlur = {(e)=>setJobText(e.target.value)}
+                        placeholder="Paste job description here..."
+                    />
                     <JIDisplay jobInfo={jobInfo} ref={JIRef}/>
                 </SplitView>
             </Section>
@@ -166,10 +163,10 @@ function App() {
                 {/* CONTROLS --------------------------- */}
 
                 <ButtonSet>
-                    <button onClick={() => { saveJobText(); getCL(jobText) }}>
+                    <button onClick={() => getCL(jobText)}>
                         Generate
                     </button>
-                    <button onClick={()=>getCL()}>
+                    <button onClick={() => getCL()}>
                         Get Template
                     </button>
                 </ButtonSet>

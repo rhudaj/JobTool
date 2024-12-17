@@ -5,7 +5,7 @@ import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
 import { Grid } from "./grid";
 import { joinClassNames } from "../../hooks/joinClassNames";
-import { BucketComponent } from "../dnd/dnd";
+import ItemBucket from "../dnd/ItemBucket";
 import { BucketTypes } from "../dnd/types";
 import { useLogger } from "../../hooks/logger";
 
@@ -154,7 +154,7 @@ const CVEditor = forwardRef((
 	for (const category in CV.experiences) {
 		bucket_sections.push(
 			<Section head={category.toUpperCase()}>
-				<BucketComponent
+				<ItemBucket
 					id={category}
 					values={CV.experiences[category]}
 					item_type={bt.item_type}
@@ -173,7 +173,7 @@ const CVEditor = forwardRef((
 							})
 						}} />
 					))}
-				</BucketComponent>
+				</ItemBucket>
 			</Section>
 		);
 	}
@@ -227,7 +227,7 @@ const CVEditor = forwardRef((
 				</Section>
 			)
 		],
-		// LAST 3 ROWS ARE EXPERIENCES (each held in BucketComponent)
+		// LAST 3 ROWS ARE EXPERIENCES (each held in ItemBucket)
 		...bucket_sections
 	];
 

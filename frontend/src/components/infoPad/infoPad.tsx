@@ -1,6 +1,6 @@
 import './infoPad.scss';
 import { useLogger } from '../../hooks/logger';
-import { BucketComponent } from '../dnd/dnd';
+import ItemBucket from '../dnd/ItemBucket';
 import React from "react";
 import { BucketTypes, InfoPadMap } from '../dnd/types';
 
@@ -45,19 +45,17 @@ export function InfoPad(props: { info: any} ) {
         return (
             <div key={i}>
                 <h3>{bucket.id}</h3>
-                <BucketComponent
+                <ItemBucket
                     key={i}
                     id={bucket.id}
                     values={bucket.values}
                     item_type={bt.item_type}
                     isVertical={bt.isVertical}
                     displayItemsClass={bt.displayItemsClass}
-                    deleteItemsDisabled
-                    disableItemReplace
-                    disableDrop
+                    deleteDisabled replaceDisabled dropDisabled deleteOnMoveDisabled
                 >
                     { bucket.values.map(bt.DisplayItem) }
-                </BucketComponent>
+                </ItemBucket>
             </div>
         );
     });

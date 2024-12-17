@@ -1,7 +1,20 @@
 import { Experience } from "shared";
 import { ExperienceUI } from "../CVEditor/cveditor";
-import { Item } from "./dnd";
 import "./types.scss";
+
+export { Item, Bucket, BucketType, DEFAULT_ITEM_TYPE, BucketTypes, InfoPadMap };
+
+const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
+
+interface Item {
+    id: any;
+    value: any;		// can't be a JSX element. Anything else is fine.
+};
+
+interface Bucket {
+    id: any;
+    items: Item[];
+};
 
 interface BucketType {
     item_type: string,
@@ -22,6 +35,12 @@ const BucketTypes: { [key: string]: BucketType } = {
         isVertical: true,
         displayItemsClass:"experiences",
         DisplayItem: (props: Experience) => ExperienceUI(props)
+    },
+    "cl-info-pad": {
+        item_type: "cl-item",
+        isVertical: true,
+        displayItemsClass: "text-item-list",
+        DisplayItem: (props: string) => <div className="text-item" key={props}>{props}</div>
     }
 };
 
@@ -34,7 +53,5 @@ const InfoPadMap = {
     "summaries":    "info-pad-text-list",
     "projects":     "experiences",
     // CL
-    "paragraphs":  "info-pad-text-list"
+    "paragraphs":  "cl-info-pad"
 }
-
-export { BucketTypes, InfoPadMap }
