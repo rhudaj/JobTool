@@ -39,7 +39,6 @@ export function InfoPad(props: { info: any} ) {
      * you also have to define a bucket type.
      * otherwise, BucketTypes[CVInfoPadMap[bucket.id]] will throw an error.
      */
-
     const InfoPadComponents = infoBuckets.map((bucket, i: number) => {
         const type_for_bucket = InfoPadMap[bucket.id];
         const bt = BucketTypes[type_for_bucket];
@@ -54,10 +53,10 @@ export function InfoPad(props: { info: any} ) {
                     isVertical={bt.isVertical}
                     displayItemsClass={bt.displayItemsClass}
                     deleteItemsDisabled
+                    disableItemReplace
+                    disableDrop
                 >
-                    {
-                        bucket.values.map(bt.DisplayItem)
-                    }
+                    { bucket.values.map(bt.DisplayItem) }
                 </BucketComponent>
             </div>
         );

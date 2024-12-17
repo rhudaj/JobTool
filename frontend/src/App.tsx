@@ -74,18 +74,15 @@ function App() {
         log("Extracting Job Info...");
         // 2 - Backend extracts the job info from the text
         // Does not stall UI, by using .then(...)
-        BackendAPI.getJobInfo(jobText).then((jobInfo: JobInfo | null) => {
-            if (jobInfo === null) log("Job Info is null!");
-            else setJobInfo(jobInfo);
-        });
+        BackendAPI.post<{job_text: string}, JobInfo>("getJobInfo", {job_text: jobText}).then((jobInfo: JobInfo|null) =>
+            (jobInfo !== null) && setJobInfo(jobInfo)
+        );
     };
 
     const getCL = (input: string = null) => {
-        BackendAPI.genCL(input).then(setCL);
-    };
-
-    const getCV = (input = {}) => {
-        BackendAPI.genCV(input as JobInfo).then(setCV);
+        BackendAPI
+        .post<{ job_info: string }, string[]>("genCL", {job_info: input })
+        .then(setCL);
     };
 
     const changeCV = (name: string) => {
@@ -125,14 +122,13 @@ function App() {
         }
 
         // get CV from the cvref:
-
         const newCV = cvref.current.getCV();
 
         // Save the named CV to the backend
-        BackendAPI.saveCV(cvName, newCV)
-        .then((isSuccess) => {
-            alert(`CV was ${isSuccess ? "" : "NOT"} saved successfully`);
-        });
+        BackendAPI.post<{name: string, cv: CV}, null>("saveCV", {name: cvName, cv: newCV})
+        // .then((isSuccess) => {
+        //     alert(`CV was ${isSuccess ? "" : "NOT"} saved successfully`);
+        // });
     };
 
     const saveJobText = () => {
@@ -189,7 +185,7 @@ function App() {
                 <DndProvider backend={HTML5Backend}>
                     <SplitView>
                         <PrintablePage page_id="cl-page">
-                            { CL ? <CLEditor cl_paragraphs={CL}/> : null }
+                            <CLEditor paragraphs={CL}/>
                         </PrintablePage>
                         <InfoPad info={clInfo}/>
                     </SplitView>
@@ -204,7 +200,6 @@ function App() {
                 {/* CONTROLS --------------------------- */}
 
                 <ButtonSet>
-                    <button onClick={() => { saveJobText(); getCV() }}>Generate</button>
                     <select onChange={e => changeCV(e.target.value)}>
                         { CVs?.map((cv,i) => <option key={i} value={cv.name}>{cv.name}</option>) }
                     </select>

@@ -1,7 +1,7 @@
 $base-font-size: 0.25cqw;
 
 /* FOR DISPLAY */
-#cl-editor {
+.cl-editor {
     color: black;
 
     font-size: calc(8 * $base-font-size);
@@ -11,5 +11,9 @@ $base-font-size: 0.25cqw;
     grid-auto-rows: min-content;
     row-gap: calc(8 * $base-font-size);
 
-    font-family: 'Arial Narrow Bold', sans-serif;;
+    font-family: 'Arial Narrow Bold', sans-serif;
+
+    height: 100%;
+    width: 100%;
+    border: 2px solid red;
 }

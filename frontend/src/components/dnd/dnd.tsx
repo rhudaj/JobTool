@@ -26,8 +26,8 @@ function DragDropItem(props: {
 	onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
 	onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
 	onDelete?: (id: any) => void,
-	disableDrag?: boolean		// defaults to true
-	disableReplace?: boolean 	// defaults to true
+	disableDrag?: boolean		// defaults to false
+	disableReplace?: boolean 	// defaults to false
 }) {
 
 
@@ -176,10 +176,11 @@ function BucketComponent(props: {
 	displayItemsClass?: string,
 	item_type?: string,
 	onUpdate?: (newValues: any[]) => void
+} & {
 	// OPTIONS (all default to false)
 	deleteItemsDisabled?: boolean,
-	disableItemDrag?: boolean
-	disableItemReplace?: boolean
+	disableItemReplace?: boolean,
+	disableDrop?: boolean
 }) {
 
 	const log = useLogger(`BucketComponent (${props.id})`);
@@ -187,19 +188,19 @@ function BucketComponent(props: {
 	// ----------------- STATE -----------------
 
 	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket(
-		props.values.map(v => ({ id: count++, value: v }))
+		props.values?.map(v => ({ id: count++, value: v }))
 	);
 
 	React.useEffect(() => {
 		// If item ids are not provided (only values), use the value as the id.
 		setItems(
-			props.values.map(v => ({ id: count++, value: v }))
+			props.values?.map(v => ({ id: count++, value: v }))
 		);
 	}, [props.values])
 
 	// Called whenever INTERNAL state changes:
 	React.useEffect(()=>{
-		const newValues = items.map(I=>I.value);
+		const newValues = items?.map(I=>I.value);
 		// Only call the callback if the values have changed
 		if (JSON.stringify(newValues) === JSON.stringify(props.values))	// shallow comparison
 			return;
@@ -215,6 +216,7 @@ function BucketComponent(props: {
 	const nextGap = (itemIndex: number) => itemIndex + 1;
 
 	const onBucketItemHover = (hoverId: string, dragId: string, isPastHalf: boolean) => {
+		if (props.disableDrop) return;
 		const hoveredIndex = items.findIndex((I) => I.id === hoverId);
 		let gapIndex = isPastHalf ? nextGap(hoveredIndex) : prevGap(hoveredIndex);
 		const dragIndex = items.findIndex((I) => I.id === dragId);
@@ -230,6 +232,7 @@ function BucketComponent(props: {
     const [{isHovered}, dropRef] = useDrop(
 		() => ({
 			accept: props.item_type ?? DEFAULT_ITEM_TYPE,
+			canDrop: () =>  props.disableDrop !== true,
 			drop: (dropItem: Item, monitor: DropTargetMonitor<Item, unknown>) => {
 				// An item was dropped on the bucket (or a nested drop target).
 
@@ -264,7 +267,7 @@ function BucketComponent(props: {
 				return { id: props.id };
 			},
 			collect: (monitor) => ({
-				isHovered: monitor.isOver()
+				isHovered: monitor.isOver() && props.disableDrop !== true,
 			}),
     	}),
 		// dependency array - if any of these values change, the above object will be recreated.

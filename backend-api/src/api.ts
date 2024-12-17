@@ -64,28 +64,6 @@ app.post("/genCL", async (req, res) => {
 });
 
 /* ##########################################################
-                            genCV
-############################################################*/
-
-app.post("/genCV", async (req, res) => {
-    console.log('genCV posted to!');
-    const jobInfo = req.body as JobInfo;
-    console.log('genCV body = ', req.body);
-    const new_cv: CV = await tailorCV(jobInfo); // run function
-    if ( new_cv ) {
-        console.log('Sending the new_cv to the frontend');
-        console.log(new_cv);
-        if(!TEST && LOG) {
-            if( ! LOG.isSetup() ) LOG.setup(`LOG_someCompany_${new Date().getSeconds()}`)
-            LOG.addFile("cv.json", new_cv);
-        }
-        res.json(new_cv); // send result (as a JSON response)
-    } else {
-        res.status(404).send("Error getting a new CV info from the jobInfo.");
-    }
-});
-
-/* ##########################################################
                             saveCV
 ############################################################*/
 

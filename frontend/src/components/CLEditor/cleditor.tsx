@@ -1,21 +1,29 @@
-import { useState } from "react";
+import React, { useEffect } from "react";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
 import "./cleditor.scss"
-import { TrackVal, wrapTrackable } from "../../hooks/trackable";
+import { BucketComponent } from "../dnd/dnd";
 
 export function CLEditor(props: {
-    cl_paragraphs: string[],
+    paragraphs: string[],
 }) {
 
-    const VAL = useState(wrapTrackable(props.cl_paragraphs))[0];
+    const [pgs, setPgs] = React.useState<string[]>(props.paragraphs);
+
+    useEffect(()=> setPgs(props.paragraphs), [props.paragraphs]);
 
     return (
-        <div id="cl-editor">
+        <BucketComponent
+            id="cl-paragraphs"
+            values={pgs}
+            isVertical={true}
+            displayItemsClass="cl-editor"
+            item_type="cl-paragraph"
+        >
             {
-                VAL.map((pgraph_tv: TrackVal<string>, i: number)=>(
-                    <TextEditDiv key={i} id={`cl-row-${i}`} tv={pgraph_tv}/>
+                pgs?.map((p: string, i: number)=>(
+                    <TextEditDiv key={i} id={`cl-row-${i}`} tv={p}/>
                 ))
             }
-        </div>
+        </BucketComponent>
     );
 }
