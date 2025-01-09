@@ -42,9 +42,10 @@ interface Experience {
         end: string;
     };
     title: string;
-    side_title: string | Link;
-    points: string[];
-    tech: string[];
+    role?: string;
+    link?: Link;
+    description: string[];
+    item_list: string[];
 }
 interface Link {
     icon: string;
