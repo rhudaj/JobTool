@@ -77,10 +77,12 @@ function App() {
     // FROM BACKEND:
 
     const getJobInfo = () => {
+
         if(!jobText) {
             log("No job text to extract from.");
             return;
         }
+
         BackendAPI
         .post<{job_text: string}, JobInfo>("getJobInfo", {job_text: jobText})
         .then((jobInfo: JobInfo|null) =>
@@ -95,8 +97,10 @@ function App() {
     };
 
     const saveCV = () => {
+
         // Get non-empty user input for CV name
         let cvName: string|null = null;
+
         while (true) {
             cvName = prompt('Name the CV')?.trim()
             // 3 cases
@@ -123,10 +127,8 @@ function App() {
         } else {
             log(`User entered CV name: ${cvName}`);
         }
-
         // get CV from the cvref:
         const newCV = cvref.current.getCV();
-
         // Save the named CV to the backend
         BackendAPI.post<{name: string, cv: CV}, null>("saveCV", {name: cvName, cv: newCV})
     };
@@ -173,7 +175,6 @@ function App() {
                         Download PDF
                     </button>
                 </ButtonSet>
-
 
                 {/* VIEW ------------------------------- */}
 

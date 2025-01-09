@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/node": "^20.12.13",
     "rollup": "^4.21.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "rollup-plugin-dts": "^6.1.1",

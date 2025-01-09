@@ -44,17 +44,20 @@ interface CoverLetterResponse {
 // TODO: should not have to define a resume interface. The user can specify there own sections and what each of those contain.
 
 interface Experience {
-    date_range: string;
-    title: string;
-    side_title: string|Link;     // TODO: this can be a link (e.g. for projects)
-    points: string[];
-    tech: string[];
+    date: {
+        start: string,
+        end: string
+    }
+    title: string
+    side_title: string|Link
+    points: string[]
+    tech: string[]
 }
 
 interface Link {
-    icon: string;
-    url: string;
-    text?: string;
+    icon: string
+    url: string
+    text?: string
 }
 
 interface CV {

@@ -1,24 +1,24 @@
 {
-    "personalTitle": "CS Student ~ Full Stack Developer",
-    "summary": "Dynamic, agile full-stack software developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
+    "personalTitle": "CS Student ~ Data Developer",
+    "summary": "Dynamic, agile data-focused developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": [
+        "Python",
+        "SQL",
         "TypeScript",
         "JavaScript",
-        "SQL",
         "GoLang",
         "Java",
         "Scala",
         "HTML",
-        "CSS",
-        "Python"
+        "CSS,"
     ],
     "technologies": [
-        "React",
-        "Node",
+        "AWS (Lambda)",
+        "Excel",
+        "MS Office",
         "Git",
         "Alteryx",
-        "SQL Server",
-        "MongoDB",
+        "Postgres",
         "Numpy/Pandas",
         "Express"
     ],
@@ -26,8 +26,8 @@
         "experience": [
             {
                 "date": {
-                    "start": "05/24",
-                    "end": "09/24"
+                    "start":"04/23",
+                    "end": "09/23"
                 },
                 "title": "Software Product Developer",
                 "side_title": "Timeplay",
@@ -36,7 +36,7 @@
                     "Optimized data structures, architecture and APIs across backend-services, reducing data redundancy and enhancing usability improving performance of tools used by the end-users; admins on cruise ships.",
                     "Prioritized and deployed new game features based on client/user feedback, coordinating with stakeholders ensuring timely updates, and with developers using Jira which resulted in a 30% increase in game engagement."
                 ],
-                "tech": ["Node", "Docker", "React", "MongoDB"]
+                "tech": ["Postgres SQL", "Node", "Docker"]
             },
             {
                 "date": {
@@ -50,7 +50,7 @@
                     "Created a user-friendly app with Python and Microsoft SQL Server to extract client usage data of company products from databases; provided ease of data access and analysis by non-technical teams.",
                     "Enhanced databases to monitor client usage of products/APIs to formulate an optimized product pricing strategy and ultimately increase profitability and user satisfaction."
                 ],
-                "tech": ["SQL", "Python", "Alteryx", "Azure"]
+                "tech": ["Excel", "SQL", "Python", "Alteryx", "Azure"]
             },
             {
                 "date": {
@@ -61,26 +61,12 @@
                 "side_title": "Martinrea International",
                 "points": [
                     "Spearheaded a major project to optimize the flow of materials across a large facility; improved system for collecting and analyzing data to plan the project; resulted in increased output and cost efficiency.",
-                    "Implemented a supply chain tracking system using Apache Spark,SQL & ETL Warehouses for proactive identification of issues, enabling timely alerts to managers and achieving estimated $11,000 annual cost savings."
+                    "Implemented a supply chain tracking system using PySpark, SQL & ETL Warehouses for proactive identification of issues, enabling timely alerts to managers and achieving estimated $11,000 annual cost savings."
                 ],
-                "tech": ["SQL", "Apache Spark", "ETL", "Excel"]
+                "tech": ["PySpark", "Excel", " ETL", "SQL"]
             }
         ],
         "projects": [
-            {
-                "date": {
-                    "start": "08/24"
-                },
-                "title": "Job Application Tool",
-                "side_title": {
-                    "url": "https://github.com/rhudaj/JobTool",
-                    "icon": "fa fa-link"
-                },
-                "points": [
-                    "Developed a full-stack app with React, TypeScript and Express  that streamlines the job application process // The frontend features interactive tools to create, edit, and save tailored resumes dynamically, enhancing the efficiency and personalization of job applications // A backend exposed as a RESTful API with Express, stores templates and connects to an NER model that extracts key information from job descriptions."
-                ],
-                "tech": ["React", "TypeScript", "Express", "Python"]
-            },
             {
                 "date": {
                     "start": "05/24"
@@ -91,31 +77,43 @@
                     "icon": "fa fa-link"
                 },
                 "points": [
-                    "Fully automated system to secure sought-after reservations at world-famous restaurants for clients, generating $X,XXX a month // Developed with TypeScript and Node.js // Deployed on Google-Cloud and managed through their REST API, utilizing Scheduler for automated tasks, Task Manager for executing parallel API requests to reservation-platforms, and cloud-storage for saving transaction and listing records, ensuring a scalable and reliable system."
+                    "Fully automated system to secure sought-after reservations at world-famous restaurants for clients, generating $X,XXX a month // Developed with TypeScript and Node.js // Deployed on AWS and managed through their REST API, utilizing AWS Lambda for automated tasks, Task Manager for executing parallel API requests to reservation-platforms, and cloud-storage for saving transaction and listing records, ensuring a scalable and reliable system."
                 ],
-                "tech": ["TypeScript", "Node", "Google Cloud"]
+                "tech": ["TypeScript", "Node", "AWS"]
             },
             {
                 "date": {
-                    "start":"5/23",
-                    "end": "7/23"
+                    "start": "01/24",
+                    "end": "04/24"
                 },
-                "title": "Database Interface App",
+                "title": "Voice-to-Instrument Translator",
                 "side_title": {
-                    "url": "https://github.com/rhudaj/DatabaseInterfaceApp",
+                    "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
                     "icon": "fa fa-link"
                 },
                 "points": [
-                    "Efficient, user-friendly app to interface with any database featuring: fast connection/querying with ODBC // Intuitive UI for table selection and data filtering, dynamically generated in real-time by efficiently handling of millions of records via Pandas, optimized display algorithms and batch querying // crash-safe via multi-threading // MVC architecture."
+                    "Developed an app enabling real-time translation of human voice audio data musical instruments // Utilized Python (Numpy) to implement  advanced probabilistic algorithms for detecting: pitch, tempo and note-onsets // Exposed the backend as a REST API to integrate with a GUI built with React."
                 ],
-                "tech": ["Python", "SQL"]
+                "tech": ["Python", "React", "Express"]
+            },
+            {
+                "date": {
+                    "start": "01/24",
+                    "end": "02/24"
+                },
+                "title": "Distributed Email Spam Classifier",
+                "side_title": { "url": "", "icon": "fa fa-link" },
+                "points": [
+                    "Developed a spam classification system using Apache Spark.Implemented and optimized stochastic gradient descent (SGD) to on 1GB+ datasets, utilizing hashed byte 4-grams as feature vectors, distributed Spark programs to preprocess training data, train models, and make predictions, ensuring scalability and efficient memory usage // Evaluated performance using ROC metrics, achieving a competitive area under the curve (AUC) score."
+                ],
+                "tech": ["Apache Spark", "Python"]
             }
         ],
         "education": [
             {
                 "date": {
                     "start":"09/20",
-                    "end": "12/24"
+                    "end": "01/25"
                 },
                 "title": "Computer Science, Honours",
                 "side_title": "University of Waterloo",

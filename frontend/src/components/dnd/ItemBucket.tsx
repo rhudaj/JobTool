@@ -94,27 +94,25 @@ function ItemBucket(props: {
 
 	// ----------------- STATE -----------------
 
-	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket([]);
-
+	const { items, setItems, addItem, moveItem, removeItem, changeItemValue } = useBucket(
+		!props.values ? [] :
+		props.values.map(v => ({
+			id: objectHash.sha1(v),
+			value: v
+		}))
+	);
 	const [hoveredGap, setHoveredGap] = React.useState<number|undefined>(undefined);
 
-	// TODO: somehow this works with an empty dependency (meaning on first render).
 	React.useEffect(() => {
 		log("NEW props.values:", props.values);
-
-		if(!props.values) {
-			setItems([]);
-			return;
-		}
-
-
 		setItems(
+			!props.values ? [] :
 			props.values.map(v => ({
 				id: objectHash.sha1(v),
 				value: v
 			}))
 		);
-	}, [])
+	}, [props.values]);
 
 	// Called whenever INTERNAL state changes:
 	React.useEffect(()=>{

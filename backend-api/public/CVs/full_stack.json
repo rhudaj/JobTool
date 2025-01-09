@@ -24,7 +24,10 @@
     "experiences": {
         "experience": [
             {
-                "date_range": "4/23 - 9/23",
+                "date": {
+                    "start":"04/23",
+                    "end": "09/23"
+                },
                 "title": "Software Product Management Intern",
                 "side_title": "Environics Analytics",
                 "points": [
@@ -35,7 +38,10 @@
                 "tech": ["SQL", "Python", "Alteryx", "Azure"]
             },
             {
-                "date_range": "5/24 - 9/24",
+                "date": {
+                    "start": "04/22",
+                    "end": "09/23"
+                },
                 "title": "Software Product Developer",
                 "side_title": "Timeplay",
                 "points": [
@@ -46,7 +52,10 @@
                 "tech": ["Node", "Docker", "React", "MongoDB"]
             },
             {
-                "date_range": "1/22 - 8/22",
+                "date": {
+                    "start": "01/22",
+                    "end": "08/22"
+                },
                 "title": "Student Engineer",
                 "side_title": "Martinrea International",
                 "points": [
@@ -58,7 +67,9 @@
         ],
         "projects": [
             {
-                "date_range": "5/24 - Pres",
+                "date": {
+                    "start":"05/24"
+                },
                 "title": "Automated Restaurant Reservation Business",
                 "side_title": {
                     "url": "https://github.com/rhudaj/ResyBot",
@@ -70,24 +81,30 @@
                 "tech": ["TypeScript", "Node", "Google Cloud"]
             },
             {
+                "date": {
+                    "start":"05/23",
+                    "end": "07/23"
+                },
                 "title": "Database Interface App",
                 "side_title": {
                     "url": "https://github.com/rhudaj/DatabaseInterfaceApp",
                     "icon": "fa fa-link"
                 },
-                "date_range": "5/23 - 7/23",
                 "points": [
                     "Created a efficient, user-friendly app to interact with a database featuring: Connection to any specified database via ODBC // Intuitive UI for table selection and data filtering, dynamically generated in real-time by efficiently handling of millions of records via Pandas, optimized display algorithms and batch querying // crash-safe via multi-threading // MVC architecture."
                 ],
                 "tech": ["Python", "SQL"]
             },
             {
+                "date": {
+                    "start":"01/24",
+                    "end": "04/24"
+                },
                 "title": "Voice-to-Instrument Translator",
                 "side_title": {
                     "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
                     "icon": "fa fa-link"
                 },
-                "date_range": "1/24 - 4/24",
                 "points": [
                     "Developed an app enabling real-time translation of human voice into various musical instruments // Utilized Python (Numpy) to implement  advanced probabilistic algorithms for detecting: pitch, tempo and note-onsets // Exposed the backend as a REST API to integrate with a GUI built with React."
                 ],
@@ -96,14 +113,17 @@
         ],
         "education": [
             {
-            "title": "Computer Science, Honours",
-            "side_title": "University of Waterloo",
-            "date_range": "9/20 - 12/24",
-            "points": [
-                "Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
-                "Course-Work: Databases, UI/UX, Networks, Algorithms, Machine Learning"
-            ],
-            "tech": []
+                "date": {
+                    "start":"09/20",
+                    "end": "01/25"
+                },
+                "title": "Computer Science, Honours",
+                "side_title": "University of Waterloo",
+                "points": [
+                    "Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
+                    "Course-Work: Databases, UI/UX, Networks, Algorithms, Machine Learning"
+                ],
+                "tech": []
             }
         ]
     },

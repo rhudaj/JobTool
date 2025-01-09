@@ -19,14 +19,17 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
 	if (!props.title) return null;
 
-	let sideTitleEl;
-	let content;
+	let sideTitleEl, content;
+
+	// sideTitleEl UI depends
 
 	if (typeof props.side_title === "string") {
 		sideTitleEl = <TextEditDiv tv={props.side_title} onUpdate={val => handleUpdate('side_title', val)} />
 	} else {
 		sideTitleEl = <LinkUI {...props.side_title} />
 	}
+
+	// content UI depends
 
 	if (props.points.length === 1) {
 		content = <TextEditDiv tv={props.points[0]} onUpdate={(val) => handleUpdate('points', [val])} />
@@ -46,12 +49,27 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 		)
 	}
 
+
+	const getDateStr = (date: {start: string, end?: string}) => (
+		date.start + "-" + (date.end ?? "Pres ")
+	)
+
+	const getDateFromStr = (dateStr: string) => {
+		const parts = dateStr.split("-")
+		const start = parts[0]
+		var end = parts[1]
+		if (end === "Pres ") {
+			end = undefined
+		}
+		return {start: start, end: end}
+	}
+
 	return (
 		<div className="experience">
 
 			{/* ------------ COLUMN 1 ------------ */}
 
-			<TextEditDiv tv={props.date_range} className="date-range" onUpdate={val => handleUpdate('date_range', val)} />
+			<TextEditDiv tv={getDateStr(props.date)} className="date-range" onUpdate={val => handleUpdate('date', getDateFromStr(val))} />
 
 			{/* ------------ COLUMN 2 ------------ */}
 
@@ -131,17 +149,13 @@ const CVEditor = forwardRef((
 	ref: React.ForwardedRef<any>
 ) => {
 
-	const log = useLogger("CVEditor");
-
 	// -------------- STATE --------------
 
 	const [CV, setCV] = useImmer<CV>(null);
 
 	useEffect(() => {
-		log("new CV:", CV);
 		setCV(props.cv);
-	}
-	, [props.cv]);
+	}, [props.cv]);
 
 	useImperativeHandle(ref, () => ({
 		getCV: () => CV
@@ -149,12 +163,14 @@ const CVEditor = forwardRef((
 
 	// -------------- RENDER --------------
 
-	if (!CV) return null;
+	if (!CV) {
+		return null;
+	}
 
 	const bt = BucketTypes["experiences"];
-	const bucket_sections = [];
+	const experience_sections = [];
 	for (const category in CV.experiences) {
-		bucket_sections.push(
+		experience_sections.push(
 			<Section head={category.toUpperCase()}>
 				<ItemBucket
 					id={category}
@@ -224,13 +240,13 @@ const CVEditor = forwardRef((
 							setCV(draft => {
 								draft.technologies = vals
 							})
-						}}/>
+						}}/>22
 					</div>
 				</Section>
 			)
 		],
 		// LAST 3 ROWS ARE EXPERIENCES (each held in ItemBucket)
-		...bucket_sections
+		...experience_sections
 	];
 
 	return <Grid id="cv-editor" rows_cols={rows_cols} rowGapPct="1" colGapPct="2"/>;

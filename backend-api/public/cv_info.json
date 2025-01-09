@@ -21,7 +21,8 @@
     ],
     "courses": [
         "Databases",
-        "UI/UX", "Networks",
+        "UI/UX",
+        "Networks",
         "Algorithms",
         "Machine Learning",
         "Data Structures",
@@ -30,54 +31,96 @@
         "Computer Architecture",
         "Cybersecurity"
     ],
-    "summaries": [
-        "Some summary..."
-    ],
+    "summaries": ["Some summary..."],
     "projects": [
         {
-            "date_range": "9/21 - 9/22",
+            "date": {
+                "start": "09/21",
+                "end": "9/22"
+            },
             "title": "Portfolio Website",
-            "side_title": "https://github.com/rhudaj/personal-website-v2",
+            "side_title": {
+                "url": "https://github.com/rhudaj/personal-website-v2",
+                "icon": "fa fa-link"
+            },
             "points": [
                 "Developed a dynamic personal website to showcase my resume, projects, coursework, and artwork, with content automatically updated via APIs and web scraping // Built with React, TypeScript, Express.js, HTML, and CSS // Integrated data sources like social media APIs for artwork, GitHub readmes for project details, and web-crawled university course listings // Implemented React Router for seamless navigation and hosted the site on a custom domain // Added a contact form with email functionality to enhance engagement."
             ],
             "tech": ["React", "TypeScript", "Express", "HTML", "CSS"]
         },
         {
-            "date_range": "5/24 - Pres",
+            "date": {
+                "start": "05/24"
+            },
             "title": "Automated Restaurant Reservation Business",
-            "side_title": "https://github.com/rhudaj/ResyBot",
+            "side_title": {
+                "url": "https://github.com/rhudaj/ResyBot",
+                "icon": "fa fa-link"
+            },
             "points": [
                 "Fully automated system to secure sought-after reservations at world-famous restaurants for clients, generating $X,XXX a month // Developed with TypeScript and Node.js // Deployed on Google-Cloud and managed through their REST API, utilizing Scheduler for automated tasks, Task Manager for executing parallel API requests to reservation-platforms, and cloud-storage for saving transaction and listing records, ensuring a scalable and reliable system."
             ],
             "tech": ["TypeScript", "Node", "Google Cloud"]
         },
         {
-            "date_range": "8/24 - Pres",
+            "date": {
+                "start": "09/24"
+            },
             "title": "Job Application Tool",
-            "side_title": "https://github.com/rhudaj/JobTool",
+            "side_title": {
+                "url": "https://github.com/rhudaj/JobTool",
+                "icon": "fa fa-link"
+            },
             "points": [
                 "Developed a full-stack app with React, TypeScript and Express  that streamlines the job application process // The frontend features interactive tools to create, edit, and save tailored resumes dynamically, enhancing the efficiency and personalization of job applications // A backend exposed as a RESTful API with Express, stores templates and connects to an NER model that extracts key information from job descriptions."
             ],
             "tech": ["React", "TypeScript", "Express", "Python"]
         },
         {
+            "date": {
+                "start": "05/23",
+                "end": "07/23"
+            },
             "title": "Database Interface App",
-            "side_title": "https://github.com/rhudaj/DatabaseInterfaceApp",
-            "date_range": "5/23 - 7/23",
+            "side_title": {
+                "url": "https://github.com/rhudaj/DatabaseInterfaceApp",
+                "icon": "fa fa-link"
+            },
             "points": [
                 "Created a efficient, user-friendly app to interact with a database featuring: Connection to any specified database via ODBC // Intuitive UI for table selection and data filtering, dynamically generated in real-time by efficiently handling of millions of records via Pandas, optimized display algorithms and batch querying // crash-safe via multi-threading // MVC architecture."
             ],
             "tech": ["Python", "SQL"]
         },
         {
+            "date": {
+                "start": "01/24",
+                "end": "04/24"
+            },
             "title": "Voice-to-Instrument Translator",
-            "side_title": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
-            "date_range": "1/24 - 4/24",
+            "side_title": {
+                "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
+                "icon": "fa fa-link"
+            },
             "points": [
                 "Developed an app enabling real-time translation of human voice into various musical instruments // Utilized Python (Numpy) to implement  advanced probabilistic algorithms for detecting: pitch, tempo and note-onsets // Exposed the backend as a REST API to integrate with a GUI built with React."
             ],
             "tech": ["Python", "React", "Express"]
+        },
+        {
+            "date": {
+                "start": "10/24",
+                "end": "11/24"
+            },
+            "title": "Distributed Email Spam Classifier",
+            "side_title": {
+                "url": "",
+                "icon": "fa fa-link"
+            },
+            "points": [
+                "Developed a spam classification system using Apache Spark.Implemented and optimized stochastic gradient descent (SGD) to on 1GB+ datasets, utilizing hashed byte 4-grams as feature vectors, distributed Spark programs to preprocess training data, train models, and make predictions, ensuring scalability and efficient memory usage // Evaluated performance using ROC metrics, achieving a competitive area under the curve (AUC) score."
+            ],
+            "date_range": "10/24-11/24",
+            "tech": [ "Apache Spark, Scala" ]
         }
     ]
 }

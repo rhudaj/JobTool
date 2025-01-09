@@ -8,9 +8,12 @@ export function CLEditor(props: {
     paragraphs: string[],
 }) {
 
-    const [pgs, setPgs] = useImmer<string[]>(props.paragraphs);
+    const [pgs, setPgs] = useImmer<string[]>([]);
 
-    useEffect(()=> setPgs(props.paragraphs), [props.paragraphs]);
+    useEffect(()=> {
+        console.log("Setting paragraphs", props.paragraphs);
+        setPgs(props.paragraphs);
+    }, [props.paragraphs]);
 
     return (
         <ItemBucket

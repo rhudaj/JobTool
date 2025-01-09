@@ -37,7 +37,10 @@ interface CoverLetterResponse {
     closing_remarks: string;
 }
 interface Experience {
-    date_range: string;
+    date: {
+        start: string;
+        end: string;
+    };
     title: string;
     side_title: string | Link;
     points: string[];
