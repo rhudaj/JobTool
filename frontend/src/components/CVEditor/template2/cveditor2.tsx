@@ -1,4 +1,4 @@
-import "./cveditor2.scss";
+import "./cveditor2.sass";
 import { CV, Experience, Link } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import React, { forwardRef, useEffect, useImperativeHandle } from "react";
@@ -7,6 +7,7 @@ import { Grid } from "../grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
 import ItemBucket from "../../dnd/ItemBucket";
 import { BucketTypes } from "../../dnd/types";
+import { useLogger } from "../../../hooks/logger";
 
 const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
@@ -63,19 +64,27 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 		return {start: start, end: end}
 	}
 
-    return (
-        <div className="experience">
-            <div>
-                <div>
-                    <TextEditDiv tv={props.title} className="title" onUpdate={val => handleUpdate('title', val)} />
-                    <div className="side-title">{sideTitleEl}</div>
-                </div>
-                <TextEditDiv tv={getDateStr(props.date)} className="date-range" onUpdate={val => handleUpdate('date', getDateFromStr(val))} />
-            </div>
-            <div className="exp-content">{content}</div>
-            <DelimitedList items={props.tech} delimiter=" / " onUpdate={val => handleUpdate('tech', val)} />
-        </div>
-    )
+	// TODO: side-title should be called "position-name"
+	// TODO: Experience should have (optional) location field
+	return (
+		<div className="experience">
+			{/* ROW 1 */}
+			<div className="header-info">
+				<div>
+					<div className="side-title col-1">{sideTitleEl}</div>
+					<TextEditDiv tv={getDateStr(props.date)} className="date-range col-2" onUpdate={val => handleUpdate('date', getDateFromStr(val))} />
+				</div>
+				<div>
+					<TextEditDiv className="title col-1" tv={props.title} onUpdate={val => handleUpdate('title', val)} />
+					<div className="location col-2">Region,Country</div>
+				</div>
+			</div>
+			{/* ROW 2 */}
+			<div className="exp-content">{content}</div>
+			{/* ROW 3 */}
+			<DelimitedList items={props.tech} delimiter=" / " onUpdate={val => handleUpdate('tech', val)} />
+		</div>
+	);
 };
 
 const Section = (props: {
