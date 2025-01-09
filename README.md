@@ -84,7 +84,6 @@ The frontend is located in the `frontend` directory. The frontend is split into 
 
 The backend is located in the `backend` directory. The backend is split into routes that are located in the `src/routes` directory. The backend serves the frontend and provides an API for the frontend to interact with.
 
-
 <!-- CONTACT -->
 ## Contact
 
