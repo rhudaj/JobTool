@@ -1,0 +1,167 @@
+$base-font-size: 0.26cqw;
+
+$page-padding:          calc(20 * $base-font-size);
+
+$hr-line-width:         0.5rem;
+
+$experiences-gap:       calc(5 * $base-font-size);
+
+$exp-row-gap:           calc(5 * $base-font-size);
+$exp-col-gap:           calc(5 * $base-font-size);
+$exp-head-content-gap:  calc(5 * $base-font-size);
+$link-col-gap:          calc(3 * $base-font-size);
+$skills-col-gap:        calc(3 * $base-font-size);
+$bullet-point-gap:      calc(2 * $base-font-size);
+
+$sec-row-gap:           calc(6 * $base-font-size);
+$sec-head-line-gap:     calc(3 * $base-font-size);
+$sec-head-line-height:  calc(0.5 * $base-font-size);
+
+/* FONT SIZES */
+$p-font:                calc(6 * $base-font-size);
+$name-font:             calc(12 * $base-font-size);
+$title-font:            calc(8 * $base-font-size);
+
+
+/* delimited-list ---------------------------- */
+
+.delimited-list {
+    display: flex;
+    flex-wrap: wrap;
+    & > * {
+        flex: 0 1 auto;                     /* Prevent children from expanding and ensure they fit their content */
+        white-space: wrap;                  /* Prevent wrapping */
+        white-space-collapse: preserve;
+    }
+}
+
+/* CV-EDITOR ---------------------------- */
+
+#cv-editor {
+    padding: $page-padding;
+    color: black;
+    font-family: 'Arial Narrow Bold', sans-serif;
+    height: 100%;
+}
+
+
+/* SECTION ------------------  */
+
+.section {
+    display: grid;
+    grid-template-rows: repeat(2, min-content);
+    font-size: $p-font;
+    row-gap: $sec-row-gap;
+}
+
+.sec-head {
+    font-weight: bold;
+
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    column-gap: $sec-head-line-gap;
+
+    hr {
+        /* HORIZONTAL LINE ACROSS CENTER OF DIV */
+        border: none;
+        height: $sec-head-line-height;
+        border-bottom: $hr-line-width solid black;
+        align-self: center;
+    }
+}
+
+/* SUB SECTION ------------------  */
+
+.sub-sec {
+    display: grid;
+    grid-template-columns: 0.35fr 1fr;
+    column-gap: $skills-col-gap;
+
+    .sub-sec-head {
+        font-weight: bold;
+    }
+}
+
+/* EXPERIENCE ------------------ */
+
+.experience {
+    display: grid;
+    grid-template-rows: repeat(3, min-content);
+    & :nth-child(1) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        & :nth-child(2) {
+            text-align: end;
+        }
+    }
+}
+
+.exp-points {
+    display: grid;
+    grid-template-rows: repeat(min-content);
+    row-gap: $bullet-point-gap;
+}
+
+.exp-tech {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 501;
+}
+
+.title, .side-title {
+    font-weight: bold;
+}
+
+/* LINK $$$$$$$$$$$$$$*/
+
+.link {
+    display: grid;
+    white-space: nowrap;
+    grid-template-columns: min-content 1fr;
+    column-gap: $link-col-gap;
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+}
+/* ROW 1 $$$$$$$$$$$$$$*/
+
+#name-title {
+
+    display: grid;
+
+    #div-full-name {
+        font-size: $name-font;
+        white-space: nowrap;
+        font-weight: bolder;
+    }
+
+    #div-personal-title {
+        font-size: $title-font;
+    }
+}
+
+#div-links {
+    font-size: $p-font;
+    display: grid;
+    /* ASSUMES EXACTLY 4 LINKS */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+/* ROW 2 --------------- */
+
+#section-skills {
+    .sec-content {
+        display: grid;
+        grid-template-rows: repeat(2, min-content);
+        row-gap: 1fr;
+    }
+}
+
+/* ROW 4 --------------- */
+
+#projects > .sec-content {
+    display: grid;
+    row-gap: $experiences-gap;
+}

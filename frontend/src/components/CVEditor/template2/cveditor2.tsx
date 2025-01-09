@@ -1,13 +1,12 @@
-// import "./cveditor.scss";
+import "./cveditor2.scss";
 import { CV, Experience, Link } from "shared";
-import { TextEditDiv } from "../TextEditDiv/texteditdiv";
+import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
-import { Grid } from "./grid";
-import { joinClassNames } from "../../hooks/joinClassNames";
-import ItemBucket from "../dnd/ItemBucket";
-import { BucketTypes } from "../dnd/types";
-import { useLogger } from "../../hooks/logger";
+import { Grid } from "../grid";
+import { joinClassNames } from "../../../hooks/joinClassNames";
+import ItemBucket from "../../dnd/ItemBucket";
+import { BucketTypes } from "../../dnd/types";
 
 const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
@@ -64,31 +63,19 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 		return {start: start, end: end}
 	}
 
-	return (
-		<div className="experience">
-
-			{/* ------------ COLUMN 1 ------------ */}
-
-			<TextEditDiv tv={getDateStr(props.date)} className="date-range" onUpdate={val => handleUpdate('date', getDateFromStr(val))} />
-
-			{/* ------------ COLUMN 2 ------------ */}
-
-			<div className="exp-col-2">
-
-				{/* ------------ ROWS ------------ */}
-
-				<div className="titles">
-					<TextEditDiv tv={props.title} className="title" onUpdate={val => handleUpdate('title', val)} />
-					<div className="side-title">{sideTitleEl}</div>
-				</div>
-
-				<div className="exp-content">{content}</div>
-
-				<DelimitedList items={props.tech} delimiter=" / " onUpdate={val => handleUpdate('tech', val)} />
-
-			</div>
-		</div>
-	);
+    return (
+        <div className="experience">
+            <div>
+                <div>
+                    <TextEditDiv tv={props.title} className="title" onUpdate={val => handleUpdate('title', val)} />
+                    <div className="side-title">{sideTitleEl}</div>
+                </div>
+                <TextEditDiv tv={getDateStr(props.date)} className="date-range" onUpdate={val => handleUpdate('date', getDateFromStr(val))} />
+            </div>
+            <div className="exp-content">{content}</div>
+            <DelimitedList items={props.tech} delimiter=" / " onUpdate={val => handleUpdate('tech', val)} />
+        </div>
+    )
 };
 
 const Section = (props: {
