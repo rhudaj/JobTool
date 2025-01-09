@@ -25,9 +25,9 @@
     "experiences": {
         "experience": [
             {
-                "date": { "start": "04/22", "end": "09/23" },
+                "date": { "start": { "month": 4, "year": 2022 }, "end": { "month": 9, "year": 2023 } },
                 "title": "Timeplay",
-                "role": "Software Product Developer",
+                "role": "Software Product Developer",
                 "location": "Toronto, CAN",
                 "description": [
                     "Improved UI for lottery and instant-win games through market-research and development with React and TypeScript, supporting the rollout of a mobile-gaming platform on cruise ships from inception to deployment.",
@@ -37,9 +37,9 @@
                 "item_list": ["Node", "Docker", "React", "MongoDB"]
             },
             {
-                "date": { "start": "04/23", "end": "09/23" },
+                "date": { "start": { "month": 4, "year": 2023 }, "end": { "month": 9, "year": 2023 } },
                 "title": "Environics Analytics",
-                "role": "Software Product Management Intern",
+                "role": "Software Product Management Intern",
                 "location": "Toronto, CAN",
                 "description": [
                     "Built an adaptive French translation pipeline using Alteryx, SQL, and a deep learning AI model API to automate data product and document translations, resulting in ~$40K in savings per product translation.",
@@ -49,20 +49,20 @@
                 "item_list": ["SQL", "Python", "Alteryx", "Azure DevOps"]
             },
             {
-                "date": { "start": "01/22", "end": "08/22" },
+                "date": { "start": { "month": 1, "year": 2022 }, "end": { "month": 8, "year": 2022 } },
                 "title": "Martinrea International",
                 "role": "Student Engineer",
                 "location": "Brampton, CAN",
                 "description": [
                     "Co-lead a major project to optimize the flow of materials across a automotive manufacturing plant; improved system for collecting and analyzing data to plan the project, increasing overall output and cost efficiency by 30%.",
-                    "Built a supply chain monitoring system with ETL analysis on data warehouses using Apache Spark and SQL to track supply and demand, sending timely alerts for potential shortages or surpluses, resulting in $10K+ annual savings."
+                    "Built a supply chain monitoring system with ETL analysis on data warehouses using Apache Spark and SQL to track supply and demand, sending timely alerts for potential shortages or surpluses, resulting in $10K+ annual savings."
                 ],
                 "item_list": ["SQL", "Excel", "Apache Spark"]
             }
         ],
         "projects": [
             {
-                "date": { "start": "05/24", "end": "Pres " },
+                "date": { "start": { "month": 5, "year": 2024 }, "end": { "month": null, "year": null } },
                 "title": "Automated Restaurant Reservation Business",
                 "link": {
                     "url": "https://github.com/rhudaj/ResyBot",
@@ -75,7 +75,7 @@
                 "item_list": ["Go", "Google Cloud"]
             },
             {
-                "date": { "start": "09/24", "end": "Pres " },
+                "date": { "start": { "month": 9, "year": 2024 }, "end": { "month": null, "year": null } },
                 "title": "Job Application Tool",
                 "link": {
                     "url": "https://github.com/rhudaj/JobTool",
@@ -89,7 +89,7 @@
                 "item_list": ["React", "Redux", "Node", "TypeScript", "Python"]
             },
             {
-                "date": { "start": "01/24", "end": "04/24" },
+                "date": { "start": { "month": 1, "year": 2024 }, "end": { "month": 4, "year": 2024 } },
                 "title": "Voice-to-Instrument",
                 "link": {
                     "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
@@ -105,7 +105,7 @@
         ],
         "education": [
             {
-                "date": { "start": "09/20", "end": "01/25" },
+                "date": { "start": { "month": 9, "year": 2020 }, "end": { "month": 1, "year": 2025 } },
                 "title": "Bachelor of Computer Science, Honours",
                 "location": "University of Waterloo",
                 "description": [

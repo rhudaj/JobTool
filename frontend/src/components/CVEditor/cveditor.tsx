@@ -1,5 +1,5 @@
 // import "./cveditor.scss";
-import { CV, Experience, Link } from "shared";
+import { CV, DateRange, Experience, Link, MonthYear } from "shared";
 import { TextEditDiv } from "../TextEditDiv/texteditdiv";
 import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
@@ -8,30 +8,8 @@ import { joinClassNames } from "../../hooks/joinClassNames";
 import ItemBucket from "../dnd/ItemBucket";
 import { BucketTypes } from "../dnd/types";
 import { useLogger } from "../../hooks/logger";
+import { format, parse } from "date-fns"
 
-const DateUI = (props: {start: string, end: string} & { onUpdate?: any }) => {
-
-	const strFromDate = (date: {start: string, end?: string}) => (
-		date.start + "-" + (date.end ?? "Pres ")
-	)
-	const dateFromStr = (dateStr: string) => {
-		const parts = dateStr.split("-")
-		const start = parts[0]
-		var end = parts[1]
-		if (end === "Pres ") {
-			end = undefined
-		}
-		return {start: start, end: end}
-	}
-
-	return (
-		<TextEditDiv
-			className="date-range"
-			tv={strFromDate(props)}
-			onUpdate={val => props.onUpdate(dateFromStr(val))}
-		/>
-	)
-}
 
 const LinkUI = (props: Link) => {
 	return (
@@ -62,7 +40,7 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 
 	titleEl = <TextEditDiv className="title" tv={props.title} onUpdate={val => handleUpdate('title', val)} />
 
-	dateEl = <DateUI {...props.date} onUpdate={val => handleUpdate('date', val)} />
+	// dateEl = <DateUI {...props.date} onUpdate={val => handleUpdate('date', val)} />
 
 	if (props.role) {
 		roleEl = <TextEditDiv className="role" tv={props.role} onUpdate={val => handleUpdate('role', val)} />

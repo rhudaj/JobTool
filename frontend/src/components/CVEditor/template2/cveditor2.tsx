@@ -1,5 +1,5 @@
 import "./cveditor2.sass";
-import { CV, Experience, Link } from "shared";
+import { CV, Experience, Link, MonthYear, DateRange } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
@@ -7,6 +7,7 @@ import { Grid } from "../grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
 import ItemBucket from "../../dnd/ItemBucket";
 import { BucketTypes } from "../../dnd/types";
+import { format, parse } from "date-fns"
 
 const Section = (props: {
     head: string;
@@ -48,7 +49,7 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 						<TextEditDiv className="title" tv={props.title} onUpdate={val => handleUpdate('title', val)} />
 						{ props.link && <LinkUI {...props.link} /> }
 					</div>
-					<DateUI {...props.date} onUpdate={val => handleUpdate('date', val)} />
+					<DateUI dateRange={props.date} onUpdate={val => handleUpdate('date', val)} />
 
 				</div>
 				<div>
@@ -80,27 +81,27 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 	);
 };
 
-const DateUI = (props: {start: string, end: string} & { onUpdate?: any }) => {
+const DateUI = (props: {
+	dateRange: DateRange,
+	onUpdate?: any
+}) => {
 
-	const strFromDate = (date: {start: string, end?: string}) => (
-		date.start + "-" + (date.end ?? "Pres ")
-	)
-	const dateFromStr = (dateStr: string) => {
-		const parts = dateStr.split("-")
-		const start = parts[0]
-		var end = parts[1]
-		if (end === "Pres ") {
-			end = undefined
-		}
-		return {start: start, end: end}
-	}
+	console.log("DateUI props: ", props.dateRange)
+
+	const DELIM = " - ";
+
+	const monthYear2str = (my: MonthYear): string => (
+		format(new Date(my.year, my.month - 1), "MMM yyyy") // Format as "Aug. 2024"
+	);
+
+	const strFromDateRange = (dr: DateRange) => (
+		monthYear2str(dr.start) + DELIM + (dr.end.month ? monthYear2str(dr.end) : "Present")
+	);
 
 	return (
-		<TextEditDiv
-			className="date-range"
-			tv={strFromDate(props)}
-			onUpdate={val => props.onUpdate(dateFromStr(val))}
-		/>
+		<div className="date-range">
+			{strFromDateRange(props.dateRange)}
+		</div>
 	)
 }
 

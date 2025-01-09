@@ -37,16 +37,21 @@ interface CoverLetterResponse {
     closing_remarks: string;
 }
 interface Experience {
-    date: {
-        start: string;
-        end: string;
-    };
+    date: DateRange;
     title: string;
     role?: string;
     location?: string;
     link?: Link;
     description: string[];
     item_list: string[];
+}
+interface DateRange {
+    start: MonthYear;
+    end: MonthYear;
+}
+interface MonthYear {
+    month: number;
+    year: number;
 }
 interface Link {
     icon: string;
@@ -76,4 +81,4 @@ interface TailorCVInfo {
 interface GenCLInfo extends TailorCVInfo {
 }
 
-export type { CV, CoverLetterResponse, Experience, GenCLInfo, JobExtractResponse, JobInfo, Link, TailorCVInfo, WordOccurences };
+export type { CV, CoverLetterResponse, DateRange, Experience, GenCLInfo, JobExtractResponse, JobInfo, Link, MonthYear, TailorCVInfo, WordOccurences };

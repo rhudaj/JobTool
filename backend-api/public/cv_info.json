@@ -35,8 +35,8 @@
     "projects": [
         {
             "date": {
-                "start": "09/21",
-                "end": "9/22"
+                "start": { "month": 9, "year": 2021 },
+                "end": { "month": 9, "year": 2022 }
             },
             "title": "Portfolio Website",
             "link": {
@@ -50,7 +50,7 @@
         },
         {
             "date": {
-                "start": "05/24"
+                "start": { "month": 5, "year": 2024 }
             },
             "title": "Automated Restaurant Reservation Business",
             "link": {
@@ -64,7 +64,7 @@
         },
         {
             "date": {
-                "start": "09/24"
+                "start": { "month": 9, "year": 2024 }
             },
             "title": "Job Application Tool",
             "link": {
@@ -78,8 +78,8 @@
         },
         {
             "date": {
-                "start": "05/23",
-                "end": "07/23"
+                "start": { "month": 5, "year": 2023 },
+                "end": { "month": 7, "year": 2023 }
             },
             "title": "Database Interface App",
             "link": {
@@ -93,8 +93,8 @@
         },
         {
             "date": {
-                "start": "01/24",
-                "end": "04/24"
+                "start": { "month": 1, "year": 2024 },
+                "end": { "month": 4, "year": 2024 }
             },
             "title": "Voice-to-Instrument Translator",
             "link": {
@@ -108,8 +108,8 @@
         },
         {
             "date": {
-                "start": "10/24",
-                "end": "11/24"
+                "start": { "month": 10, "year": 2024 },
+                "end": { "month": 11, "year": 2024 }
             },
             "title": "Distributed Email Spam Classifier",
             "link": {
@@ -119,7 +119,7 @@
             "description": [
                 "Developed a spam classification system using Apache Spark.Implemented and optimized stochastic gradient descent (SGD) to on 1GB+ datasets, utilizing hashed byte 4-grams as feature vectors, distributed Spark programs to preprocess training data, train models, and make predictions, ensuring scalability and efficient memory usage // Evaluated performance using ROC metrics, achieving a competitive area under the curve (AUC) score."
             ],
-            "item_list": [ "Apache Spark, Scala" ]
+            "item_list": ["Apache Spark, Scala"]
         }
     ]
 }
