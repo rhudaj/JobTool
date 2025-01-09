@@ -240,7 +240,7 @@ const CVEditor = forwardRef((
 							setCV(draft => {
 								draft.technologies = vals
 							})
-						}}/>22
+						}}/>
 					</div>
 				</Section>
 			)
