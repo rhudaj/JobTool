@@ -20,12 +20,12 @@ const Section = (props: {
 	);
 
 	return (
-		<div className="section" id={props.id}>
+		<div className="section">
 			<div className="sec-head">
 				<p>{formatHeader(props.head)}</p>
 				<hr />
 			</div>
-			<div className="sec-content">{props.children}</div>
+			<div id={props.id} className="sec-content">{props.children}</div>
 		</div>
 	)
 };
@@ -193,55 +193,41 @@ const CVEditor = forwardRef((
 		);
 	}
 
+	// TODO: add name to CV object
 	const rows_cols = [
-		[
-			(
-				<div id="name-title">
-					<div key={"name"} id="div-full-name">ROMAN HUDAJ</div>
-					<TextEditDiv key="pt" id="div-personal-title" tv={CV["personalTitle"]} onUpdate={val => {
+		(
+			<div id="full-name" key="name">Roman Hudaj</div>
+		),
+		(
+			<div id="links">
+				{CV.links.map((l,i) => <LinkUI key={i} {...l} /> )}
+			</div>
+		),
+		(
+			<Section id="sec-summary" head="summary">
+				<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => {
+					setCV(draft => {
+						draft.summary = val
+					})
+				}}/>
+				<div className="sub-sec">
+					<div className="sub-sec-head">Languages:</div>
+					<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=> {
 						setCV(draft => {
-							draft["personalTitle"] = val
+							draft.languages = vals
 						})
 					}}/>
 				</div>
-			),
-			(
-				<div id="div-links">
-					{CV.links.map((link,i) => <LinkUI key={i} {...link} /> )}
-				</div>
-			),
-		],
-		[
-			(
-				<Section head="SUMMARY" id="section-summary">
-					<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => {
+				<div className="sub-sec">
+					<div className="sub-sec-head">Technology:</div>
+					<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=> {
 						setCV(draft => {
-							draft.summary = val
+							draft.technologies = vals
 						})
 					}}/>
-				</Section>
-			),
-			(
-				<Section head="SKILLS" id="section-skills">
-					<div className="sub-sec">
-						<div className="sub-sec-head">Languages:</div>
-						<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=> {
-							setCV(draft => {
-								draft.languages = vals
-							})
-						}}/>
-					</div>
-					<div className="sub-sec">
-						<div className="sub-sec-head">Technology:</div>
-						<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=> {
-							setCV(draft => {
-								draft.technologies = vals
-							})
-						}}/>
-					</div>
-				</Section>
-			)
-		],
+				</div>
+			</Section>
+		),
 		// LAST 3 ROWS ARE EXPERIENCES (each held in ItemBucket)
 		...experience_sections
 	];

@@ -126,7 +126,12 @@
         {
             "url": "https://github.com/rhudaj",
             "icon": "fa fa-github",
-            "text": "github.com/rhudaj"
+            "text": "rhudaj"
+        },
+        {
+            "url": "https://www.linkedin.com/rhudaj",
+            "icon": "fa fa-linkedin",
+            "text": "rhudaj"
         },
         {
             "url": "mailto:rhudaj@uwaterloo.ca",
@@ -134,9 +139,9 @@
             "text": "rhudaj@uwaterloo.ca"
         },
         {
-            "url": "https://www.linkedin.com/rhudaj",
-            "icon": "fa fa-linkedin",
-            "text": "/in/rhudaj"
+            "url": "tel:647-502-0512",
+            "icon": "fa fa-phone",
+            "text": "647-502-0512"
         }
     ]
 }

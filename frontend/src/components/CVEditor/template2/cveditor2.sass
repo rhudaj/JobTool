@@ -72,9 +72,8 @@ hr
 // SUB SECTION ------------------
 
 .sub-sec
-    display: grid
-    grid-template-columns: 0.35fr 1fr
-    column-gap: $skills-col-gap
+    display: flex
+    gap: 0.5em
 
 .sub-sec-head
     font-weight: bold
@@ -119,53 +118,36 @@ hr
 .item-list
     padding-left: 2.5em
 
-
 // LINK ------------------------------------------------
 
 .link
-    display: grid
+    display: flex
     white-space: nowrap
-    grid-template-columns: min-content 1fr
-    column-gap: $link-col-gap
-
+    gap: $link-col-gap
     a
         text-decoration: none
         color: black
 
 // ROW 1 ------------------------------------------------
 
-#name-title
-
-    display: grid
-
-    #div-full-name
-        font-size: $name-font
-        white-space: nowrap
-        font-weight: bolder
-
-
-    #div-personal-title
-        font-size: $title-font
-
-#div-links
-    font-size: $p-font
-    display: grid
-    // ASSUMES EXACTLY 4 LINKS
-    grid-template-columns: 1fr 1fr
-    grid-template-rows: 1fr 1fr
+#full-name
+    text-align: center
+    font-size: $name-font
+    white-space: nowrap
+    font-weight: bolder
 
 // ROW 2 -------------------------
 
-#section-skills
-    .sec-content
-        display: grid
-        grid-template-rows: repeat(2, min-content)
-        row-gap: 1fr
+#links
+    font-size: $p-font
+    display: flex
+    justify-content: center
+    gap: 1em
 
 
+// ROW 3 -------------------------
 
-// ROW 4 -------------------------
-
-#projects > .sec-content
-    display: grid
-    row-gap: $experiences-gap
+#sec-summary
+    display: flex
+    flex-direction: column
+    gap: 0.5em
