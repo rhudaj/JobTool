@@ -28,7 +28,7 @@
                 "date": { "start": { "month": 4, "year": 2022 }, "end": { "month": 9, "year": 2023 } },
                 "title": "Timeplay",
                 "role": "Software Product Developer",
-                "location": "Toronto, CAN",
+                "location": "Toronto, ON",
                 "description": [
                     "Improved UI for lottery and instant-win games through market-research and development with React and TypeScript, supporting the rollout of a mobile-gaming platform on cruise ships from inception to deployment.",
                     "Redesigned NoSQL schemas to eliminate redundancies and improved architecture and APIs for backend services in Go, enhancing clarity for developers and boosting performance and reliability of tools used by end-users.",
@@ -40,7 +40,7 @@
                 "date": { "start": { "month": 4, "year": 2023 }, "end": { "month": 9, "year": 2023 } },
                 "title": "Environics Analytics",
                 "role": "Software Product Management Intern",
-                "location": "Toronto, CAN",
+                "location": "Toronto, ON",
                 "description": [
                     "Built an adaptive French translation pipeline using Alteryx, SQL, and a deep learning AI model API to automate data product and document translations, resulting in ~$40K in savings per product translation.",
                     "Built a desktop app with Python to extract, filter and export client product-usage data from SQL Server databases featuring intuitive UI & efficient processing; used by to non-technical teams for data analysis.",
@@ -52,7 +52,7 @@
                 "date": { "start": { "month": 1, "year": 2022 }, "end": { "month": 8, "year": 2022 } },
                 "title": "Martinrea International",
                 "role": "Student Engineer",
-                "location": "Brampton, CAN",
+                "location": "Brampton, ON",
                 "description": [
                     "Co-lead a major project to optimize the flow of materials across a automotive manufacturing plant; improved system for collecting and analyzing data to plan the project, increasing overall output and cost efficiency by 30%.",
                     "Built a supply chain monitoring system with ETL analysis on data warehouses using Apache Spark and SQL to track supply and demand, sending timely alerts for potential shortages or surpluses, resulting in $10K+ annual savings."

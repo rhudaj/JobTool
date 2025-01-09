@@ -16,7 +16,8 @@ const Section = (props: {
 }) => {
 
 	const formatHeader = (head: string) => (
-		head.charAt(0).toUpperCase() + head.slice(1).toLowerCase()
+		// head.charAt(0).toUpperCase() + head.slice(1).toLowerCase()
+		head.toUpperCase()
 	);
 
 	return (
