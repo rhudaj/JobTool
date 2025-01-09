@@ -43,6 +43,7 @@ interface Experience {
     };
     title: string;
     role?: string;
+    location?: string;
     link?: Link;
     description: string[];
     item_list: string[];

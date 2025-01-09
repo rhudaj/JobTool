@@ -31,7 +31,6 @@ $title-font:            calc(8 * $base-font-size)
         white-space-collapse: preserve
 
 
-
 // CV-EDITOR ----------------------------
 
 #cv-editor
@@ -41,28 +40,34 @@ $title-font:            calc(8 * $base-font-size)
     font-family: 'Arial Narrow Bold', sans-serif
 
 
-// SECTION ------------------
+// ------------------ SECTION ------------------
+
+// LAYOUT ------------------
 
 .section
-
     display: grid
-    font-size: $p-font
     grid-template-rows: repeat(2, min-content)
     row-gap: $sec-row-gap
-
     .sec-head
-        font-weight: bold
-
         display: grid
         grid-template-columns: min-content 1fr
         column-gap: $sec-head-line-gap
 
-        hr
-            // HORIZONTAL LINE ACROSS CENTER OF DIV
-            border: none
-            height: $sec-head-line-height
-            border-bottom: $hr-line-width solid black
-            align-self: center
+// STYLES ------------------
+
+.section
+    font-size: $p-font
+
+.sec-head
+    font-weight: bold
+
+hr
+    // HORIZONTAL LINE ACROSS CENTER OF DIV
+    border: none
+    height: $sec-head-line-height
+    border-bottom: $hr-line-width solid black
+    align-self: center
+
 
 // SUB SECTION ------------------
 
@@ -71,34 +76,49 @@ $title-font:            calc(8 * $base-font-size)
     grid-template-columns: 0.35fr 1fr
     column-gap: $skills-col-gap
 
-    .sub-sec-head
-        font-weight: bold
+.sub-sec-head
+    font-weight: bold
 
 // ------------------EXPERIENCE ------------------
 
 // LAYOUT ------------------
 .experience
-    // 2 rows: header-info, content
     display: grid
-    // grid-template-rows: 1fr 1fr
-    gap: $exp-head-content-gap $exp-col-gap
-    & > .header-info    // contains 2 rows (divs)
+    grid-template-rows: repeat(auto, min-content)
+    row-gap: 0.5em
+    // first child
+    .header-info
         display: grid
-        grid-template-rows: 1fr 1fr
-        & > div         // row div
+        grid-template-rows: repeat(auto, min-content)
+        row-gap: 0.25em
+        & > *         // children
             display: grid
             grid-template-columns: 1fr 1fr
-            & > .col-2
+            & > :first-child
+                display: grid
+                grid-template-columns: repeat(2, max-content)
+                column-gap: 3%
+            & > :last-child
                 text-align: right
+    // second child
+    .exp-content
+        padding-left: 2.5em
 
 // STYLES ------------------
 
-.title, .side-title
+.exp-points
+    display: grid
+    row-gap: $bullet-point-gap
+
+.title
     font-weight: bold
 
-.exp-tech
-    font-family: 'Courier New', Courier, monospace
-    font-weight: 501
+.role, .location
+    font-style: italic
+
+.item-list
+    padding-left: 2.5em
+
 
 // LINK ------------------------------------------------
 

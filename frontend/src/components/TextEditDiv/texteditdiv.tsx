@@ -56,7 +56,8 @@ export function TextEditDiv(props: {
             onBlur={onBlur}
             onDoubleClick={()=>setIsEditing(true)}
         >
-            { typeof props.tv === "string" ? props.tv : props.tv.value }
+            { props.tv }
+            {/* { typeof props.tv === "string" ? props.tv : props.tv.value } */}
         </div>
     );
 }
