@@ -9,52 +9,12 @@ import ItemBucket from "../dnd/ItemBucket";
 import { BucketTypes } from "../dnd/types";
 import { useLogger } from "../../hooks/logger";
 
-const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
+const DateUI = (props: {start: string, end: string} & { onUpdate?: any }) => {
 
-	const handleUpdate = (field: keyof Experience, value: any) => {
-		props.onUpdate({ ...props, [field]: value });
-	};
-
-	// Map each entry in the Experience object to a <TextEditDiv> component:
-
-	if (!props.title) return null;
-
-	let sideTitleEl, content;
-
-	// sideTitleEl UI depends
-
-	if (typeof props.side_title === "string") {
-		sideTitleEl = <TextEditDiv tv={props.side_title} onUpdate={val => handleUpdate('side_title', val)} />
-	} else {
-		sideTitleEl = <LinkUI {...props.side_title} />
-	}
-
-	// content UI depends
-
-	if (props.points.length === 1) {
-		content = <TextEditDiv tv={props.points[0]} onUpdate={(val) => handleUpdate('points', [val])} />
-	} else {
-		content = (
-			<ul className="exp-points">
-				{ props.points.map((p, index) => (
-					<li key={index}>
-						<TextEditDiv tv={p} onUpdate={(val) => {
-							const newPoints = [...props.points];
-							newPoints[index] = val;
-							handleUpdate('points', newPoints);
-						}} />
-					</li>
-				)) }
-			</ul>
-		)
-	}
-
-
-	const getDateStr = (date: {start: string, end?: string}) => (
+	const strFromDate = (date: {start: string, end?: string}) => (
 		date.start + "-" + (date.end ?? "Pres ")
 	)
-
-	const getDateFromStr = (dateStr: string) => {
+	const dateFromStr = (dateStr: string) => {
 		const parts = dateStr.split("-")
 		const start = parts[0]
 		var end = parts[1]
@@ -65,27 +25,81 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 	}
 
 	return (
+		<TextEditDiv
+			className="date-range"
+			tv={strFromDate(props)}
+			onUpdate={val => props.onUpdate(dateFromStr(val))}
+		/>
+	)
+}
+
+const LinkUI = (props: Link) => {
+	return (
+		<div className="link">
+			<a className="link" href={props.url}>
+				<i className={props.icon} />
+				{ props.text && <TextEditDiv tv={props.text} id="link-text" /> }
+			</a>
+		</div>
+	)
+}
+
+const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
+
+	const handleUpdate = (field: keyof Experience, value: any) => {
+		props.onUpdate({ ...props, [field]: value });
+	};
+
+	// TODO: find a better way to check for invalid object
+	if (!props.title) {
+		// Invalid object
+		return null;
+	}
+
+	let titleEl, dateEl, roleEl, linkEl, contentEl;
+
+	// sideTitleEl UI depends
+
+	titleEl = <TextEditDiv className="title" tv={props.title} onUpdate={val => handleUpdate('title', val)} />
+
+	dateEl = <DateUI {...props.date} onUpdate={val => handleUpdate('date', val)} />
+
+	if (props.role) {
+		roleEl = <TextEditDiv className="role" tv={props.role} onUpdate={val => handleUpdate('role', val)} />
+	}
+
+	if (props.link) {
+		linkEl = <LinkUI {...props.link} />
+	}
+
+	contentEl = (
+		<ul
+			className="exp-points"
+			// If only one item => don't render bullet point:
+			style={{ listStyleType: props.description.length === 1 ? 'none' : 'disc' }}
+		>
+			{ props.description.map((descrItem, i) => (
+				<li key={i}>
+					<TextEditDiv tv={descrItem} onUpdate={val => {
+						const newPoints = [...props.description];
+						newPoints[i] = val;
+						handleUpdate('description', newPoints);
+					}} />
+				</li>
+			)) }
+		</ul>
+	);
+
+	return (
 		<div className="experience">
-
-			{/* ------------ COLUMN 1 ------------ */}
-
-			<TextEditDiv tv={getDateStr(props.date)} className="date-range" onUpdate={val => handleUpdate('date', getDateFromStr(val))} />
-
-			{/* ------------ COLUMN 2 ------------ */}
-
+			<div className="exp-col-1">{dateEl}</div>
 			<div className="exp-col-2">
-
-				{/* ------------ ROWS ------------ */}
-
 				<div className="titles">
-					<TextEditDiv tv={props.title} className="title" onUpdate={val => handleUpdate('title', val)} />
-					<div className="side-title">{sideTitleEl}</div>
+					{roleEl ?? null}
+					{titleEl}
 				</div>
-
-				<div className="exp-content">{content}</div>
-
-				<DelimitedList items={props.tech} delimiter=" / " onUpdate={val => handleUpdate('tech', val)} />
-
+				<div className="exp-content">{contentEl}</div>
+				<DelimitedList items={props.item_list} delimiter=" / " onUpdate={val => handleUpdate('item_list', val)} />
 			</div>
 		</div>
 	);
@@ -105,17 +119,6 @@ const Section = (props: {
 			<div className="sec-content">{props.children}</div>
 		</div>
 	)
-};
-
-const LinkUI = (props: Link) => {
-	return (
-		<div className="link">
-			<a className="link" href={props.url}>
-				<i className={props.icon} />
-				{ props.text && <TextEditDiv tv={props.text} id="link-text" /> }
-			</a>
-		</div>
-	);
 };
 
 const DelimitedList = (props: {
