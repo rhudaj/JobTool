@@ -7,7 +7,7 @@ import { Grid } from "../grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
 import ItemBucket from "../../dnd/ItemBucket";
 import { BucketTypes } from "../../dnd/types";
-import { format, parse } from "date-fns"
+import { format } from "date-fns"
 
 const Section = (props: {
     head: string;
@@ -65,15 +65,26 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 					// If only one item => don't render bullet point:
 					style={{ listStyleType: props.description.length === 1 ? 'none' : 'disc' }}
 				>
-					{ props.description.map((descrItem, i) => (
-						<li key={i}>
-							<TextEditDiv tv={descrItem} onUpdate={val => {
-								const newPoints = [...props.description];
-								newPoints[i] = val;
-								handleUpdate('description', newPoints);
-							}} />
-						</li>
-					)) }
+					<ItemBucket
+						id={`${props.title}-bucket`}
+						values={props.description}
+						onUpdate={newPoints => {
+							handleUpdate('description', newPoints);
+						}}
+						isVertical={true}
+						replaceDisabled
+						deleteOnMoveDisabled
+					>
+						{ props.description.map((descrItem, i) => (
+							<li key={i}>
+								<TextEditDiv tv={descrItem} onUpdate={val => {
+									const newPoints = [...props.description];
+									newPoints[i] = val;
+									handleUpdate('description', newPoints);
+								}} />
+							</li>
+						)) }
+					</ItemBucket>
 				</ul>
 			</div>
 			{/* ROW 3 */}
