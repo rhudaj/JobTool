@@ -1,36 +1,40 @@
 {
-    "personalrole": "CS Student ~ Software Engineer",
-    "summary": "Versatile full-stack software developer skilled in modern frontend and backend languages/frameworks, working with APIs and machine learning. Proficient in:",
+    "personalTitle": "CS Student ~ Data Developer",
+    "summary": "Dynamic, agile data-focused developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
     "languages": [
         "Python",
-        "Go",
         "SQL",
-        "JavaScript",
         "TypeScript",
-        "C++",
-        "C",
+        "JavaScript",
+        "GoLang",
+        "Java",
+        "Scala",
         "HTML",
         "CSS"
     ],
     "technologies": [
-        "React",
-        "Node",
+        "AWS (Lambda)",
+        "Excel",
+        "MS Office",
         "Git",
-        "Docker",
-        "NoSQL(MongoDB)",
         "Alteryx",
-        "SQL Server",
-        "Numpy/Pandas/PyTorch"
+        "Postgres",
+        "Numpy/Pandas",
+        "Express"
     ],
     "experiences": {
         "education": [
             {
-                "date": { "start": { "month": 9, "year": 2020 }, "end": { "month": 1, "year": 2025 } },
-                "title": "Bachelor of Computer Science, Honours",
+                "date": {
+                    "start": { "month": 9, "year": 2022 },
+                    "end": { "month": 1, "year": 2025 }
+                },
+                "role": "Computer Science, Honours",
+                "title": "University of Waterloo",
                 "location": "University of Waterloo",
                 "description": [
-                    "Specialization: Software Engineering, Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
-                    "Courses: Databases, UI/UX, Data Structures and Algorithms, Artificial Intelligence (AI), Machine Learning"
+                    "Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
+                    "Course-Work: Databases, UI/UX, Networks, Algorithm Design/Analysis, Machine Learning"
                 ],
                 "item_list": []
             }
@@ -74,6 +78,19 @@
         ],
         "projects": [
             {
+                "date": {
+                    "start": { "month": 1, "year": 2024 },
+                    "end": { "month": 2, "year": 2024 }
+                },
+                "title": "Distributed Spam Email Classifier",
+                "link": { "url": "", "icon": "fa fa-link" },
+                "description": [
+                    "Built a pipeline to train an accurate spam email classifier on a distributed cluster with Apache Spark / HDFS.",
+                    "Implemented and optimized stochastic gradient descent (SGD) on large (1GB+) datasets."
+                ],
+                "item_list": ["Apache Spark", "Python"]
+            },
+            {
                 "date": { "start": { "month": 5, "year": 2024 } },
                 "title": "Automated Restaurant Reservation Business",
                 "link": {
@@ -87,20 +104,6 @@
                 "item_list": ["Go", "Google Cloud"]
             },
             {
-                "date": { "start": { "month": 9, "year": 2024 }},
-                "title": "Job Application Tool",
-                "link": {
-                    "url": "https://github.com/rhudaj/JobTool",
-                    "icon": "fa fa-link"
-                },
-                "description": [
-                    "Created a full-stack web-app that streamlines the job application process.",
-                    "Built a frontend with React/Redux featuring interactive tools to edit, and save resumes, enhancing personalization.",
-                    "Created a backend with Python that features a machine learning pipeline for analysis of job descriptions."
-                ],
-                "item_list": ["React", "Redux", "Node", "TypeScript", "Python"]
-            },
-            {
                 "date": { "start": { "month": 1, "year": 2024 }, "end": { "month": 4, "year": 2024 } },
                 "title": "Voice-to-Instrument",
                 "link": {
@@ -112,7 +115,7 @@
                     "Implement probabilistic algorithms with Python (Numpy, Pandas, PyTorch) for detection of pitch, tempo, etc.",
                     "Exposed the backend as a REST API to integrate with a GUI built with React."
                 ],
-                "item_list": ["Python", "React", "Express"]
+                "item_list": ["Python (Numpy, Pandas, PyTorch)"]
             }
         ]
     },

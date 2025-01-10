@@ -8,9 +8,10 @@ $experiences-gap:       calc(5 * $base-font-size)
 $exp-row-gap:           calc(5 * $base-font-size)
 $exp-col-gap:           calc(5 * $base-font-size)
 $exp-head-content-gap:  calc(5 * $base-font-size)
+$exp-indent:             2.5em
 $link-col-gap:          calc(3 * $base-font-size)
 $skills-col-gap:        calc(3 * $base-font-size)
-$bullet-point-gap:      calc(2 * $base-font-size)
+$bullet-point-gap:      calc(3 * $base-font-size)
 $sec-row-gap:           calc(6 * $base-font-size)
 $sec-head-line-gap:     calc(3 * $base-font-size)
 $sec-head-line-height:  calc(0.5 * $base-font-size)
@@ -105,7 +106,7 @@ hr
                 text-align: right
     // second child
     .exp-content
-        padding-left: 2.5em
+        padding-left: $exp-indent
 
 // STYLES ------------------
 
@@ -121,7 +122,8 @@ hr
     font-style: italic
 
 .item-list
-    padding-left: 2.5em
+    padding-left: $exp-indent
+    font-style: italic
 
 // LINK ------------------------------------------------
 

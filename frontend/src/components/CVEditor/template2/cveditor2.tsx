@@ -96,7 +96,7 @@ const DateUI = (props: {
 	);
 
 	const strFromDateRange = (dr: DateRange) => (
-		monthYear2str(dr.start) + DELIM + (dr.end.month ? monthYear2str(dr.end) : "Present")
+		monthYear2str(dr.start) + DELIM + (dr.end && dr.end.month ? monthYear2str(dr.end) : "Present")
 	);
 
 	return (

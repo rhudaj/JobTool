@@ -1,0 +1,161 @@
+{
+    "personalTitle": "CS Student ~ Data Developer",
+    "summary": "Software engineer with 2+ years of experience in developing scalable apps, automating tasks with pipelines and working with distributed systems. Proficient in building reliable and efficient systems and collaborating across engineering teams. ",
+    "languages": [
+        "Scala",
+        "Python",
+        "SQL",
+        "Go",
+        "Java",
+        "TypeScript",
+        "JavaScript"
+    ],
+    "technologies": [
+        "Apache Spark",
+        "Map Reduce",
+        "Kafka",
+        "Docker",
+        "Google Cloud",
+        "Git",
+        "NoSQL (Postgres",
+        "MongoDB)",
+        "Alteryx"
+    ],
+    "experiences": {
+        "education": [
+            {
+                "date": {
+                    "start": { "month": 9, "year": 2022 },
+                    "end": { "month": 1, "year": 2025 }
+                },
+                "role": "Computer Science, Honours",
+                "title": "University of Waterloo",
+                "location": "University of Waterloo",
+                "description": [
+                    "Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
+                    "Course-Work: Distributed Systems (Big Data), Machine Learning, Object-Oriented Programming"
+                ],
+                "item_list": []
+            }
+        ],
+        "experience": [
+            {
+                "date": {
+                    "start": { "month": 4, "year": 2023 },
+                    "end": { "month": 9, "year": 2023 }
+                },
+                "title": "Environics Analytics",
+                "role": "Software Product Management Intern",
+                "location": "Toronto, ON",
+                "description": [
+                    "Developed a robust data pipeline using Python, SQL and Alteryx to streamline data product translations, resulting in ~$40K in savings per product translation.\n",
+                    "Built a Python app to extract, filter and export from usage-databases featuring efficient processing of large tables;  streamlined data-analysis cross-functional teams.",
+                    "Enhanced SQL databases to provide insights into API usage, increasing data accuracy and enabling better decision-making.\n"
+                ],
+                "item_list": ["SQL", "Python", "Alteryx", "Azure DevOps"]
+            },
+            {
+                "date": {
+                    "start": { "month": 1, "year": 2022 },
+                    "end": { "month": 8, "year": 2022 }
+                },
+                "title": "Martinrea International",
+                "role": "Student Engineer",
+                "location": "Brampton, ON",
+                "description": [
+                    "Automated ETL processes to analyze data warehouses, achieving $10K+ annual savings and improving efficiency.\n",
+                    "Built a distributed supply chain monitoring system with Apache Spark, tracking real-time inventory and ensuring uninterrupted material flow.\n",
+                    "Co-lead a project to optimize the flow of materials across a manufacturing plant, increasing overall output and cost efficiency by 30%."
+                ],
+                "item_list": ["SQL", "Excel", "Apache Spark"]
+            },
+            {
+                "date": {
+                    "start": { "month": 4, "year": 2022 },
+                    "end": { "month": 9, "year": 2023 }
+                },
+                "title": "Timeplay",
+                "role": "Software Product Developer",
+                "location": "Toronto, ON",
+                "description": [
+                    "Designed and implemented scalable backend services with Go, enhancing API reliability for high-traffic systems.\n\n",
+                    "Optimized NoSQL schemas and improved system clarity, resulting in a 20% reduction in query response times.\n\n",
+                    "Deployed and maintained CI/CD pipelines, reducing deployment time for new features by 30%.\n"
+                ],
+                "item_list": ["Docker", "Go", "Postgres", "MongoDB", "Node "]
+            }
+        ],
+        "projects": [
+            {
+                "date": {
+                    "start": { "month": 1, "year": 2024 },
+                    "end": { "month": 2, "year": 2024 }
+                },
+                "title": "Distributed Spam Email Classifier",
+                "link": { "url": "", "icon": "fa fa-link" },
+                "description": [
+                    "Built a distributed pipeline with Apache Spark and HDFS to train a spam classifier on large datasets (~1GB+).\n",
+                    "Implemented stochastic gradient descent to optimize model training, improving processing efficiency.\n"
+                ],
+                "item_list": ["Apache Spark", "Scala"]
+            },
+            {
+                "date": { "start": { "month": 5, "year": 2024 } },
+                "title": "Automated Restaurant Reservation Business",
+                "link": {
+                    "url": "https://github.com/rhudaj/ResyBot",
+                    "icon": "fa fa-link"
+                },
+                "description": [
+                    "Developed a distributed system in Go to automate restaurant reservations, generating ~$3K/month from subscriptions.\n",
+                    "Deployed on distributed systems using Google Cloud Scheduler, an automated Task Manager for scalability and efficiency and cloud storage for saving data. "
+                ],
+                "item_list": ["Go", "Google Cloud"]
+            },
+            {
+                "date": {
+                    "start": { "month": 1, "year": 2024 },
+                    "end": { "month": 4, "year": 2024 }
+                },
+                "title": "Voice-to-Instrument",
+                "link": {
+                    "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
+                    "icon": "fa fa-link"
+                },
+                "description": [
+                    "Developed a desktop app enabling real-time translation of human voice into various musical instruments.",
+                    "Implement probabilistic algorithms with Python (Numpy, Pandas, PyTorch) for detection of pitch, tempo, etc.",
+                    "Built a Python-based backend with a React GUI for seamless integration and user interaction.\n"
+                ],
+                "item_list": ["Python (Numpy, Pandas, PyTorch)"]
+            }
+        ]
+    },
+    "links": [
+        {
+            "url": "https://roman-hudaj.com/",
+            "icon": "fa fa-globe",
+            "text": "roman-hudaj.com"
+        },
+        {
+            "url": "https://github.com/rhudaj",
+            "icon": "fa fa-github",
+            "text": "rhudaj"
+        },
+        {
+            "url": "www.linkedin.com/in/rhudaj",
+            "icon": "fa fa-linkedin",
+            "text": "rhudaj"
+        },
+        {
+            "url": "mailto:rhudaj@uwaterloo.ca",
+            "icon": "fa fa-envelope",
+            "text": "rhudaj@uwaterloo.ca"
+        },
+        {
+            "url": "tel:647-502-0512",
+            "icon": "fa fa-phone",
+            "text": "647-502-0512"
+        }
+    ]
+}
