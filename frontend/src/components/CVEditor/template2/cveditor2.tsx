@@ -268,11 +268,9 @@ const CVEditor = forwardRef((
 			{sections_ui}
 		</ItemBucket>
 	)
-
-	// TODO: add name to CV object
 	return (
 		<div id="cv-editor">
-			<div id="full-name" key="name">Roman Hudaj</div>
+			<div id="full-name" key="name">{CV.name}</div>
 			<div id="link-list">
 				{CV.links.map((l,i) => <LinkUI key={i} {...l} /> )}
 			</div>

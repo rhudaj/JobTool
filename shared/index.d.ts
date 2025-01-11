@@ -59,6 +59,7 @@ interface Link {
     text?: string;
 }
 interface CV {
+    name: string;
     personalTitle: string;
     summary: string;
     languages: string[];
