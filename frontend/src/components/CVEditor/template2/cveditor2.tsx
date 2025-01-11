@@ -225,16 +225,7 @@ const CVEditor = forwardRef((
 		);
 	}
 
-	// TODO: add name to CV object
-	const rows = [
-		(
-			<div id="full-name" key="name">Roman Hudaj</div>
-		),
-		(
-			<div id="links">
-				{CV.links.map((l,i) => <LinkUI key={i} {...l} /> )}
-			</div>
-		),
+	const sections = [
 		(
 			<Section id="sec-summary" head="summary">
 				<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => {
@@ -260,8 +251,20 @@ const CVEditor = forwardRef((
 				</div>
 			</Section>
 		),
-		// LAST 3 ROWS ARE EXPERIENCES (each held in ItemBucket)
 		...experience_sections
+	];
+
+	// TODO: add name to CV object
+	const rows = [
+		(
+			<div id="full-name" key="name">Roman Hudaj</div>
+		),
+		(
+			<div id="link-list">
+				{CV.links.map((l,i) => <LinkUI key={i} {...l} /> )}
+			</div>
+		),
+		...sections
 	];
 
 	return (
