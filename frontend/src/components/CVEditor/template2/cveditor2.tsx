@@ -98,8 +98,6 @@ const DateUI = (props: {
 	onUpdate?: any
 }) => {
 
-	console.log("DateUI props: ", props.dateRange)
-
 	const DELIM = " - ";
 
 	const monthYear2str = (my: MonthYear): string => (

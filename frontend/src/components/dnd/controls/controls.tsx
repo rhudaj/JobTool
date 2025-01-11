@@ -10,10 +10,12 @@ const DNDItemControls = React.forwardRef<HTMLElement, any>((
     ref: React.RefObject<HTMLElement>
 ) => {
 
+    // TODO: positions are all off when zooming in/out on the browser
+
     const [isHovered, setIsHovered] = React.useState(false);
     const [position, setPosition] = React.useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
-    const pad = 10;
+    const pad = 15;
 
     React.useEffect(() => {
         if (ref.current) {
@@ -70,7 +72,6 @@ const DNDItemControls = React.forwardRef<HTMLElement, any>((
                 position: "absolute",
                 top: position.top - pad,
                 left: position.left - pad,
-                display: 'block',
                 cursor: 'pointer',
             }}
         >

@@ -16,7 +16,6 @@ export function InfoPad(props: { info: any} ) {
 
     // Convert into [{id: string, values: any[]}]
     React.useEffect(() => {
-        log("props.cv_info:", props.info);
         if (!props.info) return;
         setInfoBuckets(
             Object.entries(props.info).map(entry => ({

@@ -15,6 +15,7 @@ function DNDItem(props: {
     onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
     onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
     onDelete?: (id: any) => void,
+    onAddItemBelow?: (id: any) => void,
 } & {
     // Optional props
     disableDrag?: boolean		// defaults to false
@@ -101,8 +102,9 @@ function DNDItem(props: {
                 {props.children}
             </div>
             <DNDItemControls ref={ref}>
-                <div ref={drag} className="move-handle" onMouseDown={()=>console.log("HANDLE PRESSED")}>M</div>
-                {props.onDelete && <div className="delete-button" onClick={()=>props.onDelete(props.item.id)}>X</div>}
+                <div ref={drag} className="move-handle">M</div>
+                { props.onDelete && <div className="delete-button" onClick={()=>props.onDelete(props.item.id)}>X</div>}
+                { props.onAddItemBelow && <div className="add-item-below" onClick={()=>props.onAddItemBelow(props.item.id)}>+</div> }
             </DNDItemControls>
         </>
     );

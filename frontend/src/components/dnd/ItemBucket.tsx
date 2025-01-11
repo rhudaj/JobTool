@@ -73,6 +73,7 @@ const useBucket = (initItems: Item[]) => {
  * @param props
  * @returns
  * TODO: hover and drop only works when over an item, not if there is empty space at the bottom of all items
+ * TODO: controls should be put here next to each item (since they only make sense if the item is in a bucker)
  */
 function ItemBucket(props: {
 	id: any,
@@ -193,6 +194,18 @@ function ItemBucket(props: {
 		[items, hoveredGap]
 	);
 
+	const onAddItemBelow = (id: any) => {
+		// TODO: for now just duplicate the item (since we don't know the format)
+		const srcIndex = items.findIndex(I => I.id === id)
+		console.log("onAddItemBelow. srcIndex = ", srcIndex)
+		if (srcIndex !== -1) {
+			console.log("adding item below index ", srcIndex);
+			const newItem = structuredClone(items[srcIndex]);
+			newItem.id += "x"
+			addItem(newItem, srcIndex)
+		}
+	};
+
 	// -----------------RENDER-----------------
 
 	const wrapperClassNames = joinClassNames("bucket-wrapper", isHovered ? "hover" : "");
@@ -209,6 +222,7 @@ function ItemBucket(props: {
 								item={I}
 								item_type={props.item_type}
 								onDelete={!props.deleteDisabled && removeItem}
+								onAddItemBelow={onAddItemBelow}
 								onHover={ (dragId, isBelow, isRight) => {
 									// What's considered next/prev item depends on orientation
 									const isPastHalf = props.isVertical ? isBelow : isRight;

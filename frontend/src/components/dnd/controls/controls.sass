@@ -1,21 +1,22 @@
 .dnd-item-controls
     display: flex
-    width: max-content
+    flex-direction: row
+    gap: .5em
+
+    & > *   // any control option(s)
+        border: 1rem solid black
+        border-radius: 3rem
+        cursor: 'pointer'
+        padding: .1em
+        opacity: 0.5
+        &:hover
+            opacity: 1
 
 .delete-button
     background-color: lightcoral
-    border: 1rem solid black
-    border-radius: 3rem
-    opacity: 0.5
-    cursor: 'pointer'
-    &:hover
-        opacity: 1
 
 .move-handle
     background-color: lightblue
-    border: 1rem solid black
-    border-radius: 3rem
-    opacity: 0.5
-    cursor: 'pointer'
-    &:hover
-        opacity: 1
+
+.add-item-below
+    background-color: grey
