@@ -264,6 +264,9 @@ const CVEditor = forwardRef((
 			values={sectionOrder} // only worry about tracking the string names (assumes all unique)
 			isVertical={true}
 			item_type="section"
+			onUpdate={newSecOrder => {
+				setSectionOrder([...newSecOrder])
+			}}
 		>
 			{sections_ui}
 		</ItemBucket>
