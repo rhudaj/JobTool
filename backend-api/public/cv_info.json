@@ -31,7 +31,22 @@
         "Computer Architecture",
         "Cybersecurity"
     ],
-    "summaries": ["Some summary..."],
+    "experience": [
+        {
+            "date": {
+                "start": { "year": 2020, "month": 9 },
+                "end": { "year": 2022, "month": 4 }
+            },
+            "title": "Waterloop (Design Team)",
+            "role": "Web Developer",
+            "location": "University of Waterloo",
+            "description": [
+                "Designed the team website with VueJS and Typescript, resulting in two new sponsors and a 20% increase in applications.",
+                "Utilized connection to backend APIs via WebSocker/HTTP to dynamically generate content/pagination from JSON."
+            ],
+            "item_list": ["VueJS", "TypeScript"]
+        }
+    ],
     "projects": [
         {
             "date": { "start": { "month": 5, "year": 2024 } },

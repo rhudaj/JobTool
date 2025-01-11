@@ -50,8 +50,9 @@ const InfoPadMap = {
     "courses":      "info-pad-text-list",
     "summaries":    "info-pad-text-list",
     "projects":     "experiences",
+    "experience": "experiences",
     // CL
-    "paragraphs":  "cl-info-pad"
+    "paragraphs":  "cl-info-pad",
 }
 
 
