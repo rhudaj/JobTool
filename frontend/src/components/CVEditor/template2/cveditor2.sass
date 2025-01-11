@@ -25,7 +25,6 @@ $title-font:            calc(8 * $base-font-size)
 .delimited-list
     display: flex
     flex-wrap: wrap
-
     & > *
         flex: 0 1 auto                     // Prevent children from expanding and ensure they fit their content
         white-space: wrap                  // Prevent wrapping
@@ -39,24 +38,41 @@ $title-font:            calc(8 * $base-font-size)
     padding: $page-padding
     color: black
     font-family: 'Arial Narrow Bold', sans-serif
-
     overflow: hidden
-
-// ------------------ SECTION ------------------
-
-// LAYOUT ------------------
-
-.section
-    display: flex
-    flex-direction: column
-    row-gap: $sec-row-gap
-    .sec-head
+    .section
         display: flex
-        gap: $sec-head-line-gap
-        & > :first-child
-            width: min-content
-        & > :last-child
-            width: 100%
+        flex-direction: column
+        row-gap: $sec-row-gap
+        .sec-head
+            display: flex
+            gap: $sec-head-line-gap
+            & > :first-child
+                width: min-content
+            & > :last-child
+                width: 100%
+        .experience
+            display: flex
+            flex-direction: column
+            gap: 0.5em
+            // first child
+            .header-info
+                display: flex
+                flex-direction: column
+                gap: 0.25em
+                & > *         // children rows
+                    display: flex
+                    & > *
+                        width: 100%
+                    & > :first-child
+                        width: 100%
+                        display: flex
+                        column-gap: 3%
+                    & > :last-child
+                        text-align: right
+            // second child
+            .exp-content
+                padding-left: $exp-indent
+
 
 // STYLES ------------------
 
@@ -83,31 +99,9 @@ hr
 .sub-sec-head
     font-weight: bold
 
-// ------------------EXPERIENCE ------------------
+// EXPERIENCE ------------------
 
 // LAYOUT ------------------
-.experience
-    display: flex
-    flex-direction: column
-    gap: 0.5em
-    // first child
-    .header-info
-        display: flex
-        flex-direction: column
-        gap: 0.25em
-        & > *         // children rows
-            display: flex
-            & > *
-                width: 100%
-            & > :first-child
-                width: 100%
-                display: flex
-                column-gap: 3%
-            & > :last-child
-                text-align: right
-    // second child
-    .exp-content
-        padding-left: $exp-indent
 
 // STYLES ------------------
 
@@ -136,24 +130,17 @@ hr
         text-decoration: none
         color: black
 
-// ROW 1 ------------------------------------------------
-
 #full-name
     text-align: center
     font-size: $name-font
     white-space: nowrap
     font-weight: bolder
 
-// ROW 2 -------------------------
-
 #links
     font-size: $p-font
     display: flex
     justify-content: center
     gap: 1em
-
-
-// ROW 3 -------------------------
 
 #sec-summary
     display: flex
