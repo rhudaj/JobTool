@@ -7,7 +7,7 @@ import { Grid } from "../grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
 import ItemBucket from "../../dnd/ItemBucket";
 import { BucketTypes } from "../../dnd/types";
-import { format } from "date-fns"
+import { format, parse } from "date-fns"
 
 const Section = (props: {
     head: string;
@@ -51,17 +51,15 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 						{ props.link && <LinkUI {...props.link} /> }
 					</div>
 					<DateUI dateRange={props.date} onUpdate={val => handleUpdate('date', val)} />
-
 				</div>
 				<div>
-					{props.role && <TextEditDiv className="role" tv={props.role} onUpdate={val => handleUpdate('role', val)} />}
-					{props.location && <div className="location">{props.location}</div>}
+					{ props.role     ? <TextEditDiv className="role" tv={props.role} onUpdate={val => handleUpdate('role', val)} /> 		: null }
+					{ props.location ? <TextEditDiv className="location" tv={props.location} onUpdate={val => handleUpdate('location', val)}/> 	: null }
 				</div>
 			</div>
 			{/* ROW 2 */}
 			<div className="exp-content">
 				<ul
-					className="exp-points"
 					// If only one item => don't render bullet point:
 					style={{ listStyleType: props.description.length === 1 ? 'none' : 'disc' }}
 				>
@@ -73,6 +71,7 @@ const ExperienceUI = (props: Experience & { onUpdate?: any }) => {
 						}}
 						isVertical={true}
 						replaceDisabled
+						displayItemsClass="exp-points"
 						deleteOnMoveDisabled
 					>
 						{ props.description.map((descrItem, i) => (
@@ -99,19 +98,42 @@ const DateUI = (props: {
 }) => {
 
 	const DELIM = " - ";
+	const PLACEHOLDER = "Present"
 
 	const monthYear2str = (my: MonthYear): string => (
 		format(new Date(my.year, my.month - 1), "MMM yyyy") // Format as "Aug. 2024"
 	);
 
 	const strFromDateRange = (dr: DateRange) => (
-		monthYear2str(dr.start) + DELIM + (dr.end && dr.end.month ? monthYear2str(dr.end) : "Present")
+		monthYear2str(dr.start) + DELIM + (dr.end && dr.end.month ? monthYear2str(dr.end) : PLACEHOLDER)
 	);
 
+	const dateRangeFromStr = (dr: string) => {
+		try {
+			const start_end = dr.split(DELIM);
+			props.onUpdate({
+				start: str2monthYear(start_end[0]),
+				...(start_end[1] !== PLACEHOLDER && { end: str2monthYear(start_end[1]) }) // Only include 'end' if it's not null
+			});
+		} catch(err: any) {
+			alert(`Invalid date range format: ${err}`);
+		}
+	};
+
+	const str2monthYear = (my: string) => {
+		const parsedDate = parse(my, "MMM yyyy", new Date());
+		return {
+			year: parsedDate.getFullYear(),
+			month: parsedDate.getMonth() + 1, // JavaScript months are 0-indexed
+		};
+	};
+
 	return (
-		<div className="date-range">
-			{strFromDateRange(props.dateRange)}
-		</div>
+		<TextEditDiv
+			className="date-range"
+			tv={strFromDateRange(props.dateRange)}
+			onUpdate={newVal => dateRangeFromStr(newVal)}
+		/>
 	)
 }
 

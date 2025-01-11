@@ -1,6 +1,6 @@
 {
     "personalrole": "CS Student ~ Software Engineer",
-    "summary": "Versatile full-stack software developer skilled in modern frontend and backend languages/frameworks, working with APIs and machine learning. Proficient in:",
+    "summary": "Versatile full-stack software developer skilled in modern frontend and backend languages/frameworks, working with APIs, cloud-services and containerization, distributed systems and machine learning pipelines. Proficient in:",
     "languages": [
         "Python",
         "Go",
@@ -13,31 +13,38 @@
         "CSS"
     ],
     "technologies": [
-        "React",
-        "Node",
         "Git",
         "Docker",
-        "NoSQL(MongoDB)",
-        "Alteryx",
-        "SQL Server",
+        "React",
+        "Node",
+        "NoSQL(MongoDB",
+        "Postgres)",
+        "Apache Spark",
+        "Map Reduce",
         "Numpy/Pandas/PyTorch"
     ],
     "experiences": {
         "education": [
             {
-                "date": { "start": { "month": 9, "year": 2020 }, "end": { "month": 1, "year": 2025 } },
+                "date": {
+                    "start": { "month": 9, "year": 2020 },
+                    "end": { "month": 1, "year": 2025 }
+                },
                 "title": "Bachelor of Computer Science, Honours",
                 "location": "University of Waterloo",
                 "description": [
                     "Specialization: Software Engineering, Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
-                    "Courses: Databases, UI/UX, Data Structures and Algorithms, Artificial Intelligence (AI), Machine Learning"
+                    "Courses: Databases, Distributed Systems, Data Structures and Algorithms, Artificial Intelligence (AI), Machine Learning"
                 ],
                 "item_list": []
             }
         ],
         "experience": [
             {
-                "date": { "start": { "month": 4, "year": 2022 }, "end": { "month": 9, "year": 2023 } },
+                "date": {
+                    "start": { "month": 4, "year": 2022 },
+                    "end": { "month": 9, "year": 2023 }
+                },
                 "title": "Timeplay",
                 "role": "Software Product Developer",
                 "location": "Toronto, ON",
@@ -49,7 +56,10 @@
                 "item_list": ["Node", "Docker", "React", "MongoDB"]
             },
             {
-                "date": { "start": { "month": 4, "year": 2023 }, "end": { "month": 9, "year": 2023 } },
+                "date": {
+                    "start": { "month": 4, "year": 2023 },
+                    "end": { "month": 9, "year": 2023 }
+                },
                 "title": "Environics Analytics",
                 "role": "Software Product Management Intern",
                 "location": "Toronto, ON",
@@ -58,10 +68,13 @@
                     "Built a desktop app with Python to extract, filter and export client product-usage data from SQL Server databases featuring intuitive UI & efficient processing; used by to non-technical teams for data analysis.",
                     "Enhanced databases to track product/API usage and formulate data-driven pricing strategies; conducted research with product owners and users to identify key \"usage\" variables, increasing profitability and user insights."
                 ],
-                "item_list": ["SQL", "Python", "Alteryx", "Azure DevOps"]
+                "item_list": ["SQL", "Python", "Azure DevOps", "Alteryx"]
             },
             {
-                "date": { "start": { "month": 1, "year": 2022 }, "end": { "month": 8, "year": 2022 } },
+                "date": {
+                    "start": { "month": 1, "year": 2022 },
+                    "end": { "month": 8, "year": 2022 }
+                },
                 "title": "Martinrea International",
                 "role": "Student Engineer",
                 "location": "Brampton, ON",
@@ -87,7 +100,7 @@
                 "item_list": ["Go", "Google Cloud"]
             },
             {
-                "date": { "start": { "month": 9, "year": 2024 }},
+                "date": { "start": { "month": 9, "year": 2024 } },
                 "title": "Job Application Tool",
                 "link": {
                     "url": "https://github.com/rhudaj/JobTool",
@@ -101,7 +114,10 @@
                 "item_list": ["React", "Redux", "Node", "TypeScript", "Python"]
             },
             {
-                "date": { "start": { "month": 1, "year": 2024 }, "end": { "month": 4, "year": 2024 } },
+                "date": {
+                    "start": { "month": 1, "year": 2024 },
+                    "end": { "month": 4, "year": 2024 }
+                },
                 "title": "Voice-to-Instrument",
                 "link": {
                     "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
