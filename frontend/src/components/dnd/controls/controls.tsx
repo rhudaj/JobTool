@@ -72,7 +72,6 @@ const DNDItemControls = React.forwardRef<HTMLElement, any>((
                 position: "absolute",
                 top: position.top - pad,
                 left: position.left - pad,
-                cursor: 'pointer',
             }}
         >
             {props.children}

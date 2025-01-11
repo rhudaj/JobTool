@@ -1,28 +1,30 @@
 {
+    "name": "Roman Hudaj",
     "personalTitle": "CS Student ~ Data Developer",
-    "summary": "Dynamic, agile data-focused developer with rapid adaptability to emerging technologies, a keen aptitude for grasping intricate concepts and solving problems with automation and data science.",
-    "languages": [
-        "Python",
-        "SQL",
-        "TypeScript",
-        "JavaScript",
-        "GoLang",
-        "Java",
-        "Scala",
-        "HTML",
-        "CSS"
-    ],
-    "technologies": [
-        "AWS (Lambda)",
-        "Excel",
-        "MS Office",
-        "Git",
-        "Alteryx",
-        "Postgres",
-        "Numpy/Pandas",
-        "Express"
-    ],
-    "experiences": {
+    "sections": {
+        "summary": {
+            "summary": "Frontend Developer with expertise in TypeScript, Vue.js, and React.js, specializing in building scalable, intuitive UIs and robust API integrations. Proven success in enhancing performance, security, and scalability using CI/CD pipelines and modern frameworks.",
+            "languages": [
+                "TypeScript",
+                "JavaScript",
+                "HTML",
+                "CSS",
+                "Python",
+                "SQL",
+                "Golang"
+            ],
+            "technologies": [
+                "Docker",
+                "Git",
+                "React.js",
+                "Vue.js",
+                "NoSQL (MongoDB",
+                "Postgres",
+                "SQL)",
+                "HTTP",
+                "WebSocket"
+            ]
+        },
         "education": [
             {
                 "date": {
@@ -34,14 +36,17 @@
                 "location": "University of Waterloo",
                 "description": [
                     "Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
-                    "Course-Work: Databases, UI/UX, Networks, Algorithm Design/Analysis, Machine Learning"
+                    "Course-Work: UI/UX, Databases, Networks, Algorithm Design/Analysis, Machine Learning, AI"
                 ],
                 "item_list": []
             }
         ],
         "experience": [
             {
-                "date": { "start": { "month": 4, "year": 2022 }, "end": { "month": 9, "year": 2023 } },
+                "date": {
+                    "start": { "month": 4, "year": 2022 },
+                    "end": { "month": 9, "year": 2023 }
+                },
                 "title": "Timeplay",
                 "role": "Software Product Developer",
                 "location": "Toronto, ON",
@@ -50,10 +55,13 @@
                     "Redesigned NoSQL schemas to eliminate redundancies and improved architecture and APIs for backend services in Go, enhancing clarity for developers and boosting performance and reliability of tools used by end-users.",
                     "Deployed new features for web and mobile lottery games by interviewing clients/users, guiding developers and updating stakeholders with CI/CD tools (Jira, Docker), resulting in a 30% increase in game engagement."
                 ],
-                "item_list": ["Node", "Docker", "React", "MongoDB"]
+                "item_list": ["Node", "Docker", "React.js", "MongoDB"]
             },
             {
-                "date": { "start": { "month": 4, "year": 2023 }, "end": { "month": 9, "year": 2023 } },
+                "date": {
+                    "start": { "month": 4, "year": 2023 },
+                    "end": { "month": 9, "year": 2023 }
+                },
                 "title": "Environics Analytics",
                 "role": "Software Product Management Intern",
                 "location": "Toronto, ON",
@@ -65,30 +73,48 @@
                 "item_list": ["SQL", "Python", "Alteryx", "Azure DevOps"]
             },
             {
-                "date": { "start": { "month": 1, "year": 2022 }, "end": { "month": 8, "year": 2022 } },
+                "date": {
+                    "start": { "year": 2020, "month": 9 },
+                    "end": { "year": 2022, "month": 4 }
+                },
+                "title": "Waterloop (Design Team)",
+                "role": "Web Developer",
+                "location": "University of Waterloo",
+                "description": [
+                    "Designed the team website with VueJS and Typescript, resulting in two new sponsors and a 20% increase in applications.",
+                    "Utilized connection to backend APIs via WebSocker/HTTP to dynamically generate content/pagination from JSON."
+                ],
+                "item_list": ["VueJS", "TypeScript"]
+            },
+            {
+                "date": {
+                    "start": { "month": 1, "year": 2022 },
+                    "end": { "month": 8, "year": 2022 }
+                },
                 "title": "Martinrea International",
                 "role": "Student Engineer",
                 "location": "Brampton, ON",
                 "description": [
-                    "Co-lead a major project to optimize the flow of materials across a automotive manufacturing plant; improved system for collecting and analyzing data to plan the project, increasing overall output and cost efficiency by 30%.",
-                    "Built a supply chain monitoring system with ETL analysis on data warehouses using Apache Spark and SQL to track supply and demand, sending timely alerts for potential shortages or surpluses, resulting in $10K+ annual savings."
+                    "Co-lead a major project to optimize the flow of materials in a manufacturing plant; improved system for collecting and analyzing data to plan the project, increasing overall output and cost efficiency by 30%.",
+                    "Built a supply chain monitoring system with ETL analysis using Apache Spark / SQL, resulting in $10K+ annual savings."
                 ],
                 "item_list": ["SQL", "Excel", "Apache Spark"]
             }
         ],
         "projects": [
             {
-                "date": {
-                    "start": { "month": 1, "year": 2024 },
-                    "end": { "month": 2, "year": 2024 }
+                "date": { "start": { "month": 9, "year": 2024 } },
+                "title": "Job Application Tool",
+                "link": {
+                    "url": "https://github.com/rhudaj/JobTool",
+                    "icon": "fa fa-link"
                 },
-                "title": "Distributed Spam Email Classifier",
-                "link": { "url": "", "icon": "fa fa-link" },
                 "description": [
-                    "Built a pipeline to train an accurate spam email classifier on a distributed cluster with Apache Spark / HDFS.",
-                    "Implemented and optimized stochastic gradient descent (SGD) on large (1GB+) datasets."
+                    "Created a full-stack web-app that streamlines the job application process.",
+                    "Built a frontend with React/Redux featuring interactive tools to edit, and save resumes, enhancing personalization.",
+                    "Created a backend with Python that features a machine learning pipeline for analysis of job descriptions."
                 ],
-                "item_list": ["Apache Spark", "Python"]
+                "item_list": ["React", "Redux", "Node", "TypeScript", "Python"]
             },
             {
                 "date": { "start": { "month": 5, "year": 2024 } },
@@ -98,24 +124,10 @@
                     "icon": "fa fa-link"
                 },
                 "description": [
-                    "Founded a service that secures reservations at world-famous restaurants with Go(lang), generating ~$3K/month.",
+                    "Founded a service that secures reservations at world-famous restaurants with TypeScript/Node.js, generating ~$3K/month.",
                     "Deployed to Google-Cloud utilizing Scheduler for automated tasks, Task Manager for distributed execution and cloud-storage for saving user and transaction data."
                 ],
-                "item_list": ["Go", "Google Cloud"]
-            },
-            {
-                "date": { "start": { "month": 1, "year": 2024 }, "end": { "month": 4, "year": 2024 } },
-                "title": "Voice-to-Instrument",
-                "link": {
-                    "url": "https://github.com/rhudaj/Real-Time-Voice-to-Instrument-Translator",
-                    "icon": "fa fa-link"
-                },
-                "description": [
-                    "Developed a desktop app enabling real-time translation of human voice into various musical instruments.",
-                    "Implement probabilistic algorithms with Python (Numpy, Pandas, PyTorch) for detection of pitch, tempo, etc.",
-                    "Exposed the backend as a REST API to integrate with a GUI built with React."
-                ],
-                "item_list": ["Python (Numpy, Pandas, PyTorch)"]
+                "item_list": ["TypeScript", "Google Cloud"]
             }
         ]
     },

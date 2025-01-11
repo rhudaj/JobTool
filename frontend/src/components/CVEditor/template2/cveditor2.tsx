@@ -190,7 +190,6 @@ const CVEditor = forwardRef((
 
 	useEffect(()=>{
 		if(!CV) return;
-		console.log("CV = :\n", CV.sections)
 		setSectionOrder(Object.keys(CV.sections))
 		console.log("section order = ", sectionOrder)
 	}, [CV])
@@ -199,7 +198,7 @@ const CVEditor = forwardRef((
 		getCV: () => CV
 	}));
 
-	// -------------- RENDER --------------
+	// -------------- SETUP RENDER --------------
 
 	if (!CV || !sectionOrder) {
 		return null;
@@ -231,24 +230,24 @@ const CVEditor = forwardRef((
 						))}
 					</ItemBucket>
 				) : (<>
-					<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => {
+					<TextEditDiv tv={CV.sections[sec_head].summary} id="summary" onUpdate={val => {
 						setCV(draft => {
-							draft.summary = val
+							draft.sections[sec_head].summary = val
 						})
 					}}/>
 					<div className="sub-sec">
 						<div className="sub-sec-head">Languages:</div>
-						<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=> {
+						<DelimitedList items={CV.sections[sec_head].languages} delimiter=", " onUpdate={vals=> {
 							setCV(draft => {
-								draft.languages = vals
+								draft.sections[sec_head].languages = vals
 							})
 						}}/>
 					</div>
 					<div className="sub-sec">
 						<div className="sub-sec-head">Technology:</div>
-						<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=> {
+						<DelimitedList items={CV.sections[sec_head].technologies} delimiter=", " onUpdate={vals=> {
 							setCV(draft => {
-								draft.technologies = vals
+								draft.sections[sec_head].technologies = vals
 							})
 						}}/>
 					</div>
@@ -264,6 +263,7 @@ const CVEditor = forwardRef((
 			values={sectionOrder} // only worry about tracking the string names (assumes all unique)
 			isVertical={true}
 			item_type="section"
+			displayItemsClass="section"
 			onUpdate={newSecOrder => {
 				setSectionOrder([...newSecOrder])
 			}}
@@ -271,6 +271,9 @@ const CVEditor = forwardRef((
 			{sections_ui}
 		</ItemBucket>
 	)
+
+	// -------------- RENDER --------------
+
 	return (
 		<div id="cv-editor">
 			<div id="full-name" key="name">{CV.name}</div>

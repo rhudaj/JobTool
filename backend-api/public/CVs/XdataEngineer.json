@@ -1,27 +1,30 @@
 {
+    "name": "Roman Hudaj",
     "personalTitle": "CS Student ~ Data Developer",
-    "summary": "Software engineer with 2+ years of experience in developing scalable apps, automating tasks with pipelines and working with distributed systems. Proficient in building reliable and efficient systems and collaborating across engineering teams. ",
-    "languages": [
-        "Scala",
-        "Python",
-        "SQL",
-        "Go",
-        "Java",
-        "TypeScript",
-        "JavaScript"
-    ],
-    "technologies": [
-        "Apache Spark",
-        "Map Reduce",
-        "Kafka",
-        "Docker",
-        "Google Cloud",
-        "Git",
-        "NoSQL (Postgres",
-        "MongoDB)",
-        "Alteryx"
-    ],
-    "experiences": {
+    "sections": {
+        "summary": {
+            "summary": "Dynamic and agile data engineer with a strong foundation in distributed systems, data pipelines, and automation. Experienced in designing, coding, and deploying scalable solutions. Adept at working with large-scale data and collaborating across teams.",
+            "languages": [
+                "Python",
+                "SQL",
+                "Go",
+                "Java",
+                "Scala",
+                "TypeScript",
+                "JavaScript"
+            ],
+            "technologies": [
+                "Apache Spark",
+                "Map Reduce",
+                "Kafka",
+                "Docker",
+                "Google Cloud",
+                "Git",
+                "NoSQL (Postgres",
+                "MongoDB)",
+                "Alteryx"
+            ]
+        },
         "education": [
             {
                 "date": {
@@ -33,7 +36,7 @@
                 "location": "University of Waterloo",
                 "description": [
                     "Awards: Presidents Scholarship of Distinction, Dean’s Honours List",
-                    "Course-Work: Distributed Systems (Big Data), Machine Learning, Object-Oriented Programming"
+                    "Course-Work: Databased (RMDBs), Distributed Systems (Big Data), Machine Learning"
                 ],
                 "item_list": []
             }
@@ -48,9 +51,9 @@
                 "role": "Software Product Management Intern",
                 "location": "Toronto, ON",
                 "description": [
-                    "Developed a robust data pipeline using Python, SQL and Alteryx to streamline data product translations, resulting in ~$40K in savings per product translation.\n",
-                    "Built a Python app to extract, filter and export from usage-databases featuring efficient processing of large tables;  streamlined data-analysis cross-functional teams.",
-                    "Enhanced SQL databases to provide insights into API usage, increasing data accuracy and enabling better decision-making.\n"
+                    "Built an adaptive French translation pipeline using Alteryx, SQL, and a deep learning AI model API to automate data product and document translations, resulting in ~$40K in savings per product translation.",
+                    "Built a Python app to extract, filter and export client product-usage data from databases featuring efficient processing of large tables, streamlining non-technical team workflows.\n",
+                    "Enhanced database systems to track product usage and support data-driven pricing strategies."
                 ],
                 "item_list": ["SQL", "Python", "Alteryx", "Azure DevOps"]
             },
@@ -63,9 +66,8 @@
                 "role": "Student Engineer",
                 "location": "Brampton, ON",
                 "description": [
-                    "Automated ETL processes to analyze data warehouses, achieving $10K+ annual savings and improving efficiency.\n",
-                    "Built a distributed supply chain monitoring system with Apache Spark, tracking real-time inventory and ensuring uninterrupted material flow.\n",
-                    "Co-lead a project to optimize the flow of materials across a manufacturing plant, increasing overall output and cost efficiency by 30%."
+                    "Co-lead a major project to optimize the flow of materials across a factory using an a system for collecting and analyzing data to plan the project, increasing output and cost efficiency by ~30%.",
+                    "Built a supply chain monitoring system with ETL analysis of data warehouses and Apache Spark, resulting in $10K+ annual savings."
                 ],
                 "item_list": ["SQL", "Excel", "Apache Spark"]
             },
@@ -78,9 +80,9 @@
                 "role": "Software Product Developer",
                 "location": "Toronto, ON",
                 "description": [
-                    "Designed and implemented scalable backend services with Go, enhancing API reliability for high-traffic systems.\n\n",
-                    "Optimized NoSQL schemas and improved system clarity, resulting in a 20% reduction in query response times.\n\n",
-                    "Deployed and maintained CI/CD pipelines, reducing deployment time for new features by 30%.\n"
+                    "Improved UI for lottery and instant-win games through market-research and development with React and TypeScript, supporting the rollout of a mobile-gaming platform on cruise ships from inception to deployment.",
+                    "Optimized NoSQL schemas and API architecture in Go to improve backend performance and clarity for developers.\n",
+                    "Enhanced CI/CD pipelines, deploying new features to mobile and web platforms, leading to a 30% increase in user engagement.\n"
                 ],
                 "item_list": ["Docker", "Go", "Postgres", "MongoDB", "Node "]
             }
@@ -95,7 +97,7 @@
                 "link": { "url": "", "icon": "fa fa-link" },
                 "description": [
                     "Built a distributed pipeline with Apache Spark and HDFS to train a spam classifier on large datasets (~1GB+).\n",
-                    "Implemented stochastic gradient descent to optimize model training, improving processing efficiency.\n"
+                    "Implemented optimized stochastic gradient descent for high-efficiency model training.\n"
                 ],
                 "item_list": ["Apache Spark", "Scala"]
             },
@@ -107,8 +109,8 @@
                     "icon": "fa fa-link"
                 },
                 "description": [
-                    "Developed a distributed system in Go to automate restaurant reservations, generating ~$3K/month from subscriptions.\n",
-                    "Deployed on distributed systems using Google Cloud Scheduler, an automated Task Manager for scalability and efficiency and cloud storage for saving data. "
+                    "Founded a service securing high-demand restaurant reservations, generating ~$3K/month.\n",
+                    "Deployed on distributed systems using Google Cloud Scheduler, an automated Task Manager for scalability and efficiency and cloud storage for saving data."
                 ],
                 "item_list": ["Go", "Google Cloud"]
             },
@@ -125,7 +127,7 @@
                 "description": [
                     "Developed a desktop app enabling real-time translation of human voice into various musical instruments.",
                     "Implement probabilistic algorithms with Python (Numpy, Pandas, PyTorch) for detection of pitch, tempo, etc.",
-                    "Built a Python-based backend with a React GUI for seamless integration and user interaction.\n"
+                    "Exposed the backend as a REST API to integrate with a GUI built with React."
                 ],
                 "item_list": ["Python (Numpy, Pandas, PyTorch)"]
             }

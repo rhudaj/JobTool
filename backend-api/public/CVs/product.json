@@ -1,30 +1,33 @@
 {
+    "name": "Roman Hudaj",
     "personalrole": "CS Student ~ Software Engineer",
-    "summary": "2 years experience in software/product management roles, improving the SLDC process, working with large code repositories, automating tasks, performing code-reviews. I have a passion for automating tasks to improve productivity. I am proficient in: ",
-    "languages": [
-        "Python",
-        "Java",
-        "Go",
-        "SQL",
-        "JavaScript",
-        "TypeScript",
-        "C++",
-        "C",
-        "HTML",
-        "CSS"
-    ],
-    "technologies": [
-        "CI/CD (Azure",
-        "Jira)",
-        "Git",
-        "Docker",
-        "React",
-        "Node",
-        "Docker",
-        "SQL Server",
-        "GraphQL"
-    ],
-    "experiences": {
+    "sections": {
+        "summary": {
+            "summary": "2 years experience in software/product management roles, improving the SLDC process, working with large code repositories, automating tasks, performing code-reviews. I have a passion for automating tasks to improve productivity. I am proficient in: ",
+            "languages": [
+                "Python",
+                "Java",
+                "Go",
+                "SQL",
+                "JavaScript",
+                "TypeScript",
+                "C++",
+                "C",
+                "HTML",
+                "CSS"
+            ],
+            "technologies": [
+                "CI/CD (Azure",
+                "Jira)",
+                "Git",
+                "Docker",
+                "React",
+                "Node",
+                "Docker",
+                "SQL Server",
+                "GraphQL"
+            ]
+        },
         "education": [
             {
                 "date": {
