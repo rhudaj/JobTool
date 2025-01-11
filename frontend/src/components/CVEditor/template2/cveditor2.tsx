@@ -182,9 +182,18 @@ const CVEditor = forwardRef((
 
 	const [CV, setCV] = useImmer<CV>(null);
 
+	const [sectionOrder, setSectionOrder] = useImmer<string[]>(null);
+
 	useEffect(() => {
 		setCV(props.cv);
 	}, [props.cv]);
+
+	useEffect(()=>{
+		if(!CV) return;
+		console.log("CV = :\n", CV.sections)
+		setSectionOrder(Object.keys(CV.sections))
+		console.log("section order = ", sectionOrder)
+	}, [CV])
 
 	useImperativeHandle(ref, () => ({
 		getCV: () => CV
@@ -192,84 +201,82 @@ const CVEditor = forwardRef((
 
 	// -------------- RENDER --------------
 
-	if (!CV) {
+	if (!CV || !sectionOrder) {
 		return null;
 	}
 
 	const bt = BucketTypes["experiences"];
-	const experience_sections = [];
-	for (const category in CV.experiences) {
-		experience_sections.push(
-			<Section head={category.toUpperCase()}>
-				<ItemBucket
-					id={category}
-					values={CV.experiences[category]}
-					item_type={bt.item_type}
-					isVertical={bt.isVertical}
-					displayItemsClass={bt.displayItemsClass}
-					onUpdate={(newItems) => {
-						setCV(draft => {
-							draft.experiences[category] = newItems
-						})
-					}}
-				>
-					{CV.experiences[category].map((exp, i) => (
-						<ExperienceUI key={i} {...exp} onUpdate={(newExp: Experience) => {
+	const sections_ui = sectionOrder.map(sec_head => (
+		<Section head={sec_head.toUpperCase()} id={`sec-${sec_head}`}>
+			{
+				(sec_head !== "summary") ? (
+					<ItemBucket
+						id={sec_head}
+						values={CV.sections[sec_head] as any[]}
+						item_type={bt.item_type}
+						isVertical={bt.isVertical}
+						displayItemsClass={bt.displayItemsClass}
+						onUpdate={(newItems) => {
 							setCV(draft => {
-								draft.experiences[category][i] = newExp
+								draft.sections[sec_head] = newItems
 							})
-						}} />
-					))}
-				</ItemBucket>
-			</Section>
-		);
-	}
+						}}
+					>
+						{CV.sections[sec_head]?.map((exp, i) => (
+							<ExperienceUI key={i} {...exp} onUpdate={(newExp: Experience) => {
+								setCV(draft => {
+									draft.sections[sec_head][i] = newExp
+								})
+							}} />
+						))}
+					</ItemBucket>
+				) : (<>
+					<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => {
+						setCV(draft => {
+							draft.summary = val
+						})
+					}}/>
+					<div className="sub-sec">
+						<div className="sub-sec-head">Languages:</div>
+						<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=> {
+							setCV(draft => {
+								draft.languages = vals
+							})
+						}}/>
+					</div>
+					<div className="sub-sec">
+						<div className="sub-sec-head">Technology:</div>
+						<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=> {
+							setCV(draft => {
+								draft.technologies = vals
+							})
+						}}/>
+					</div>
+				</>)
+			}
+		</Section>
+	))
 
-	const sections = [
-		(
-			<Section id="sec-summary" head="summary">
-				<TextEditDiv tv={CV.summary} id="summary" onUpdate={val => {
-					setCV(draft => {
-						draft.summary = val
-					})
-				}}/>
-				<div className="sub-sec">
-					<div className="sub-sec-head">Languages:</div>
-					<DelimitedList items={CV.languages} delimiter=", " onUpdate={vals=> {
-						setCV(draft => {
-							draft.languages = vals
-						})
-					}}/>
-				</div>
-				<div className="sub-sec">
-					<div className="sub-sec-head">Technology:</div>
-					<DelimitedList items={CV.technologies} delimiter=", " onUpdate={vals=> {
-						setCV(draft => {
-							draft.technologies = vals
-						})
-					}}/>
-				</div>
-			</Section>
-		),
-		...experience_sections
-	];
+	const SectionBucket = (
+		// TODO: we don't care about replacing values themselves. Only the order (so why should we need to pass any values[])?
+		<ItemBucket
+			id="sections-bucket"
+			values={sectionOrder} // only worry about tracking the string names (assumes all unique)
+			isVertical={true}
+			item_type="section"
+		>
+			{sections_ui}
+		</ItemBucket>
+	)
 
 	// TODO: add name to CV object
-	const rows = [
-		(
+	return (
+		<div id="cv-editor">
 			<div id="full-name" key="name">Roman Hudaj</div>
-		),
-		(
 			<div id="link-list">
 				{CV.links.map((l,i) => <LinkUI key={i} {...l} /> )}
 			</div>
-		),
-		...sections
-	];
-
-	return (
-		<div id="cv-editor">
-			{rows}
+			{SectionBucket}
 		</div>
 	);
 });

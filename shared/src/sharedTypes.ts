@@ -68,8 +68,8 @@ interface CV {
     languages: string[];
     technologies: string[];
     links: Link[];
-    experiences: {
-        [category: string]: Experience[];
+    sections: {
+        [category: string]: any;
     };
 }
 interface TailorCVInfo {
