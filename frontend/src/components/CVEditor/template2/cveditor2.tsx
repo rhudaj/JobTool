@@ -3,7 +3,7 @@ import { CV, Experience, Link, MonthYear, DateRange } from "shared";
 import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
-import { Grid } from "../grid";
+import { Grid } from "../template1/grid";
 import { joinClassNames } from "../../../hooks/joinClassNames";
 import ItemBucket from "../../dnd/ItemBucket";
 import { BucketTypes } from "../../dnd/types";
@@ -226,7 +226,7 @@ const CVEditor = forwardRef((
 	}
 
 	// TODO: add name to CV object
-	const rows_cols = [
+	const rows = [
 		(
 			<div id="full-name" key="name">Roman Hudaj</div>
 		),
@@ -264,7 +264,11 @@ const CVEditor = forwardRef((
 		...experience_sections
 	];
 
-	return <Grid id="cv-editor" rows_cols={rows_cols} rowGapPct="1" colGapPct="2"/>;
+	return (
+		<div id="cv-editor">
+			{rows}
+		</div>
+	);
 });
 
 

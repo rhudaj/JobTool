@@ -1,13 +1,13 @@
 // import "./cveditor.scss";
 import { CV, DateRange, Experience, Link, MonthYear } from "shared";
-import { TextEditDiv } from "../TextEditDiv/texteditdiv";
+import { TextEditDiv } from "../../TextEditDiv/texteditdiv";
 import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useImmer } from "use-immer";
 import { Grid } from "./grid";
-import { joinClassNames } from "../../hooks/joinClassNames";
-import ItemBucket from "../dnd/ItemBucket";
-import { BucketTypes } from "../dnd/types";
-import { useLogger } from "../../hooks/logger";
+import { joinClassNames } from "../../../hooks/joinClassNames";
+import ItemBucket from "../../dnd/ItemBucket";
+import { BucketTypes } from "../../dnd/types";
+import { useLogger } from "../../../hooks/logger";
 import { format, parse } from "date-fns"
 
 

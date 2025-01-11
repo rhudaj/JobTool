@@ -1,5 +1,5 @@
 import { Experience } from "shared";
-import { ExperienceUI } from "../CVEditor/cveditor";
+import { ExperienceUI } from "../CVEditor/template1/cveditor";
 import "./types.scss";
 
 const DEFAULT_ITEM_TYPE = "DRAG-ITEM";

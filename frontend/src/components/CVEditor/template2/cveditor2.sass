@@ -39,6 +39,11 @@ $title-font:            calc(8 * $base-font-size)
     color: black
     font-family: 'Arial Narrow Bold', sans-serif
     overflow: hidden
+
+    display: grid
+    grid-auto-rows: min-content // same as repeat(N, min-content), where N = # rows
+    row-gap: 1%
+
     .section
         display: flex
         flex-direction: column

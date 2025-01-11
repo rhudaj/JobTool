@@ -142,10 +142,8 @@ function App() {
         BackendAPI.post<{name: string, cv: CV}, null>("saveCV", {name: cvName, cv: newCV})
     };
 
-    // RENDER ACTIVE SECTION
     return (
         <div className="App-Div">
-            {/* --------------- JOB INFO --------------- */}
 
             <Section id="section-job-info" heading="Job Info">
                 <ButtonSet>
@@ -161,13 +159,9 @@ function App() {
                 </SplitView>
             </Section>
 
-            {/* --------------- EMAIL --------------- */}
-
             <Section id="section-email" heading="Email">
                 <EmailEditor />
             </Section>
-
-            {/* --------------- COVER LETTER --------------- */}
 
             <Section id="section-cl" heading="Cover Letter">
 
@@ -198,8 +192,6 @@ function App() {
 
             </Section>
 
-            {/* --------------- RESUME --------------- */}
-
             <Section id="section-cv" heading="Resume">
 
                 {/* CONTROLS --------------------------- */}
@@ -222,7 +214,6 @@ function App() {
                         <InfoPad info={cvInfo}/>
                     </SplitView>
                 </DndProvider>
-
             </Section>
 
         </div>
