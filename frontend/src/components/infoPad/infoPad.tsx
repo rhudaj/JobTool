@@ -4,8 +4,6 @@ import ItemBucket from '../dnd/ItemBucket';
 import React from "react";
 import { BucketTypes, InfoPadMap } from '../dnd/types';
 
-
-
 export function InfoPad(props: { info: any} ) {
 
     const log = useLogger("InfoPad");
@@ -62,7 +60,7 @@ export function InfoPad(props: { info: any} ) {
     // ----------------- RENDER -----------------
 
     if(infoBuckets.length === 0)
-        return <div id="info-pad">no cv-info found</div>;
+        return <div className="info-pad">no cv-info found</div>;
     else
-        return <div id="info-pad">{InfoPadComponents}</div>;
+        return <div className="info-pad">{InfoPadComponents}</div>;
 };

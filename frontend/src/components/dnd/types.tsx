@@ -51,6 +51,7 @@ const InfoPadMap = {
     "summaries":    "info-pad-text-list",
     "projects":     "experiences",
     "experience": "experiences",
+    "education": "experiences",
     // CL
     "paragraphs":  "cl-info-pad",
 }

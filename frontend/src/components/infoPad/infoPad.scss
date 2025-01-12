@@ -1,4 +1,4 @@
-#info-pad {
+.info-pad {
     font-size: 10rem;
     color: black;
     background-color: white;
@@ -7,6 +7,10 @@
     display: flex;
     flex-direction: column;
     gap: 10rem;
+
+    // take up to the container height. After that, scroll.
+    max-height: 100cqh;
+    overflow: scroll;
 }
 
 .info-pad-sec {
