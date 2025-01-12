@@ -181,19 +181,21 @@ const CVEditor = forwardRef((
 	// -------------- STATE --------------
 
 	const [CV, setCV] = useImmer<CV>(null);
-
 	const [sectionOrder, setSectionOrder] = useImmer<string[]>(null);
 
+	// initialize the CV
 	useEffect(() => {
 		setCV(props.cv);
 	}, [props.cv]);
 
+	// initialize the section order
 	useEffect(()=>{
 		if(!CV) return;
 		setSectionOrder(Object.keys(CV.sections))
 		console.log("section order = ", sectionOrder)
 	}, [CV])
 
+	// give parent access to CV
 	useImperativeHandle(ref, () => ({
 		getCV: () => CV
 	}));
@@ -256,22 +258,6 @@ const CVEditor = forwardRef((
 		</Section>
 	))
 
-	const SectionBucket = (
-		// TODO: we don't care about replacing values themselves. Only the order (so why should we need to pass any values[])?
-		<ItemBucket
-			id="sections-bucket"
-			values={sectionOrder} // only worry about tracking the string names (assumes all unique)
-			isVertical={true}
-			item_type="section"
-			displayItemsClass="section"
-			onUpdate={newSecOrder => {
-				setSectionOrder([...newSecOrder])
-			}}
-		>
-			{sections_ui}
-		</ItemBucket>
-	)
-
 	// -------------- RENDER --------------
 
 	return (
@@ -280,7 +266,16 @@ const CVEditor = forwardRef((
 			<div id="link-list">
 				{CV.links.map((l,i) => <LinkUI key={i} {...l} /> )}
 			</div>
-			{SectionBucket}
+			<ItemBucket
+				id="sections-bucket"
+				values={sectionOrder} // only worry about tracking the string names (assumes all unique)
+				isVertical={true}
+				item_type="section"
+				displayItemsClass="section"
+				onUpdate={newSecOrder => {
+					setSectionOrder([...newSecOrder])
+				}}
+			>{sections_ui}</ItemBucket>
 		</div>
 	);
 });
