@@ -16,12 +16,11 @@ export function InfoPad(props: { info: any} ) {
 
     // Convert into [{id: string, values: any[]}]
     React.useEffect(() => {
-        log("props.cv_info:", props.info);
         if (!props.info) return;
         setInfoBuckets(
             Object.entries(props.info).map(entry => ({
-                id: entry[0],
-                values: entry[1]
+                id: entry[0],       // field name
+                values: entry[1]    // value
             }))
         )
     }, [props.info]);
@@ -43,8 +42,8 @@ export function InfoPad(props: { info: any} ) {
         const type_for_bucket = InfoPadMap[bucket.id];
         const bt = BucketTypes[type_for_bucket];
         return (
-            <div key={i}>
-                <h3>{bucket.id}</h3>
+            <div className="info-pad-sec" key={i}>
+                <h2>{bucket.id.toUpperCase()}</h2>
                 <ItemBucket
                     key={i}
                     id={bucket.id}

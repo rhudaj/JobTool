@@ -3,7 +3,7 @@ import { useEffect, useState, useRef, createContext } from "react";
 import { Section } from "./components/Section/Section";
 import { CV, JobInfo } from "shared";
 import { BackendAPI } from "./backend_api";
-import { CVEditor } from "./components/CVEditor/cveditor";
+import { CVEditor } from "./components/CVEditor/template2/cveditor2";
 import { CLEditor } from "./components/CLEditor/cleditor";
 import { PrintablePage } from "./components/PagePrint/pageprint";
 import { ButtonSet } from "./components/ButtonSet/buttonSet";
@@ -30,9 +30,9 @@ function App() {
     const [clInfo, setCLInfo] = useState<any>([]);
 
     // CV Related
-    const [CVs, setCVs] = useState<{name: string, data: CV}[]>(null);
+    const [named_cvs, set_named_cvs] = useState<{name: string, data: CV}[]>(null);
     const cvref = useRef(null);
-    const [CV, setCV] = useState(null);
+    const [active_cv, set_active_cv] = useState<{name: string, data: CV}>(null);
     const [cvInfo, setCVInfo] = useState<any>([]);
 
     const JIRef = useRef(null);
@@ -47,8 +47,8 @@ function App() {
         .then(cvs => {
             if (cvs && cvs.length > 0) {
                 log("CVs from backend:", cvs.map(cv => cv.name));
-                setCVs(cvs);
-                setCV(cvs[0].data); // set the first CV as the default
+                set_named_cvs(cvs);
+                set_active_cv(cvs[0]); // set the first CV as the default
             }
         })
         // Get the cv info
@@ -69,9 +69,9 @@ function App() {
     // INTERNALLY:
 
     const changeCV = (name: string) => {
-        const new_cv = CVs.find(cv => cv.name === name);
+        const new_cv = named_cvs.find(cv => cv.name === name);
         log("Changing CV to:", new_cv.name);
-        setCV(new_cv.data);
+        set_active_cv(new_cv);
     };
 
     // FROM BACKEND:
@@ -111,11 +111,20 @@ function App() {
                 // they clicked ok but didn't enter anything
                 cvName = null;
                 alert("Input cannot be left blank.");
-            } else if ( CVs.find(cv => cv.name === cvName) ) {
-                cvName = null;
-                alert("CV with that name already exists.");
+            } else if ( named_cvs.find(cv => cv.name === cvName) ) {
+                // alert("CV with that name already exists.");
+                const isConfirmed = window.confirm("CV with that name already exists. Are you okay with it?");
+                if (isConfirmed) {
+                    // User clicked "OK"
+                    console.log("User is okay with it.");
+                    break;
+                } else {
+                    // User clicked "Cancel"
+                    console.log("User is not okay with it.");
+                    cvName = null;
+                }
             } else {
-                // they entered a valid name
+                // they entered a VALID name
                 break;
             }
         }
@@ -133,10 +142,8 @@ function App() {
         BackendAPI.post<{name: string, cv: CV}, null>("saveCV", {name: cvName, cv: newCV})
     };
 
-    // RENDER ACTIVE SECTION
     return (
         <div className="App-Div">
-            {/* --------------- JOB INFO --------------- */}
 
             <Section id="section-job-info" heading="Job Info">
                 <ButtonSet>
@@ -152,13 +159,9 @@ function App() {
                 </SplitView>
             </Section>
 
-            {/* --------------- EMAIL --------------- */}
-
             <Section id="section-email" heading="Email">
                 <EmailEditor />
             </Section>
-
-            {/* --------------- COVER LETTER --------------- */}
 
             <Section id="section-cl" heading="Cover Letter">
 
@@ -189,15 +192,13 @@ function App() {
 
             </Section>
 
-            {/* --------------- RESUME --------------- */}
-
             <Section id="section-cv" heading="Resume">
 
                 {/* CONTROLS --------------------------- */}
 
                 <ButtonSet>
                     <select onChange={e => changeCV(e.target.value)}>
-                        { CVs?.map((cv,i) => <option key={i} value={cv.name}>{cv.name}</option>) }
+                        { named_cvs?.map((cv,i) => <option key={i} value={cv.name}>{cv.name}</option>) }
                     </select>
                     <button className="download-button" onClick={() => printReactComponentAsPdf("cv-page")}> Download PDF </button>
                     <button onClick={saveCV}> Save CV </button>
@@ -208,12 +209,11 @@ function App() {
                 <DndProvider backend={HTML5Backend}>
                     <SplitView>
                         <PrintablePage page_id="cv-page">
-                            <CVEditor cv={CV} ref={cvref}/>
+                            { active_cv && <CVEditor cv={active_cv.data} ref={cvref}/> }
                         </PrintablePage>
                         <InfoPad info={cvInfo}/>
                     </SplitView>
                 </DndProvider>
-
             </Section>
 
         </div>

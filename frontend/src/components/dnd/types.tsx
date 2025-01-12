@@ -1,5 +1,5 @@
 import { Experience } from "shared";
-import { ExperienceUI } from "../CVEditor/cveditor";
+import { ExperienceUI } from "../CVEditor/template2/cveditor2";
 import "./types.scss";
 
 const DEFAULT_ITEM_TYPE = "DRAG-ITEM";
@@ -50,8 +50,9 @@ const InfoPadMap = {
     "courses":      "info-pad-text-list",
     "summaries":    "info-pad-text-list",
     "projects":     "experiences",
+    "experience": "experiences",
     // CL
-    "paragraphs":  "cl-info-pad"
+    "paragraphs":  "cl-info-pad",
 }
 
 

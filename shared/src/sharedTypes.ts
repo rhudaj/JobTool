@@ -1,5 +1,8 @@
+/* NOTE!
+    After making any updates to this file, you need to run the command
+        $ yarn prepublishOnly
+*/
 type WordOccurences = [string, number][];
-
 interface JobExtractResponse {
     company: string;
     positionName: string;
@@ -13,9 +16,7 @@ interface JobExtractResponse {
     deadline: string;
     howToApply: string;
 }
-
 type reqType = "required" | "optional";
-
 interface JobInfo {
     company: string;
     positionName: string;
@@ -32,7 +33,6 @@ interface JobInfo {
     howToApply: string;
     coverLetter: string;
 }
-
 interface CoverLetterResponse {
     intro: string;
     transition: string;
@@ -40,35 +40,39 @@ interface CoverLetterResponse {
     why_work_here: string;
     closing_remarks: string;
 }
-
-// TODO: should not have to define a resume interface. The user can specify there own sections and what each of those contain.
-
 interface Experience {
-    date: {
-        start: string,
-        end: string
-    }
-    title: string
-    side_title: string|Link
-    points: string[]
-    tech: string[]
+    date: DateRange;
+    title: string;
+    role?: string;
+    location?: string;
+    link?: Link;
+    description: string[];
+    item_list: string[];
 }
-
+interface DateRange {
+    start: MonthYear;
+    end: MonthYear;
+}
+interface MonthYear {
+    month: number;
+    year: number;
+}
 interface Link {
-    icon: string
-    url: string
-    text?: string
+    icon: string;
+    url: string;
+    text?: string;
 }
-
 interface CV {
+    name: string;
     personalTitle: string;
     summary: string;
     languages: string[];
     technologies: string[];
     links: Link[];
-    experiences: {[category: string]: Experience[]};
+    sections: {
+        [category: string]: any;
+    };
 }
-
 interface TailorCVInfo {
     company: string;
     positionName: string;
@@ -79,7 +83,18 @@ interface TailorCVInfo {
     languages: string[];
     technologies: string[];
 }
-
 interface GenCLInfo extends TailorCVInfo {}
 
-export type { CV, CoverLetterResponse, GenCLInfo, Experience, Link, JobExtractResponse, JobInfo, TailorCVInfo, WordOccurences };
+export type {
+    CV,
+    CoverLetterResponse,
+    Experience,
+    GenCLInfo,
+    JobExtractResponse,
+    JobInfo,
+    Link,
+    TailorCVInfo,
+    WordOccurences,
+    MonthYear,
+    DateRange,
+};

@@ -1,0 +1,153 @@
+// PAGE RELATED:
+$base-font-size: 0.26cqw
+$page-padding:          calc(20 * $base-font-size)
+
+// CV CONTENT SPECIFIC:
+$hr-line-width:         .5rem
+$experiences-gap:       calc(5 * $base-font-size)
+$exp-row-gap:           calc(5 * $base-font-size)
+$exp-col-gap:           calc(5 * $base-font-size)
+$exp-head-content-gap:  calc(5 * $base-font-size)
+$exp-indent:             2.5em
+$link-col-gap:          calc(3 * $base-font-size)
+$skills-col-gap:        calc(3 * $base-font-size)
+$bullet-point-gap:      calc(2 * $base-font-size)
+$sec-row-gap:           calc(6 * $base-font-size)
+$sec-head-line-gap:     calc(3 * $base-font-size)
+$sec-head-line-height:  calc(0.5 * $base-font-size)
+// FONT SIZES
+$p-font:                calc(6 * $base-font-size)
+$name-font:             calc(12 * $base-font-size)
+$title-font:            calc(8 * $base-font-size)
+
+// delimited-list ----------------------------
+
+.delimited-list
+    display: flex
+    flex-wrap: wrap
+    & > *
+        flex: 0 1 auto                     // Prevent children from expanding and ensure they fit their content
+        white-space: wrap                  // Prevent wrapping
+        white-space-collapse: preserve
+
+
+// CV-EDITOR ----------------------------
+
+#cv-editor
+    height: 100% // take up the whole page
+    padding: $page-padding
+    color: black
+    font-family: 'Arial Narrow Bold', sans-serif
+    overflow: hidden
+
+    display: grid
+    grid-auto-rows: min-content // same as repeat(N, min-content), where N = # rows
+    row-gap: 1%
+
+    .section
+        display: flex
+        flex-direction: column
+        row-gap: $sec-row-gap
+        .sec-head
+            display: flex
+            gap: $sec-head-line-gap
+            & > :first-child
+                width: min-content
+            & > :last-child
+                width: 100%
+        .experience
+            display: flex
+            flex-direction: column
+            gap: 0.5em
+            // first child
+            .header-info
+                display: flex
+                flex-direction: column
+                gap: 0.25em
+                & > *         // children rows
+                    display: flex
+                    & > *
+                        width: 100%
+                    & > :first-child
+                        width: 100%
+                        display: flex
+                        column-gap: 3%
+                    & > :last-child
+                        text-align: right
+            // second child
+            .exp-content
+                padding-left: $exp-indent
+
+
+// STYLES ------------------
+
+.section
+    font-size: $p-font
+
+.sec-head
+    font-weight: bold
+
+hr
+    // HORIZONTAL LINE ACROSS CENTER OF DIV
+    border: none
+    height: $sec-head-line-height
+    border-bottom: $hr-line-width solid black
+    align-self: center
+
+
+// SUB SECTION ------------------
+
+.sub-sec
+    display: flex
+    gap: 0.5em
+
+.sub-sec-head
+    font-weight: bold
+
+// EXPERIENCE ------------------
+
+// LAYOUT ------------------
+
+// STYLES ------------------
+
+.exp-points
+    display: flex
+    flex-direction: column
+    row-gap: $bullet-point-gap
+
+.title
+    font-weight: bold
+
+.role, .location
+    font-style: italic
+
+.item-list
+    padding-left: $exp-indent
+    font-style: italic
+
+// LINK ------------------------------------------------
+
+.link
+    display: flex
+    white-space: nowrap
+    gap: $link-col-gap
+    a
+        text-decoration: none
+        color: black
+
+#full-name
+    text-align: center
+    font-size: $name-font
+    white-space: nowrap
+    font-weight: bolder
+
+#link-list
+    font-size: $p-font
+    display: flex
+    justify-content: center
+    gap: 1em
+
+#sec-summary
+    display: flex
+    flex-direction: column
+    gap: 0.5em

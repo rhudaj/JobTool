@@ -1,4 +1,4 @@
-import { joinClassNames } from "../../hooks/joinClassNames";
+import { joinClassNames } from "../../../hooks/joinClassNames";
 import React from "react";
 
 function Grid(props: {

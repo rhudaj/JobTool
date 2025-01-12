@@ -2,10 +2,10 @@
 
 .dnd-item-wrapper {
 
-    & .can-drag:hover {
-        outline: 2rem solid red;
-        background-color: lightblue;
-    }
+    // & .can-drag:hover {
+    //     outline: 2rem dashed red;
+    // }
+
     & .dragging:active {
         opacity: 0.1;
     }

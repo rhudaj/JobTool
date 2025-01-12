@@ -2,9 +2,10 @@ import "./Item.scss"
 import { useDrag, useDrop } from "react-dnd";
 import React from "react";
 import { useLogger } from "../../hooks/logger";
-import { DeleteButton } from "./controls/delete";
 import { joinClassNames } from "../../hooks/joinClassNames";
 import { Item, DEFAULT_ITEM_TYPE } from "./types";
+import { DNDItemControls } from "./controls/controls";
+
 
 // TODO: should be usable on its own (ie: has its own state) in the case you dont want a bucket.
 function DNDItem(props: {
@@ -14,6 +15,7 @@ function DNDItem(props: {
     onHover?: (dragId: string, isBelow: boolean, isRight: boolean) => void,
     onLetGo?: (dragId: any, bucketId: any) => void, // send to parent when you drop on a bucket
     onDelete?: (id: any) => void,
+    onAddItemBelow?: (id: any) => void,
 } & {
     // Optional props
     disableDrag?: boolean		// defaults to false
@@ -25,11 +27,13 @@ function DNDItem(props: {
 
     // -------------------- STATE ---------------------
 
-    const ref = React.useRef(null);
+    // const ref = React.useRef(null);
+    const dragRef = React.useRef(null)
+    const ref = React.useRef(null)  // "preview ref"
 
     // -----------------DRAG FUNCTIONALITY-----------------
 
-    const [{isDragging}, drag] = useDrag(() => ({
+    const [{isDragging}, drag, preview] = useDrag(() => ({
         type: props.item_type ?? DEFAULT_ITEM_TYPE,
         canDrag: props.disableDrag !== true,
         item: () => {
@@ -52,7 +56,7 @@ function DNDItem(props: {
 
     // -----------------DROP FUNCTIONALITY-----------------
 
-    const [{isDropTarget}, dropRef] = useDrop(
+    const [{isDropTarget}, drop] = useDrop(
         () => ({
             accept: props.item_type ?? DEFAULT_ITEM_TYPE,
             canDrop: (dropItem: Item) => {
@@ -79,8 +83,8 @@ function DNDItem(props: {
         [props.item, props.onHover]
     );
 
-    // Inject the dnd props into the ref
-    drag(dropRef(ref));
+    // Inject the dnd props into the reference
+    drop(preview(ref))
 
     // -----------------RENDER-----------------
 
@@ -90,14 +94,18 @@ function DNDItem(props: {
         "dnd-item-wrapper",
         isDragging ? "dragging" : "", isDropTarget ? "droppable": "",
         props.disableDrag === true ? "no-drag" : "can-drag"
-    )
+    );
 
     return (
         <>
             <div ref={ref} className={classNames}>
                 {props.children}
             </div>
-            { props.onDelete && <DeleteButton ref={ref} onDelete={()=>props.onDelete(props.item.id)}/> }
+            <DNDItemControls ref={ref}>
+                <div ref={drag} className="move-handle">M</div>
+                { props.onDelete && <div className="delete-button" onClick={()=>props.onDelete(props.item.id)}>X</div>}
+                { props.onAddItemBelow && <div className="add-item-below" onClick={()=>props.onAddItemBelow(props.item.id)}>+</div> }
+            </DNDItemControls>
         </>
     );
 };
