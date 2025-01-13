@@ -1,6 +1,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+Interact with the testing version here: https://rhudaj.github.io/JobTool-Frontend/
+
 The purpose of this project is to streamline the job application process. From finding jobs, to extracting usefull information, to writing a cover letter and tailored resume.
 
 The project features a frontend implementing the core features and a frontend for interactive UI.
