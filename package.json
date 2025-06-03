@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "install-all": "cd JobTool-Backend && npm install && cd ../JobTool-Frontend && npm install && cd ..",
+        "start": "concurrently -n backend,frontend -c green,blue \"npm run start:backend\" \"npm run start:JobTool-Frontend\"",
+        "start:backend": "cd JobTool-Backend && npm run start",
+        "start:JobTool-Frontend": "cd JobTool-Frontend && npm run start"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2"
+    }
+}
