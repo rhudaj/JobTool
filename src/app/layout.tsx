@@ -1,24 +1,20 @@
-import type { Metadata } from "next"
-import { Toaster } from "@/components/ui/sonner"
-import "./globals.css"
+import './globals.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Job Tool - Next.js",
-  description: "A Next.js app for job applications and resume building",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  title: 'Job Tool',
+  description: 'Resume and Cover Letter Builder',
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className="antialiased">
-        {children}
-        <Toaster />
-      </body>
+    <html lang="en" className="h-full">
+      <body className="h-full">{children}</body>
     </html>
   )
 }

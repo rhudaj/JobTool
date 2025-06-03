@@ -52,6 +52,12 @@ To get a local copy up and running follow these simple example steps.
    git remote -v # confirm the changes
    ```
 
+9. Start MongoDB locally
+   ```sh
+   # Start MongoDB with custom data directory and different port
+   mongod --dbpath /path/to/your/custom/data --port 27018
+   ```
+
 <!-- USAGE EXAMPLES -->
 ## Usage
 

@@ -10,7 +10,7 @@ export function PrintablePage(props: {
             <div
                 title="A4-page"
                 id={props.page_id}
-                className="[container-type:size] bg-white w-full h-auto aspect-[21/29.7]"
+                className="[container-type:size] bg-white w-full h-auto aspect-[21/29.7] border border-black"
             >
                 { props.children }
             </div>

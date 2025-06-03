@@ -1,5 +1,5 @@
 import { DropTargetMonitor, useDrop } from "react-dnd";
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Item, getBucketType } from "./types";
 import { DragItem } from "./BucketItem";
 import { BucketAction, BucketActions, bucketReducer } from "./useBucket";
@@ -64,6 +64,9 @@ function ItemBucket<T>(props: {
         items: [],
     });
     const [hoveredGap, setHoveredGap] = React.useState<number | undefined>(
+        undefined
+    );
+    const [hoveredItemId, setHoveredItemId] = useState<string | undefined>(
         undefined
     );
     const bt = getBucketType(props.type); // will return default if !props.type
@@ -205,7 +208,11 @@ function ItemBucket<T>(props: {
     );
 
     // Render controls for each item
-    const renderControls = React.useCallback((item_id: Item<T>) => {
+    const renderControls = React.useCallback((item: Item<T>) => {
+        const isItemHovered = hoveredItemId === item.id;
+
+        if (!isItemHovered) return null;
+
         const controls = [
             {
                 id: "move",
@@ -219,7 +226,7 @@ function ItemBucket<T>(props: {
                 onClick: () =>
                     bucketDispatch({
                         type: BucketActions.REMOVE,
-                        payload: { id: item_id},
+                        payload: { id: item.id},
                     }),
             },
             {
@@ -229,7 +236,7 @@ function ItemBucket<T>(props: {
                 onClick: () =>
                     bucketDispatch({
                         type: BucketActions.ADD_BLANK,
-                        payload: { id: item_id, below: false },
+                        payload: { id: item.id, below: false },
                     }),
             },
             {
@@ -239,14 +246,14 @@ function ItemBucket<T>(props: {
                 onClick: () =>
                     bucketDispatch({
                         type: BucketActions.ADD_BLANK,
-                        payload: { id: item_id, below: true },
+                        payload: { id: item.id, below: true },
                     }),
             },
         ]
 
         return <ControlsBox placement="top" controls={controls} />;
 
-    }, [ props.moveItemDisabled, props.deleteDisabled, props.addItemDisabled ]);
+    }, [hoveredItemId, props.moveItemDisabled, props.deleteDisabled, props.addItemDisabled]);
 
     // -----------------RENDER-----------------
 
@@ -265,22 +272,27 @@ function ItemBucket<T>(props: {
                 {bucket.items?.map((item, index) => (
                     <div key={`bucket-${bucket.id}-item-${index}`}>
                         <DropGap isActive={ index === 0 && hoveredGap === prevGap(index) } />
-                        <DragItem
-                            item={item}
-                            dragProps={{
-                                type: props.type,
-                                canDrag: !props.moveItemDisabled,
-                            }}
-                            onHover={onItemHover}
+                        <div
+                            onMouseEnter={() => setHoveredItemId(item.id)}
+                            onMouseLeave={() => setHoveredItemId(undefined)}
                         >
-                            {renderControls(item)}
-                            <bt.DisplayItem
-                                obj={item.value}
-                                onUpdate={(newObj: T) =>
-                                    props.onItemUpdate?.(newObj, index)
-                                }
-                            />
-                        </DragItem>
+                            <DragItem
+                                item={item}
+                                dragProps={{
+                                    type: props.type,
+                                    canDrag: !props.moveItemDisabled,
+                                }}
+                                onHover={onItemHover}
+                            >
+                                {renderControls(item)}
+                                <bt.DisplayItem
+                                    obj={item.value}
+                                    onUpdate={(newObj: T) =>
+                                        props.onItemUpdate?.(newObj, index)
+                                    }
+                                />
+                            </DragItem>
+                        </div>
                         <DropGap isActive={hoveredGap === nextGap(index)} />
                     </div>
                 ))}

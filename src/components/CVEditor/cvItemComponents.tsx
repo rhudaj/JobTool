@@ -224,7 +224,7 @@ const ExperienceUI: BucketItemComponent<Experience, {
 			)}
 			{/* BULLET POINTS */}
 			<div className="exp-content" style={{paddingLeft: Styles.exp_indent}}>
-				<ul>
+				<ul className="list-disc">
 					{props.disableBucketFeatures ? UI_elements.bulletPoints : (
 						<ItemBucket
 							id="experience"

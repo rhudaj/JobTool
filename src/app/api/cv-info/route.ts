@@ -7,6 +7,7 @@ export async function GET() {
   try {
     await connectDB();
     const cvInfo = await DB.cv_info();
+    console.log("Got CV info from backend:", cvInfo);
     return NextResponse.json(cvInfo);
   } catch (error) {
     console.error("Error fetching CV info:", error);

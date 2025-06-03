@@ -121,13 +121,19 @@ const fetchFromBackend = async (): Promise<NamedCV[]> => {
         }
         return response.json();
     } else {
-        const sampleFiles = [
-            "sample_resume1.json",
-            "sample_resume2.json",
-            "sample_resume3.json",
-        ];
+        // Dynamically fetch all CV files from the samples directory
+        const filesResponse = await fetch('/api/samples/cvs');
+        if (!filesResponse.ok) {
+            throw new Error('Failed to fetch sample file list');
+        }
+        const { files } = await filesResponse.json();
+
+        if (!files || files.length === 0) {
+            return [];
+        }
+
         return Promise.all(
-            sampleFiles.map((file) =>
+            files.map((file: string) =>
                 fetch(`${CVS_PATH}/${file}`).then((r) => r.json())
             )
         )

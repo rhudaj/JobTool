@@ -75,16 +75,6 @@ export default function ResumeBuilderPage() {
                 savePopup.close();
             },
 
-            onSaveAnnotationFormSubmit: (formData: ExportForm) => {
-                console.log('onSaveAnnotationFormSubmit ')
-                if (formData.job) {
-                    saveAnnotation2Backend({
-                        job: formData.job,
-                        ncv: cur_cv,
-                    })
-                }
-            },
-
             onImportJsonFileChange: (
                 e: React.ChangeEvent<HTMLInputElement>
             ) => {
@@ -109,18 +99,21 @@ export default function ResumeBuilderPage() {
         },
     };
 
-    // POPUPS
+    // POPUPS - Using new simplified API
     const savePopup = usePopup("Save",
         <SaveForm
             cvInfo={cur_cv ? { name: cur_cv.name, path: cur_cv.path, tags: cur_cv.tags } : { name: "", path: "", tags: [] }}
             onSave={CONTROLS.popups.onSaveFormSubmit}
-        />
+        />,
+        { size: "default" }
     );
 
     const exportPopup = usePopup("Export",
         <ExportForm
-            onSubmit={CONTROLS.popups.onSaveAnnotationFormSubmit}
-        />
+            onPDFClicked={CONTROLS.popups.onPDFClicked}
+            onJsonClicked={CONTROLS.popups.onJsonClicked}
+        />,
+        { size: "default" }
     );
 
     const importPopup = usePopup("Import",
@@ -129,34 +122,19 @@ export default function ResumeBuilderPage() {
                 cvsState.add(ncv);
                 importPopup.close();
             }}
-        />
+        />,
+        { size: "lg" }
     );
 
     const findReplacePopup = usePopup("Find & Replace",
-        <FindReplaceForm cb={CONTROLS.popups.onFindReplaceSubmit} />
+        <FindReplaceForm cb={CONTROLS.popups.onFindReplaceSubmit} />,
+        { size: "default" }
     );
 
     const stylesPopup = usePopup("Styles",
-        <StylesForm />
+        <StylesForm />,
+        { size: "lg" }
     );
-
-    const popups = {
-        save: {
-            hook: savePopup,
-        },
-        export: {
-            hook: exportPopup,
-        },
-        import: {
-            hook: importPopup,
-        },
-        findReplace: {
-            hook: findReplacePopup,
-        },
-        styles: {
-            hook: stylesPopup,
-        },
-    };
 
     if (!cvsState.status || !cvInfoState.status) return null;
 
@@ -166,12 +144,9 @@ export default function ResumeBuilderPage() {
 
             {/* ------------ VIEW SAVED CVs ------------ */}
             <SubSection id="named-cvs" heading="Resumes">
-                <button
-                    onClick={() => popups.import.hook.open()}
-                    className="px-3 py-1 bg-blue-500 text-white rounded mb-2"
-                >
-                    Import
-                </button>
+                {importPopup.createTriggerButton("Import", undefined, {
+                    className: "px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 mb-2"
+                })}
                 <SavedCVsUI />
             </SubSection>
 
@@ -192,25 +167,23 @@ export default function ResumeBuilderPage() {
                         {cur_cv?.tags?.join(", ")}
                     </div>
                     {/* BUTTONS */}
-                    <div title="cv-buttons" className="max-w-33% flex gap-1 flex-wrap">
-                        {[
-                            { popup: popups.save.hook, disabled: !curIsModified },
-                            { popup: popups.export.hook, disabled: !cur_cv },
-                            { popup: popups.import.hook, disabled: false },
-                            { popup: popups.findReplace.hook, disabled: !cur_cv },
-                            { popup: popups.styles.hook, disabled: !cur_cv },
-                        ].map(({ popup, disabled }, index) =>
-                            <button
-                                key={`popup-${popup.title}-${index}`}
-                                disabled={disabled}
-                                onClick={() => popup.open()}
-                                className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50"
-                            >
-                                {popup.title}
-                            </button>
-                        )}
-                        {/* Render popup components */}
-                        {Object.values(popups).map(popup => popup.hook.component)}
+                    <div title="cv-buttons" className="max-w-33% flex gap-2 flex-wrap">
+                        {savePopup.createTriggerButton("Save", undefined, {
+                            disabled: !curIsModified,
+                            className: "px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        })}
+                        {exportPopup.createTriggerButton("Export", undefined, {
+                            disabled: !cur_cv,
+                            className: "px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        })}
+                        {findReplacePopup.createTriggerButton("Find & Replace", undefined, {
+                            disabled: !cur_cv,
+                            className: "px-3 py-1 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        })}
+                        {stylesPopup.createTriggerButton("Styles", undefined, {
+                            disabled: !cur_cv,
+                            className: "px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        })}
                     </div>
                 </div>
             </SubSection>
@@ -230,6 +203,13 @@ export default function ResumeBuilderPage() {
                     <InfoPad mode="ALL-CVS" info={cvInfoState.cv_info} onUpdate={cvInfoState.set} />
                 </SplitView>
             </DndProvider>
+
+            {/* Auto-rendering popups */}
+            <savePopup.PopupComponent />
+            <exportPopup.PopupComponent />
+            <importPopup.PopupComponent />
+            <findReplacePopup.PopupComponent />
+            <stylesPopup.PopupComponent />
         </div>
     );
 }

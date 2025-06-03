@@ -89,8 +89,9 @@ class DB {
         const r = await this.db
             .collection(this.cols.cv_info)
             .findOne()
-        delete r._id // Don't need this field (messes up the frontend)
+
         if(!r) throw new Error("Error getting cv_info from the database")
+        delete r._id // Don't need this field (messes up the frontend)
         return r
     }
 

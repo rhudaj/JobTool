@@ -99,7 +99,8 @@ export default function CoverLetterPage() {
         <JobPopup onEnter={(result) => {
             setCLs(result);
             jobPopup.close();
-        }} />
+        }} />,
+        { size: "lg" }
     );
 
     useEffect(() => {
@@ -111,10 +112,12 @@ export default function CoverLetterPage() {
             <h1 className="text-3xl font-bold mb-6">Cover Letter Builder</h1>
 
             <div className="mb-4 space-x-4">
-                {jobPopup.getTriggerButton({ title: "Generate Cover Letter" })}
+                {jobPopup.createTriggerButton("Generate Cover Letter", undefined, {
+                    className: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                })}
                 <button
                     onClick={() => saveAsPDF("cover-letter")}
-                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
                     disabled={CLs.length === 0}
                 >
                     Export PDF
@@ -122,10 +125,13 @@ export default function CoverLetterPage() {
             </div>
 
             <DndProvider backend={HTML5Backend}>
-                    <PrintablePage page_id="cl-page">
-                        <CLEditor paragraphs={CLs} />
-                    </PrintablePage>
+                <PrintablePage page_id="cl-page">
+                    <CLEditor paragraphs={CLs} />
+                </PrintablePage>
             </DndProvider>
+
+            {/* Auto-rendering popup */}
+            <jobPopup.PopupComponent />
         </div>
     );
 }

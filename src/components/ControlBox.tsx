@@ -21,14 +21,29 @@ export function ControlsBox(props: {
         flexDirection: props.isVertical ? "column" : "row",
     }
 
-    if(props.placement === "left") styles.right = "100%"
-    else if (props.placement === "top") styles.left = 0
+    // if(props.placement === "left") styles.right = "100%"
+    // else if (props.placement === "top") styles.left = 0
+
+    // Position the control box based on placement
+    if (props.placement === "left") {
+        styles.right = "100%";
+        styles.top = 0;
+    } else if (props.placement === "top") {
+        styles.left = 0;
+        styles.bottom = "100%"; // Position above the parent
+    } else if (props.placement === "right") {
+        styles.left = "100%";
+        styles.top = 0;
+    } else if (props.placement === "bottom") {
+        styles.left = 0;
+        styles.top = "100%";
+    }
 
     return (
         <div
             title="controls-box"
             id={props.id}
-            className="absolute top-0 flex"
+            className="absolute flex gap-[10%]"
             style={styles}
         >
             {props.controls.map(
@@ -54,7 +69,7 @@ export function ControlsBox(props: {
 }
 
 /**
- * Optional hook to huge alongside the ControlsBox
+ * Optional hook to hug alongside the ControlsBox
  */
 export function useHoverBuffer(buffer: number) {
     const ref = useRef<HTMLDivElement>(null);

@@ -95,50 +95,40 @@ export const SaveForm = (props: {
 };
 
 
-export interface ExportForm {
-    job?: string
-}
-
 export const ExportForm = (props: {
-    onSubmit: (formData: ExportForm) => void
+    onPDFClicked: () => void;
+    onJsonClicked: () => void;
 }) => {
-    const { register, handleSubmit, formState } = useForm<ExportForm>({
-        defaultValues: { job: "" }
-    });
-
-    const [submitDone, setSubmitDone] = useState(false);
-
-    const onSubmit = (data: ExportForm) => {
-        props.onSubmit(data);
-        setSubmitDone(true);
-    }
-
     return (
-        <form
-            className="flex flex-col gap-10"
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <label>Job Text</label>
-            <textarea
-                {...register('job', {required: true})}
-                placeholder="Paste a job description"
-                className="min-h-30 align-top"
-            />
-            <button type="submit" disabled={!formState.isValid || submitDone}>Export</button>
-        </form>
+        <div className="flex gap-4">
+            <button
+                type="button"
+                onClick={props.onPDFClicked}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            >
+                Export as PDF
+            </button>
+            <button
+                type="button"
+                onClick={props.onJsonClicked}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+                Export as JSON
+            </button>
+        </div>
     )
 }
 
 export const AnnotationForm = (props: {
-    onSubmit: (formData: ExportForm) => void
+    onSubmit: (formData: { job?: string }) => void
 }) => {
-    const { register, handleSubmit, formState } = useForm<ExportForm>({
+    const { register, handleSubmit, formState } = useForm<{ job?: string }>({
         defaultValues: { job: "" }
     });
 
     const [submitDone, setSubmitDone] = useState(false);
 
-    const onSubmit = (data: ExportForm) => {
+    const onSubmit = (data: { job?: string }) => {
         props.onSubmit(data);
         setSubmitDone(true);
     }
