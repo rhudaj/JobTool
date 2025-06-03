@@ -2,7 +2,6 @@ import TextItems from "@/components/TextItems";
 import { CVMetaInfo, NamedCV } from "@/lib/types";
 import { StyleManager } from "./CVEditor/styles";
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { CustomStyles } from "@/styles";
 import { useState } from "react";
 
 /**
@@ -20,6 +19,10 @@ import { useState } from "react";
  *           Instead of onBlur, use watch() to monitor field values and call onChange only when they actually change.
 
 */
+
+const CustomStyles = {
+    popup_content: "flex flex-col align-center gap-3 p-2",
+}
 
 export interface SaveFormData extends CVMetaInfo {
     // For annotations
