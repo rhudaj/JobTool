@@ -1,9 +1,6 @@
 import { CVInfo } from "@/components/infoPad";
 import { create } from "zustand";
 
-const USE_BACKEND = process.env.NEXT_PUBLIC_USE_BACKEND === "1";
-const SAMPLES_PATH = "samples";
-
 // ------------------------------------------------------
 //                          STATE
 // ------------------------------------------------------
@@ -66,16 +63,11 @@ const save2backend = async (cv_info: CVInfo) => {
 };
 
 const fetchFromBackend = async (): Promise<CVInfo> => {
-    if (USE_BACKEND) {
-        const response = await fetch('/api/cv-info');
-        if (!response.ok) {
-            throw new Error('Failed to fetch CV info');
-        }
-        return response.json();
-    } else {
-        const response = await fetch(`${SAMPLES_PATH}/cv_info.json`);
-        return response.json();
+    const response = await fetch('/api/cv-info');
+    if (!response.ok) {
+        throw new Error('Failed to fetch CV info');
     }
+    return response.json();
 }
 
 export { useCvInfoStore };

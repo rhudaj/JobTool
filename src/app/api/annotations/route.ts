@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DB } from "@/lib/db";
+import { DB, connectDB } from "@/lib/database";
 import { NamedCV } from "@/lib/types";
-import { connectDB } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {

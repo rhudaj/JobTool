@@ -3,10 +3,6 @@ import { create } from 'zustand'
 import { produce } from 'immer' // simplify changing nested state
 import { isEqual } from "lodash";
 
-const USE_BACKEND = process.env.NEXT_PUBLIC_USE_BACKEND === "1";
-const SAMPLES_PATH = "samples";
-const CVS_PATH = `${SAMPLES_PATH}/CVs`;
-
 interface State {
     ncvs: NamedCV[]
     status: boolean
@@ -114,30 +110,11 @@ const useCvsStore = create<State & Actions>((set, get) => ({
 // ---------------------------------------------------------------
 
 const fetchFromBackend = async (): Promise<NamedCV[]> => {
-    if(USE_BACKEND) {
-        const response = await fetch('/api/cvs');
-        if (!response.ok) {
-            throw new Error('Failed to fetch CVs');
-        }
-        return response.json();
-    } else {
-        // Dynamically fetch all CV files from the samples directory
-        const filesResponse = await fetch('/api/samples/cvs');
-        if (!filesResponse.ok) {
-            throw new Error('Failed to fetch sample file list');
-        }
-        const { files } = await filesResponse.json();
-
-        if (!files || files.length === 0) {
-            return [];
-        }
-
-        return Promise.all(
-            files.map((file: string) =>
-                fetch(`${CVS_PATH}/${file}`).then((r) => r.json())
-            )
-        )
+    const response = await fetch('/api/cvs');
+    if (!response.ok) {
+        throw new Error('Failed to fetch CVs');
     }
+    return response.json();
 }
 
 const deleteFromBackend = async (name: string) => {
