@@ -13,6 +13,9 @@ public/*
 archive
 archive/*
 
+# Next build folder
+.next
+
 node_modules
 dist
 dist-ssr
