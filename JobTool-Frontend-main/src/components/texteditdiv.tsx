@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { joinClassNames } from "@/lib/utils";
+import React from "react";
+import { joinClassNames } from "../util/joinClassNames";
 
 /**
  * @param tv standard text || html string
@@ -19,8 +19,6 @@ function TextEditDiv(props: {
      * Enabled <= onDoubleClick
      * Disabled <= onBlur */
     const [isEditing, setIsEditing] = React.useState(false);
-    // Reference to the div element to prevent dangerouslySetInnerHTML from overriding user edits
-    const divRef = useRef<HTMLDivElement>(null);
 
     // prevent default paste behavior (which copies styles)
     const onPaste = (e: React.ClipboardEvent) => {
@@ -39,11 +37,10 @@ function TextEditDiv(props: {
     // When done editing
     const onBlur = (e: React.FocusEvent) => {
         setIsEditing(false);
-        const html_str = (e.target as HTMLElement).innerHTML;
-
-        // Only update if content actually changed to avoid unnecessary state updates
-        if (props.onUpdate && html_str !== props.tv) {
-            props.onUpdate(html_str);
+        const html_str = e.target.innerHTML;
+        // use the inner html, in order to copy along styles
+        if (props.onUpdate) {
+            props.onUpdate(html_str)
         }
 	};
 
@@ -54,17 +51,8 @@ function TextEditDiv(props: {
         isEditing ? "outline-none" : "hover:outline-dashed hover:outline-blue min-w-5"
     );
 
-    // Only set dangerouslySetInnerHTML when not editing and on first render
-    // This prevents React from overwriting the user's edits during re-renders
-    React.useEffect(() => {
-        if (!isEditing && divRef.current) {
-            divRef.current.innerHTML = props.tv;
-        }
-    }, [props.tv, isEditing]);
-
     return (
         <div
-            ref={divRef}
             title="text-edit-div"
             className={classNames}
             id={props.id}
@@ -72,6 +60,7 @@ function TextEditDiv(props: {
             onPaste={onPaste}
             onBlur={onBlur}
             onDoubleClick={()=>setIsEditing(true)}
+            dangerouslySetInnerHTML={{__html: props.tv}}
         />
     );
 }

@@ -1,9 +1,9 @@
 import { DropTargetMonitor, useDrop } from "react-dnd";
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Item, getBucketType } from "./types";
 import { DragItem } from "./BucketItem";
 import { BucketAction, BucketActions, bucketReducer } from "./useBucket";
-import { arrNullOrEmpty } from "@/lib/utils";
+import { arrNullOrEmpty } from "../../util";
 import { ControlsBox } from "../ControlBox";
 
 // Shows a gap between items when dragging over the bucket.
@@ -39,6 +39,9 @@ interface BucketItemContext {
     ) => void;
 }
 
+// TODO: `just_set` is hacky but neccessary
+let just_set = false;
+
 function ItemBucket<T>(props: {
     id?: string;
     items?: Item<T>[];
@@ -60,18 +63,14 @@ function ItemBucket<T>(props: {
         id: "",
         items: [],
     });
-    const justSetRef = useRef(false); // Use a ref instead of global variable to avoid race conditions
     const [hoveredGap, setHoveredGap] = React.useState<number | undefined>(
-        undefined
-    );
-    const [hoveredItemId, setHoveredItemId] = useState<string | undefined>(
         undefined
     );
     const bt = getBucketType(props.type); // will return default if !props.type
 
     // parent -> bucket
     useEffect(() => {
-        justSetRef.current = true;
+        just_set = true;
         bucketDispatch({
             type: BucketActions.SET,
             payload: {
@@ -83,8 +82,8 @@ function ItemBucket<T>(props: {
 
     // bucket -> parent
     useEffect(() => {
-        if (justSetRef.current) {
-            justSetRef.current = false;
+        if (just_set) {
+            just_set = false;
             return;
         }
         props.onUpdate?.(bucket.items.map((I) => I.value));
@@ -206,11 +205,7 @@ function ItemBucket<T>(props: {
     );
 
     // Render controls for each item
-    const renderControls = React.useCallback((item: Item<T>) => {
-        const isItemHovered = hoveredItemId === item.id;
-
-        if (!isItemHovered) return null;
-
+    const renderControls = React.useCallback((item_id: Item<T>) => {
         const controls = [
             {
                 id: "move",
@@ -224,7 +219,7 @@ function ItemBucket<T>(props: {
                 onClick: () =>
                     bucketDispatch({
                         type: BucketActions.REMOVE,
-                        payload: { id: item.id},
+                        payload: { id: item_id},
                     }),
             },
             {
@@ -234,7 +229,7 @@ function ItemBucket<T>(props: {
                 onClick: () =>
                     bucketDispatch({
                         type: BucketActions.ADD_BLANK,
-                        payload: { id: item.id, below: false },
+                        payload: { id: item_id, below: false },
                     }),
             },
             {
@@ -244,14 +239,14 @@ function ItemBucket<T>(props: {
                 onClick: () =>
                     bucketDispatch({
                         type: BucketActions.ADD_BLANK,
-                        payload: { id: item.id, below: true },
+                        payload: { id: item_id, below: true },
                     }),
             },
         ]
 
         return <ControlsBox placement="top" controls={controls} />;
 
-    }, [hoveredItemId, props.moveItemDisabled, props.deleteDisabled, props.addItemDisabled]);
+    }, [ props.moveItemDisabled, props.deleteDisabled, props.addItemDisabled ]);
 
     // -----------------RENDER-----------------
 
@@ -270,27 +265,22 @@ function ItemBucket<T>(props: {
                 {bucket.items?.map((item, index) => (
                     <div key={`bucket-${bucket.id}-item-${index}`}>
                         <DropGap isActive={ index === 0 && hoveredGap === prevGap(index) } />
-                        <div
-                            onMouseEnter={() => setHoveredItemId(item.id)}
-                            onMouseLeave={() => setHoveredItemId(undefined)}
+                        <DragItem
+                            item={item}
+                            dragProps={{
+                                type: props.type,
+                                canDrag: !props.moveItemDisabled,
+                            }}
+                            onHover={onItemHover}
                         >
-                            <DragItem
-                                item={item}
-                                dragProps={{
-                                    type: props.type,
-                                    canDrag: !props.moveItemDisabled,
-                                }}
-                                onHover={onItemHover}
-                            >
-                                {renderControls(item)}
-                                <bt.DisplayItem
-                                    obj={item.value}
-                                    onUpdate={(newObj: T) =>
-                                        props.onItemUpdate?.(newObj, index)
-                                    }
-                                />
-                            </DragItem>
-                        </div>
+                            {renderControls(item)}
+                            <bt.DisplayItem
+                                obj={item.value}
+                                onUpdate={(newObj: T) =>
+                                    props.onItemUpdate?.(newObj, index)
+                                }
+                            />
+                        </DragItem>
                         <DropGap isActive={hoveredGap === nextGap(index)} />
                     </div>
                 ))}
