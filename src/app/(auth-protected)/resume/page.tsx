@@ -7,14 +7,13 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import CVEditor from "@/components/CVEditor/cveditor";
 import * as Util from "@/lib/utils";
-import { Section, SubSection, SplitView, InfoPad, PrintablePage } from "@/components"
+import { SubSection, SplitView, InfoPad, PrintablePage } from "@/components"
 import { usePopup } from "@/hooks/popup";
 import { useCvsStore, save2backend as saveCv2backend } from "@/hooks/useCVs";
 import { useCvInfoStore } from "@/hooks/useCVInfo";
 import { useShallow } from 'zustand/react/shallow'
 import SavedCVsUI from "@/components/savedCVs";
-import { ImportForm, SaveForm, FindReplaceForm, StylesForm, SaveFormData, ExportForm, AnnotationForm } from "@/components/forms";
-import { CustomStyles } from "@/lib/styles";
+import { ImportForm, SaveForm, FindReplaceForm, StylesForm, SaveFormData, ExportForm } from "@/components/forms";
 import { AIEditPane } from "@/components/AIEditPain";
 
 // Next.js API routes instead of external backend
