@@ -16,28 +16,6 @@ import SavedCVsUI from "@/components/savedCVs";
 import { ImportForm, SaveForm, FindReplaceForm, StylesForm, SaveFormData, ExportForm } from "@/components/forms";
 import { AIEditPane } from "@/components/AIEditPain";
 
-// Next.js API routes instead of external backend
-const saveAnnotation2Backend = async (annotation: {
-    job: string,
-    ncv: NamedCV,
-}) => {
-    try {
-        const response = await fetch('/api/annotations', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(annotation)
-        });
-        if (!response.ok) {
-            throw new Error('Failed to save annotation');
-        }
-        console.log("Annotation saved successfully!");
-    } catch (error) {
-        console.error("Error saving annotation:", error);
-    }
-};
-
 export default function ResumeBuilderPage() {
     // ---------------- STATE ----------------
     const cvsState = useCvsStore();

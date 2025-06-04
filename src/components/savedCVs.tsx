@@ -4,11 +4,9 @@ import {
     PopoverPanel,
 } from "@headlessui/react";
 import { Field, Fieldset, Input, Label } from '@headlessui/react'
-import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { useShallow } from "zustand/react/shallow";
+import { useForm } from "react-hook-form"
 import { useCvsStore } from "@/hooks/useCVs";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { joinClassNames } from "@/lib/utils";
+import { useEffect, useMemo } from "react";
 import { useImmer } from "use-immer";
 import { NamedCV } from "@/lib/types";
 
@@ -20,7 +18,7 @@ const DEFAULT_GROUP = "other";
 
 interface File {
     name: string,
-    path: string,
+    path: string | undefined,
     isModified: boolean,
     isActive: boolean,
     idx: number, // set when building the tree
@@ -44,27 +42,29 @@ function FileTreeUI(props: {
     const tree: FileTree = useMemo(() => {
         const groups: FileGroups = {};
         props.files.forEach(F => {
-			// BASE CASE
-            if (F.path === "/") {
+			// BASE CASE - handle CVs without path or with root path
+            if (!F.path || F.path === "/" || F.path === "") {
                 (groups[DEFAULT_GROUP] as File[]) = (groups[DEFAULT_GROUP] as File[]) || [];
                 (groups[DEFAULT_GROUP] as File[]).push(F);
                 return;
             }
 			// RECURSIVE CASE
-            const [subGroups, lastPart] = [
-                F.path.split("/").slice(1, -1),
-                F.path.split("/").pop(),
-            ];
-            let cur: FileGroups = groups; // start at root
-            subGroups.forEach((part: string) => {
-                (cur[part] as FileGroups) = (cur[part] as FileGroups) || {}; // may(not) exist yet
-                cur = cur[part] as FileGroups;
-            });
-            // last part, insert the item
-            if (lastPart) {
-                (cur[lastPart] as File[]) = (cur[lastPart] as File[]) || [];
-                (cur[lastPart] as File[]).push(F);
+            const pathParts = F.path.split("/");
+            // For paths like "CVs/filename.json", we want to group by "CVs"
+            // Remove empty parts and the filename, keep only directory parts
+            const directoryParts = pathParts.slice(0, -1).filter(part => part !== "");
+
+            if (directoryParts.length === 0) {
+                // If no directory parts, put in default group
+                (groups[DEFAULT_GROUP] as File[]) = (groups[DEFAULT_GROUP] as File[]) || [];
+                (groups[DEFAULT_GROUP] as File[]).push(F);
+                return;
             }
+
+            // Use the last directory as the group name
+            const groupName = directoryParts[directoryParts.length - 1];
+            (groups[groupName] as File[]) = (groups[groupName] as File[]) || [];
+            (groups[groupName] as File[]).push(F);
         });
         return Object.entries(groups) as FileTree;
     }, [props.files]);

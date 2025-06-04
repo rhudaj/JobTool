@@ -47,31 +47,42 @@ export class FileSystemProvider implements DatabaseProvider {
   // -------------------------------------------------------------------------
 
   async all_cvs(): Promise<NamedCV[]> {
-    const cvsPath = path.join(this.basePath, "CVs");
-
-    // Read all JSON files in the CVs directory
-    const files = fs.readdirSync(cvsPath)
-      .filter(file => file.endsWith('.json'));
-
     const cvs: NamedCV[] = [];
 
-    for (const file of files) {
-      try {
-        const filePath = path.join(cvsPath, file);
-        const content = fs.readFileSync(filePath, 'utf-8');
-        const cv: NamedCV = JSON.parse(content);
+    // Read from both CVs and user_cvs directories
+    const directories = [
+      { path: path.join(this.basePath, "CVs"), prefix: "CVs" },
+      { path: path.join(this.basePath, "user_cvs"), prefix: "user_cvs" }
+    ];
 
-        // Ensure the CV has a name (use filename if not present)
-        if (!cv.name) {
-          cv.name = path.basename(file, '.json');
+    for (const dir of directories) {
+      // Skip if directory doesn't exist
+      if (!fs.existsSync(dir.path)) {
+        continue;
+      }
+
+      // Read all JSON files in the directory
+      const files = fs.readdirSync(dir.path)
+        .filter(file => file.endsWith('.json'));
+
+      for (const file of files) {
+        try {
+          const filePath = path.join(dir.path, file);
+          const content = fs.readFileSync(filePath, 'utf-8');
+          const cv: NamedCV = JSON.parse(content);
+
+          // Ensure the CV has a name (use filename if not present)
+          if (!cv.name) {
+            cv.name = path.basename(file, '.json');
+          }
+
+          // Set path for reference
+          cv.path = `${dir.prefix}/${file}`;
+
+          cvs.push(cv);
+        } catch (error) {
+          console.error(`Error reading CV file ${file}:`, error);
         }
-
-        // Set path for reference
-        cv.path = `CVs/${file}`;
-
-        cvs.push(cv);
-      } catch (error) {
-        console.error(`Error reading CV file ${file}:`, error);
       }
     }
 
@@ -87,6 +98,9 @@ export class FileSystemProvider implements DatabaseProvider {
     if (!fs.existsSync(userCvsPath)) {
       fs.mkdirSync(userCvsPath, { recursive: true });
     }
+
+    // Set path for reference (consistent with all_cvs behavior)
+    cv.path = `user_cvs/${cv.name}.json`;
 
     const filePath = path.join(userCvsPath, `${cv.name}.json`);
     fs.writeFileSync(filePath, JSON.stringify(cv, null, 2));
@@ -117,6 +131,14 @@ export class FileSystemProvider implements DatabaseProvider {
         fs.mkdirSync(userCvsPath, { recursive: true });
       }
       targetPath = path.join(userCvsPath, `${cv.name}.json`);
+      cv.path = `user_cvs/${cv.name}.json`;
+    } else {
+      // Update path based on where the file is located
+      if (targetPath.includes("user_cvs")) {
+        cv.path = `user_cvs/${cv.name}.json`;
+      } else {
+        cv.path = `CVs/${cv.name}.json`;
+      }
     }
 
     fs.writeFileSync(targetPath, JSON.stringify(cv, null, 2));
