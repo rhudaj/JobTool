@@ -28,9 +28,10 @@ const useCvInfoStore = create<State & Actions>((set, get) => ({
         .then(cv_info => {
             set({ cv_info: cv_info, status: true })
         })
-        .catch(msg => {
+        .catch(error => {
+            log(`fetch - error: ${error}`);
             set({ status: false })
-            alert(msg)
+            alert(error)
         })
     },
     set: (newData: CVInfo) => {

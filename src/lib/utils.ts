@@ -72,6 +72,8 @@ export const jsonFileExport = (
 /** save the object as .json file to the Downloads folder */
 export const downloadAsJson = (data: any) => {
 
+    console.log('downloading json')
+
     // get the modified cv:
     const jsonString = JSON.stringify(data);
 

@@ -155,23 +155,23 @@ const ExperienceUI: BucketItemComponent<Experience, {
 
 	const UI_elements = {
 		title:  (
-			<TextEditDiv className="font-bold" tv={data.title} onUpdate={val => handleUpdate('title', val)} />
+			<TextEditDiv key="title" className="font-bold" tv={data.title} onUpdate={val => handleUpdate('title', val)} />
 		),
 		role:  (
-			<TextEditDiv className="italic" tv={data.role || ""} onUpdate={(val: any) => handleUpdate('role', val)} />
+			<TextEditDiv key="role" className="italic" tv={data.role || ""} onUpdate={(val: any) => handleUpdate('role', val)} />
 		),
 		item_list: (
 			!data.item_list || data.item_list.length < 2 ? null :
-			<DelimitedList className="item-list" items={data.item_list} delimiter=", " onUpdate={(val: string[]) => handleUpdate('item_list', val)} />
+			<DelimitedList key="list" className="item-list" items={data.item_list} delimiter=", " onUpdate={(val: string[]) => handleUpdate('item_list', val)} />
 		),
 		date: (
-			<DateUI obj={data.date} onUpdate={(val: any) => handleUpdate('date', val)} />
+			<DateUI key="date" obj={data.date} onUpdate={(val: any) => handleUpdate('date', val)} />
 		),
 		location: (
-			<TextEditDiv className="italic" tv={data.location || ""} onUpdate={(val: any) => handleUpdate('location', val)}/>
+			<TextEditDiv key="location" className="italic" tv={data.location || ""} onUpdate={(val: any) => handleUpdate('location', val)}/>
 		),
 		link: (
-			data.link && data.link.icon && data.link.url ? <LinkUI {...data.link as Link}/> : null
+			data.link && data.link.icon && data.link.url ? <LinkUI key="link" {...data.link as Link}/> : null
 		),
 		bulletPoints: data.description.map((item: string, i: number)=>(
 			<li key={i} className="list-disc">
@@ -190,12 +190,27 @@ const ExperienceUI: BucketItemComponent<Experience, {
 	const head_rows = [
 		(
 			props.type === "project" ?
-				[ <Divided>{UI_elements.title}{UI_elements.item_list}</Divided>, UI_elements.link ] :
-				[ UI_elements.title, UI_elements.date ]
+				[
+					<Divided key="child1">
+						{UI_elements.title}
+						{UI_elements.item_list}
+					</Divided>,
+					UI_elements.link
+				] :
+				[
+					UI_elements.title,
+					UI_elements.date
+				]
 		),
 		(
 			props.type === "project" ? null :
-				[ <Divided>{UI_elements.role}{UI_elements.item_list}</Divided>, UI_elements.location ]
+				[
+					<Divided key="child1">
+						{UI_elements.role}
+						{UI_elements.item_list}
+					</Divided>,
+					UI_elements.location
+				]
 		)
 	]
 

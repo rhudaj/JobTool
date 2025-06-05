@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect } from "react";
 import { NamedCV } from "@/lib/types";
@@ -7,21 +7,31 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import CVEditor from "@/components/CVEditor/cveditor";
 import * as Util from "@/lib/utils";
-import { SubSection, SplitView, InfoPad, PrintablePage } from "@/components"
+import { SubSection, SplitView, InfoPad, PrintablePage } from "@/components";
 import { usePopup } from "@/hooks/popup";
 import { useCvsStore, save2backend as saveCv2backend } from "@/hooks/useCVs";
 import { useCvInfoStore } from "@/hooks/useCVInfo";
-import { useShallow } from 'zustand/react/shallow'
+import { useShallow } from "zustand/react/shallow";
 import SavedCVsUI from "@/components/savedCVs";
-import { ImportForm, SaveForm, FindReplaceForm, StylesForm, SaveFormData, ExportForm } from "@/components/forms";
+import {
+    ImportForm,
+    SaveForm,
+    FindReplaceForm,
+    StylesForm,
+    SaveFormData,
+    ExportForm,
+} from "@/components/forms";
 import { AIEditPane } from "@/components/AIEditPain";
 
 export default function ResumeBuilderPage() {
+    const ENABLE_AI_EDIT_PANE = false;
+    const ENABLE_CV_INFO = false;
+
     // ---------------- STATE ----------------
     const cvsState = useCvsStore();
-    const cur_cv = useCvsStore(useShallow(s => s.ncvs[s.curIdx]));
-    const curIsModified = useCvsStore(s => s.trackMods[s.curIdx])
-    const cvInfoState = useCvInfoStore();
+    const cur_cv = useCvsStore(useShallow((s) => s.ncvs[s.curIdx]));
+    const curIsModified = useCvsStore((s) => s.trackMods[s.curIdx]);
+    const cvInfoState = useCvInfoStore(); // Fetch data on mount
 
     // Fetch data on mount
     useEffect(() => {
@@ -31,70 +41,90 @@ export default function ResumeBuilderPage() {
 
     const saveAsPDF = useComponent2PDF("cv-page");
 
-    const CONTROLS = {
-        popups: {
-            onPDFClicked: () => {
-                saveAsPDF(cur_cv?.name);
-                exportPopup.close();
-            },
+    // Handler functions with fresh state access
+    const handlePDFClicked = () => {
+        saveAsPDF(cur_cv?.name);
+        exportPopup.close();
+    };
 
-            onJsonClicked: () => {
-                if (cur_cv) Util.downloadAsJson(cur_cv);
-                exportPopup.close();
-            },
+    const handleJsonClicked = () => {
+        // Get fresh data directly from store (otherwise its stale)
+        const store = useCvsStore.getState();
+        const currentCv = store.ncvs[store.curIdx];
 
-            onSaveFormSubmit: (formData: SaveFormData) => {
-                console.log("onSaveFormSubmit: ", formData);
-                const overwrite = formData.name === cur_cv.name;
-                saveCv2backend({
-                    ...formData,
-                    data: cur_cv.data,
-                }, overwrite)
-                savePopup.close();
-            },
+        if (currentCv && currentCv.data) {
+            Util.downloadAsJson(currentCv);
+        }
+        exportPopup.close();
+    };
 
-            onImportJsonFileChange: (
-                e: React.ChangeEvent<HTMLInputElement>
-            ) => {
-                Util.jsonFileImport(e, cvsState.add);
-                importPopup.close();
+    const handleSaveFormSubmit = (formData: SaveFormData) => {
+        console.log("onSaveFormSubmit: ", formData);
+        const overwrite = formData.name === cur_cv.name;
+        saveCv2backend(
+            {
+                ...formData,
+                data: cur_cv.data,
             },
+            overwrite
+        );
+        savePopup.close();
+    };
 
-            onPasteJson: (json_str: string, name: string) => {
-                const cv = JSON.parse(json_str);
-                cvsState.add(cv);
-            },
+    const handleImportJsonFileChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        Util.jsonFileImport(e, cvsState.add);
+        importPopup.close();
+    };
 
-            onFindReplaceSubmit: (data: { find: string, replace: string }) => {
-                cvsState.findReplace(data.find, data.replace);
-                findReplacePopup.close();
-            },
+    const handlePasteJson = (json_str: string, name: string) => {
+        const cv = JSON.parse(json_str);
+        cvsState.add(cv);
+    };
 
-            onStyleFormSubmit: () => {
-                // StylesForm doesn't take any parameters - it handles its own state
-                stylesPopup.close();
-            },
-        },
+    const handleFindReplaceSubmit = (data: {
+        find: string;
+        replace: string;
+    }) => {
+        cvsState.findReplace(data.find, data.replace);
+        findReplacePopup.close();
+    };
+
+    const handleStyleFormSubmit = () => {
+        // StylesForm doesn't take any parameters - it handles its own state
+        stylesPopup.close();
     };
 
     // POPUPS - Using new simplified API
-    const savePopup = usePopup("Save",
+    const savePopup = usePopup(
+        "Save",
         <SaveForm
-            cvInfo={cur_cv ? { name: cur_cv.name, path: cur_cv.path, tags: cur_cv.tags } : { name: "", path: "", tags: [] }}
-            onSave={CONTROLS.popups.onSaveFormSubmit}
+            cvInfo={
+                cur_cv
+                    ? {
+                          name: cur_cv.name,
+                          path: cur_cv.path,
+                          tags: cur_cv.tags,
+                      }
+                    : { name: "", path: "", tags: [] }
+            }
+            onSave={handleSaveFormSubmit}
         />,
         { size: "default" }
     );
 
-    const exportPopup = usePopup("Export",
+    const exportPopup = usePopup(
+        "Export",
         <ExportForm
-            onPDFClicked={CONTROLS.popups.onPDFClicked}
-            onJsonClicked={CONTROLS.popups.onJsonClicked}
+            onPDFClicked={handlePDFClicked}
+            onJsonClicked={handleJsonClicked}
         />,
         { size: "default" }
     );
 
-    const importPopup = usePopup("Import",
+    const importPopup = usePopup(
+        "Import",
         <ImportForm
             cb={(ncv: NamedCV) => {
                 cvsState.add(ncv);
@@ -104,26 +134,26 @@ export default function ResumeBuilderPage() {
         { size: "lg" }
     );
 
-    const findReplacePopup = usePopup("Find & Replace",
-        <FindReplaceForm cb={CONTROLS.popups.onFindReplaceSubmit} />,
+    const findReplacePopup = usePopup(
+        "Find & Replace",
+        <FindReplaceForm cb={handleFindReplaceSubmit} />,
         { size: "default" }
     );
 
-    const stylesPopup = usePopup("Styles",
-        <StylesForm />,
-        { size: "lg" }
-    );
+    const stylesPopup = usePopup("Styles", <StylesForm />, { size: "lg" });
 
-    if (!cvsState.status || !cvInfoState.status) return null;
+    // Only block rendering if we truly have no data
+    if (!cvsState.ncvs?.length && !cvsState.status) {
+        return <div className="p-6">Loading CVs...</div>;
+    }
 
     return (
         <div className="flex flex-col h-full p-6">
-            <h1 className="text-3xl font-bold mb-6">Resume Builder</h1>
-
             {/* ------------ VIEW SAVED CVs ------------ */}
             <SubSection id="named-cvs" heading="Resumes">
                 {importPopup.createTriggerButton("Import", undefined, {
-                    className: "px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 mb-2"
+                    className:
+                        "px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 mb-2",
                 })}
                 <SavedCVsUI />
             </SubSection>
@@ -136,7 +166,9 @@ export default function ResumeBuilderPage() {
                         <span>Name:</span>
                         {cur_cv?.name}
                         {cvsState.trackMods[cvsState.curIdx] && (
-                            <span className="text-gray-500 ml-2">{"(modified)"}</span>
+                            <span className="text-gray-500 ml-2">
+                                {"(modified)"}
+                            </span>
                         )}
                     </div>
                     {/* TAGS */}
@@ -145,22 +177,33 @@ export default function ResumeBuilderPage() {
                         {cur_cv?.tags?.join(", ")}
                     </div>
                     {/* BUTTONS */}
-                    <div title="cv-buttons" className="max-w-33% flex gap-2 flex-wrap">
+                    <div
+                        title="cv-buttons"
+                        className="max-w-33% flex gap-2 flex-wrap"
+                    >
                         {savePopup.createTriggerButton("Save", undefined, {
                             disabled: !curIsModified,
-                            className: "px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className:
+                                "px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed",
                         })}
                         {exportPopup.createTriggerButton("Export", undefined, {
                             disabled: !cur_cv,
-                            className: "px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className:
+                                "px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed",
                         })}
-                        {findReplacePopup.createTriggerButton("Find & Replace", undefined, {
-                            disabled: !cur_cv,
-                            className: "px-3 py-1 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                        })}
+                        {findReplacePopup.createTriggerButton(
+                            "Find & Replace",
+                            undefined,
+                            {
+                                disabled: !cur_cv,
+                                className:
+                                    "px-3 py-1 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed",
+                            }
+                        )}
                         {stylesPopup.createTriggerButton("Styles", undefined, {
                             disabled: !cur_cv,
-                            className: "px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className:
+                                "px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed",
                         })}
                     </div>
                 </div>
@@ -169,17 +212,37 @@ export default function ResumeBuilderPage() {
             {/* ------------ DRAG/DROP ELEMENTS ------------ */}
             <DndProvider backend={HTML5Backend}>
                 {/* ------------ AI EDIT - PANE ------------ */}
-                <SubSection id="ai-edit">
-                    <AIEditPane/>
-                </SubSection>
+                {ENABLE_AI_EDIT_PANE && (
+                    <SubSection id="ai-edit">
+                        <AIEditPane />
+                    </SubSection>
+                )}
 
                 {/* ------------ CV EDITOR ------------ */}
-                <SplitView>
-                    <PrintablePage page_id="cv-page">
-                        <CVEditor cv={cur_cv.data} onUpdate={cvsState.update} />
-                    </PrintablePage>
-                    <InfoPad mode="ALL-CVS" info={cvInfoState.cv_info} onUpdate={cvInfoState.set} />
-                </SplitView>
+                {ENABLE_CV_INFO && cvInfoState.status ? (
+                    <SplitView>
+                        <PrintablePage page_id="cv-page">
+                            <CVEditor
+                                cv={cur_cv?.data}
+                                onUpdate={cvsState.update}
+                            />
+                        </PrintablePage>
+                        <InfoPad
+                            mode="ALL-CVS"
+                            info={cvInfoState.cv_info}
+                            onUpdate={cvInfoState.set}
+                        />
+                    </SplitView>
+                ) : (
+                    <div className="py-10 px-[20%]  w-full bg-gray-600">
+                        <PrintablePage page_id="cv-page">
+                            <CVEditor
+                                cv={cur_cv?.data}
+                                onUpdate={cvsState.update}
+                            />
+                        </PrintablePage>
+                    </div>
+                )}
             </DndProvider>
 
             {/* Auto-rendering popups */}

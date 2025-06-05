@@ -43,6 +43,7 @@ function TextEditDiv(props: {
 
         // Only update if content actually changed to avoid unnecessary state updates
         if (props.onUpdate && html_str !== props.tv) {
+            console.log("Updated TextEditDiv!")
             props.onUpdate(html_str);
         }
 	};

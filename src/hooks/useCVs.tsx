@@ -34,7 +34,8 @@ const useCvsStore = create<State & Actions>((set, get) => ({
         .then((cvList) => {
             set({ ncvs: cvList, curIdx: 0, status: true });
         })
-        .catch(() => {
+        .catch((error) => {
+            console.error("[cvs state] Fetch failed:", error);
             set({ status: false });
             alert("Failed to fetch CVs")
         })
@@ -113,9 +114,10 @@ const useCvsStore = create<State & Actions>((set, get) => ({
 const fetchFromBackend = async (): Promise<NamedCV[]> => {
     const response = await fetch('/api/cvs');
     if (!response.ok) {
-        throw new Error('Failed to fetch CVs');
+        throw new Error(`Failed to fetch CVs: ${response.status} ${response.statusText}`);
     }
-    return response.json();
+    const data = await response.json();
+    return data;
 }
 
 const deleteFromBackend = async (name: string) => {
