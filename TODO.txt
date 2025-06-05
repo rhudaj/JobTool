@@ -12,8 +12,6 @@
     - bullet points
     - tech list
 
-* Enable export to json
-
 * Save state on reload/crash
 
 * Support 2 page resumes
