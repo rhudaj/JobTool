@@ -1,5 +1,3 @@
-* Bucket actions are not updating state correctly – try draggin and dropping bucket items.
-
 * Seperate who/where/what info from content
 
     e.g. For a Work Experience

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DB, connectDB } from "@/lib/database";
+import { DB, connectDB } from "@/lib/db";
 import { NamedCV } from "@/lib/types";
 
 // PUT /api/cvs/[name] - Update existing CV
