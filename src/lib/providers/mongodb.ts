@@ -1,7 +1,8 @@
 // MongoDB Provider Implementation
 import * as mongo from "mongodb";
-import { NamedCV } from "@/lib/types";
+import { NamedCV, NamedCVContent, CVCore } from "@/lib/types";
 import { DatabaseProvider, CVInfo, Annotation } from "./types";
+import { mergeNamedContentWithCore, extractContentFromCV } from "../cv-converter";
 
 export class MongoDBProvider implements DatabaseProvider {
   private db: mongo.Db;
@@ -9,6 +10,7 @@ export class MongoDBProvider implements DatabaseProvider {
 
   private readonly cols = {
     cv: "cvs",
+    cv_core: "cv_core",
     cv_info: "cv_info",
     annotations: "annotations"
   };
@@ -49,38 +51,109 @@ export class MongoDBProvider implements DatabaseProvider {
   }
 
   // -------------------------------------------------------------------------
-  //                                  CV operations
+  //                                  CV operations (Legacy - merged with core)
   // -------------------------------------------------------------------------
 
   async all_cvs(): Promise<NamedCV[]> {
-    const results = await this.db
-      .collection(this.cols.cv)
-      .find()
-      .toArray();
+    // Get content and core, then merge them
+    const contents = await this.all_cv_contents();
+    const core = await this.cv_core();
 
-    // Convert MongoDB documents to NamedCV type by removing _id
-    return results.map(doc => {
-      const { _id, ...cv } = doc;
-      return cv as NamedCV;
-    });
+    return contents.map(content => mergeNamedContentWithCore(content, core));
   }
 
   async save_new_cv(cv: NamedCV): Promise<void> {
-    await this.db
-      .collection(this.cols.cv)
-      .insertOne(cv);
+    // Extract content from full CV and save as content
+    const content: NamedCVContent = {
+      name: cv.name,
+      path: cv.path,
+      tags: cv.tags,
+      data: extractContentFromCV(cv.data)
+    };
+
+    await this.save_new_cv_content(content);
   }
 
   async update_cv(cv: NamedCV, name: string): Promise<void> {
-    await this.db
-      .collection(this.cols.cv)
-      .updateOne({ name }, { $set: cv });
+    // Extract content from full CV and save as content
+    const content: NamedCVContent = {
+      name: cv.name,
+      path: cv.path,
+      tags: cv.tags,
+      data: extractContentFromCV(cv.data)
+    };
+
+    await this.update_cv_content(content, name);
   }
 
   async delete_cv(name: string): Promise<void> {
     await this.db
       .collection(this.cols.cv)
       .deleteOne({ name });
+  }
+
+  // -------------------------------------------------------------------------
+  //                                  CV Content operations (New structure)
+  // -------------------------------------------------------------------------
+
+  async all_cv_contents(): Promise<NamedCVContent[]> {
+    const results = await this.db
+      .collection(this.cols.cv)
+      .find()
+      .toArray();
+
+    // Convert MongoDB documents to NamedCVContent type by removing _id
+    return results.map(doc => {
+      const { _id, ...content } = doc;
+
+      // Check if it's old format (has header_info) or new format
+      if (content.data && content.data.header_info) {
+        // Old format - convert to new format
+        return {
+          name: content.name,
+          path: content.path,
+          tags: content.tags,
+          data: extractContentFromCV(content.data)
+        } as NamedCVContent;
+      } else {
+        // New format - use as-is
+        return content as NamedCVContent;
+      }
+    });
+  }
+
+  async save_new_cv_content(cv: NamedCVContent): Promise<void> {
+    await this.db
+      .collection(this.cols.cv)
+      .insertOne(cv);
+  }
+
+  async update_cv_content(cv: NamedCVContent, name: string): Promise<void> {
+    await this.db
+      .collection(this.cols.cv)
+      .updateOne({ name }, { $set: cv });
+  }
+
+  // -------------------------------------------------------------------------
+  //                                  CV Core operations
+  // -------------------------------------------------------------------------
+
+  async cv_core(): Promise<CVCore> {
+    // Get the one and only doc
+    const r = await this.db
+      .collection(this.cols.cv_core)
+      .findOne();
+
+    if (!r) throw new Error("Error getting cv_core from the database");
+    delete r._id; // Don't need this field (messes up the frontend)
+    return r as unknown as CVCore;
+  }
+
+  async save_cv_core(core: CVCore): Promise<void> {
+    // Update the one and only doc
+    await this.db
+      .collection(this.cols.cv_core)
+      .updateOne({}, { $set: core }, { upsert: true });
   }
 
   // -------------------------------------------------------------------------

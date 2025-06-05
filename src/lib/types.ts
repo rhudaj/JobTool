@@ -111,6 +111,61 @@ export interface Link {
 }
 
 /* ---------------------------------------------------------------
+                        NEW CV STRUCTURE (with cv_core)
+--------------------------------------------------------------- */
+
+// New CV content structure that references cv_core by ID
+export interface CVContent {
+    sections: CVContentSection[]
+}
+
+export interface CVContentSection {
+    name: string;
+    bucket_type?: string;
+    items: CVContentItem[];
+}
+
+export type CVContentItem = CVContentSummary | CVContentReference
+
+export interface CVContentSummary {
+    summary: string;
+    languages: string[];
+    technologies: string[];
+}
+
+export interface CVContentReference {
+    id: string;
+    description?: string[];
+    item_list?: string[];
+}
+
+// New NamedCV structure that uses CVContent
+export type NamedCVContent = CVMetaInfo & {
+    data: CVContent;
+};
+
+// CV Core structure (stored separately)
+export interface CVCore {
+    full_name: string;
+    contact_links: Link[];
+    sections: CVCoreSection[];
+}
+
+export interface CVCoreSection {
+    id: string;
+    items: CVCoreItem[];
+}
+
+export interface CVCoreItem {
+    id: string;
+    title?: string;
+    role?: string;
+    location?: string;
+    date?: DateRange;
+    link?: Link;
+}
+
+/* ---------------------------------------------------------------
                         UNUSED (keeping for compatibility)
 --------------------------------------------------------------- */
 

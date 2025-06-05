@@ -1,17 +1,3 @@
-* Seperate who/where/what info from content
-
-    e.g. For a Work Experience
-
-    INFO WE CANT CHANGE:
-    - Company Name
-    - Location
-    - Date Range
-    - Position Title
-
-    INFO WE CAN CHANGE:
-    - bullet points
-    - tech list
-
 * Save state on reload/crash
 
 * Support 2 page resumes

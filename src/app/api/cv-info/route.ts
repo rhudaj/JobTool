@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DB, connectDB } from "@/lib/database";
+import { DB, connectDB } from "@/lib/db";
 
 // GET /api/cv-info - Get CV info
 export async function GET() {
