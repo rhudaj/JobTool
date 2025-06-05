@@ -52,8 +52,13 @@ const actionHandlers: ActionMap = {
     },
     ADD_BLANK: (D, payload) => {
         const { id, below } = payload;
-        const index2add = getIdx(id, D.items) + (below ? 1 : 0);
-        D.items.splice(index2add, 0, emptyObject(D.items[0]));    // deep copy
+        const idx = getIdx(id, D.items);
+        if (idx !== -1) {
+            const index2add = idx + (below ? 1 : 0);
+            D.items.splice(index2add, 0, emptyObject(D.items[0]));    // deep copy
+        } else {
+            console.warn(`ADD_BLANK: Item with id "${id}" not found in bucket`);
+        }
     },
     MOVE: (D, payload) => {
         const { indexBefore, indexAfter } = payload;
@@ -62,11 +67,21 @@ const actionHandlers: ActionMap = {
     },
     REMOVE: (D, payload) => {
         const { id } = payload;
-        D.items.splice(getIdx(id, D.items), 1);
+        const idx = getIdx(id, D.items);
+        if (idx !== -1) {
+            D.items.splice(idx, 1);
+        } else {
+            console.warn(`REMOVE: Item with id "${id}" not found in bucket`);
+        }
     },
     CHANGE: (D, payload) => {
         const { id, newValue } = payload;
-        D.items[getIdx(id, D.items)].value = newValue;
+        const idx = getIdx(id, D.items);
+        if (idx !== -1) {
+            D.items[idx].value = newValue;
+        } else {
+            console.warn(`CHANGE: Item with id "${id}" not found in bucket`);
+        }
     },
 }
 
