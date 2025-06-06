@@ -5,10 +5,11 @@ import {
 } from "@headlessui/react";
 import { Field, Fieldset, Input, Label } from '@headlessui/react'
 import { useForm } from "react-hook-form"
-import { useCvsStore } from "@/hooks/useCVs";
+import { useCvsMetadataStore } from "@/hooks/useCvsMetadata";
+import { useCurrentCvStore } from "@/hooks/useCurrentCv";
 import { useEffect, useMemo } from "react";
 import { useImmer } from "use-immer";
-import { NamedCV } from "@/lib/types";
+import { CVMetaInfo } from "@/lib/types";
 
 const DEFAULT_GROUP = "other";
 
@@ -19,9 +20,8 @@ const DEFAULT_GROUP = "other";
 interface File {
     name: string,
     path: string | undefined,
-    isModified: boolean,
     isActive: boolean,
-    idx: number, // set when building the tree
+    metadata: CVMetaInfo
 }
 
 // Group -> list of files
@@ -30,11 +30,11 @@ type FileTree = [ string, File[] ][]
 
 /**
  * Displays the list of saved CVs.
- * And allows the user to select one (change state.curIdx)
+ * And allows the user to select one to load into the current CV store
  */
 function FileTreeUI(props: {
     files: File[]
-    onFileSelect: (file_idx: number) => void
+    onFileSelect: (fileName: string) => void
 }) {
 
     // ----------------- STATE -----------------
@@ -82,7 +82,7 @@ function FileTreeUI(props: {
                     <PopoverPanel className="pl-4">
                         {file_list.map(file =>
                             <FileUI
-                                key={`item-${file.idx}-${file.name}`}
+                                key={file.name}
                                 file={file}
                                 onClick={props.onFileSelect}
                             />
@@ -96,16 +96,16 @@ function FileTreeUI(props: {
 
 function FileUI(props: {
 	file: File
-	onClick: (idx: number) => void,
+	onClick: (fileName: string) => void,
 }) {
 	return (
 		<div
 			className="w-max whitespace-nowrap p-2 hover:scale-105"
             style={{
                 fontWeight: props.file.isActive ? "bold" : "",
-                backgroundColor: props.file.isModified ? "red 300" : ""
+                backgroundColor: props.file.isActive ? "#3b82f6" : ""
             }}
-			onClick={()=>props.onClick(props.file.idx)}
+			onClick={()=>props.onClick(props.file.name)}
 		>
 			{props.file.name}
 		</div>
@@ -202,7 +202,8 @@ export default function SavedCVsUI() {
 
     // ------------------------ STATE ------------------------
 
-    const cvsState = useCvsStore();
+    const metadataState = useCvsMetadataStore();
+    const currentCvState = useCurrentCvStore();
     const [allFiles, setAllFiles] = useImmer<File[]>([]);
     const [filteredFiles, setFilteredFiles] = useImmer<File[]>([]);
     const [filter, setFilter] = useImmer<FilterCVParams>({
@@ -211,52 +212,47 @@ export default function SavedCVsUI() {
         pattern: "",
     });
 
-    // at the start, its all files
-    useEffect(()=>{
+    // Initialize files from metadata
+    useEffect(() => {
         setAllFiles(
-            cvsState.ncvs.map((ncv: NamedCV, i: number) => ({
-                idx: i,
-                name: ncv.name,
-                path: ncv.path,
-                isModified: cvsState.trackMods[i],
-                isActive: i === cvsState.curIdx
+            metadataState.metadata.map((metadata: CVMetaInfo) => ({
+                name: metadata.name,
+                path: metadata.path,
+                isActive: currentCvState.cv?.name === metadata.name,
+                metadata
             }))
         )
-    }, [cvsState.ncvs]);
+    }, [metadataState.metadata, currentCvState.cv?.name]);
 
-    useEffect(()=>{
+    useEffect(() => {
         setFilteredFiles(allFiles);
     }, [allFiles])
 
-    useEffect(()=>{
+    useEffect(() => {
         if(filter === null) return; // just mounted
         console.log('Filter changed: ', filter)
         setFilteredFiles(
             allFiles.filter(F => {
-                const ncv = cvsState.ncvs[F.idx];
                 return (
                     !filter.name ||
                     F.name.toLowerCase().includes(filter.name.toLowerCase())
                 ) &&
                 (
-                    !filter.pattern ||
-                    JSON.stringify(ncv.data).match(filter.pattern)
-                ) &&
-                (
                     !filter.tags ||
-                    filter.tags.every(tag => ncv.tags?.includes(tag))
+                    filter.tags.every(tag => F.metadata.tags?.includes(tag))
                 )
+                // Note: We can't filter by pattern anymore since we don't have CV data
             })
         )
     }, [filter])
 
-    useEffect(()=>{
-        console.log(`Filtered files, ${cvsState.ncvs.length} --> ${filteredFiles.length}`);
+    useEffect(() => {
+        console.log(`Filtered files, ${metadataState.metadata.length} --> ${filteredFiles.length}`);
     }, [filteredFiles])
 
-    const onCvSelected = (idx: number) => {
-        if (idx === cvsState.curIdx) return; // only update if diff
-        cvsState.setCur(idx);
+    const onCvSelected = (fileName: string) => {
+        if (fileName === currentCvState.cv?.name) return; // only update if diff
+        currentCvState.loadCv(fileName);
     };
 
     return (

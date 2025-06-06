@@ -62,9 +62,9 @@ export const SaveForm = (props: {
             onSubmit={handleSubmit(props.onSave)}
         >
             {/* FIELD #1 -- NAME */}
-            <label>File Name:</label>
+            <label>Name:</label>
             <div>
-                <input name="file-name" type="text" {...register("name")} />
+                <input name="file-name" type="text" {...register("name")}/>
                 <p>{errors.name?.message}</p>
             </div>
 

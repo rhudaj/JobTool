@@ -9,9 +9,9 @@ import CVEditor from "@/components/CVEditor/cveditor";
 import * as Util from "@/lib/utils";
 import { SubSection, SplitView, PrintablePage, InfoPad } from "@/components";
 import { usePopup } from "@/hooks/popup";
-import { useCvsStore, save2backend as saveCv2backend } from "@/hooks/useCVs";
+import { useCvsMetadataStore } from "@/hooks/useCvsMetadata";
+import { useCurrentCvStore } from "@/hooks/useCurrentCv";
 import { useCvInfoStore } from "@/hooks/useCVInfo";
-import { useShallow } from "zustand/react/shallow";
 import SavedCVsUI from "@/components/CVEditor/savedCVs";
 import {
     ImportForm,
@@ -26,18 +26,16 @@ import { CustomTabView } from "@/components/ui/customTabView";
 
 export default function ResumeBuilderPage() {
     const ENABLE_AI_EDIT_PANE = false;
-    const ENABLE_CV_INFO = false;
 
     // ---------------- STATE ----------------
-    const cvsState = useCvsStore();
-    const cur_cv = useCvsStore(useShallow((s) => s.ncvs[s.curIdx]));
-    const curIsModified = useCvsStore((s) => s.trackMods[s.curIdx]);
+    const metadataStore = useCvsMetadataStore();
+    const currentCvStore = useCurrentCvStore();
     const cvInfoState = useCvInfoStore(); // Fetch data on mount
     const [editModeEnabled, setEditModeEnabled] = useState(false);
 
-    // Fetch data on mount
+    // Fetch metadata on mount
     useEffect(() => {
-        cvsState.fetch();
+        metadataStore.fetch();
         cvInfoState.fetch();
     }, []);
 
@@ -45,51 +43,52 @@ export default function ResumeBuilderPage() {
 
     // Handler functions with fresh state access
     const handlePDFClicked = () => {
-        saveAsPDF(cur_cv?.name);
+        saveAsPDF(currentCvStore.cv?.name);
         exportPopup.close();
     };
 
     const handleJsonClicked = () => {
-        // Get fresh data directly from store (otherwise its stale)
-        const store = useCvsStore.getState();
-        const currentCv = store.ncvs[store.curIdx];
-
-        if (currentCv && currentCv.data) {
-            Util.downloadAsJson(currentCv);
+        if (currentCvStore.cv && currentCvStore.cv.data) {
+            Util.downloadAsJson(currentCvStore.cv);
         }
         exportPopup.close();
     };
 
     const handleSaveFormSubmit = (formData: SaveFormData) => {
         console.log("onSaveFormSubmit: ", formData);
-        const overwrite = formData.name === cur_cv.name;
-        saveCv2backend(
-            {
-                ...formData,
-                data: cur_cv.data,
-            },
-            overwrite
-        );
+        const overwrite = formData.name === currentCvStore.cv?.name;
+
+        if (overwrite) {
+            currentCvStore.saveCv();
+        } else {
+            currentCvStore.saveCvAs(formData);
+        }
         savePopup.close();
     };
 
     const handleImportJsonFileChange = (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
-        Util.jsonFileImport(e, cvsState.add);
+        Util.jsonFileImport(e, (ncv: NamedCV) => {
+            // We would need to save the imported CV first, then load it
+            // For now, let's just alert about this functionality
+            alert("Import functionality needs to be integrated with the new backend API");
+            metadataStore.refresh(); // Refresh metadata after import
+        });
         importPopup.close();
     };
 
     const handlePasteJson = (json_str: string, name: string) => {
-        const cv = JSON.parse(json_str);
-        cvsState.add(cv);
+        // Similar issue - we need to save the CV first
+        alert("Paste functionality needs to be integrated with the new backend API");
+        metadataStore.refresh(); // Refresh metadata
     };
 
     const handleFindReplaceSubmit = (data: {
         find: string;
         replace: string;
     }) => {
-        cvsState.findReplace(data.find, data.replace);
+        currentCvStore.findReplace(data.find, data.replace);
     };
 
     const handleStyleFormSubmit = () => {
@@ -102,22 +101,25 @@ export default function ResumeBuilderPage() {
     };
 
     // POPUPS - Using new simplified API (only for Save, Export, and Import)
-    const savePopup = usePopup(
-        "Save",
-        <SaveForm
-            cvInfo={
-                cur_cv
-                    ? {
-                          name: cur_cv.name,
-                          path: cur_cv.path,
-                          tags: cur_cv.tags,
-                      }
-                    : { name: "", path: "", tags: [] }
-            }
-            onSave={handleSaveFormSubmit}
-        />,
-        { size: "default" }
-    );
+    const savePopup = usePopup("Save", null, { size: "default" });
+
+    // Create SaveForm content dynamically when popup opens
+    const openSavePopup = () => {
+        const cvInfo = currentCvStore.cv
+            ? {
+                  name: currentCvStore.cv.name,
+                  path: currentCvStore.cv.path || "/",
+                  tags: currentCvStore.cv.tags || [],
+              }
+            : { name: "", path: "/", tags: [] };
+
+        savePopup.open(
+            <SaveForm
+                cvInfo={cvInfo}
+                onSave={handleSaveFormSubmit}
+            />
+        );
+    };
 
     const exportPopup = usePopup(
         "Export",
@@ -132,7 +134,8 @@ export default function ResumeBuilderPage() {
         "Import",
         <ImportForm
             cb={(ncv: NamedCV) => {
-                cvsState.add(ncv);
+                // TODO: Integrate with new backend API
+                alert("Import functionality needs to be updated for new architecture");
                 importPopup.close();
             }}
         />,
@@ -140,7 +143,7 @@ export default function ResumeBuilderPage() {
     );
 
     // Only block rendering if we truly have no data
-    if (!cvsState.ncvs?.length && !cvsState.status) {
+    if (!metadataStore.status && metadataStore.metadata.length === 0) {
         return <div className="p-6">Loading CVs...</div>;
     }
 
@@ -186,8 +189,8 @@ export default function ResumeBuilderPage() {
                     {/* FILE NAME */}
                     <div>
                         <span>Name:</span>
-                        {cur_cv?.name}
-                        {cvsState.trackMods[cvsState.curIdx] && (
+                        {currentCvStore.cv?.name}
+                        {currentCvStore.isModified && (
                             <span className="text-gray-500 ml-2">
                                 {"(modified)"}
                             </span>
@@ -196,26 +199,28 @@ export default function ResumeBuilderPage() {
                     {/* TAGS */}
                     <div>
                         <span className="text-gray-600">Tags:</span>
-                        {cur_cv?.tags?.join(", ")}
+                        {currentCvStore.cv?.tags?.join(", ")}
                     </div>
                     {/* BUTTONS */}
                     <div
                         title="cv-buttons"
                         className="max-w-33% flex gap-2 flex-wrap"
                     >
-                        {savePopup.createTriggerButton("Save", undefined, {
-                            disabled: !curIsModified,
-                            className:
-                                "px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed",
-                        })}
+                        <button
+                            onClick={openSavePopup}
+                            disabled={!currentCvStore.isModified}
+                            className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Save
+                        </button>
                         {exportPopup.createTriggerButton("Export", undefined, {
-                            disabled: !cur_cv,
+                            disabled: !currentCvStore.cv,
                             className:
                                 "px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed",
                         })}
                         <button
                             onClick={handleEditModeToggle}
-                            disabled={!cur_cv}
+                            disabled={!currentCvStore.cv}
                             className={`px-3 py-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed ${
                                 editModeEnabled
                                     ? "bg-blue-700 text-white"
@@ -243,8 +248,8 @@ export default function ResumeBuilderPage() {
                         {/* LHS VIEW */}
                         <PrintablePage page_id="cv-page">
                             <CVEditor
-                                cv={cur_cv?.data}
-                                onUpdate={cvsState.update}
+                                cv={currentCvStore.cv?.data}
+                                onUpdate={currentCvStore.updateCv}
                             />
                         </PrintablePage>
                         {/* RHS VIEW */}
@@ -254,8 +259,8 @@ export default function ResumeBuilderPage() {
                     <div className="py-10 px-[20%]  w-full bg-gray-600">
                         <PrintablePage page_id="cv-page">
                             <CVEditor
-                                cv={cur_cv?.data}
-                                onUpdate={cvsState.update}
+                                cv={currentCvStore.cv?.data}
+                                onUpdate={currentCvStore.updateCv}
                             />
                         </PrintablePage>
                     </div>

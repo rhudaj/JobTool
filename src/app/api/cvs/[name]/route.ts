@@ -2,6 +2,38 @@ import { NextRequest, NextResponse } from "next/server";
 import { DB, connectDB } from "@/lib/db";
 import { NamedCV } from "@/lib/types";
 
+// GET /api/cvs/[name] - Fetch specific CV by name
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ name: string }> }
+) {
+  try {
+    await connectDB();
+    const params = await context.params;
+    const cvs = await DB.all_cvs();
+    const cv = cvs.find(cv => cv.name === params.name);
+
+    if (!cv) {
+      return NextResponse.json(
+        { error: "CV not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(cv);
+  } catch (error) {
+    console.error("Error fetching CV:", error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json(
+      {
+        error: "Failed to fetch CV",
+        details: errorMessage
+      },
+      { status: 500 }
+    );
+  }
+}
+
 // PUT /api/cvs/[name] - Update existing CV
 export async function PUT(
   request: NextRequest,
