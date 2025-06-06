@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NamedCV } from "@/lib/types";
 import { useComponent2PDF } from "@/hooks";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import CVEditor from "@/components/CVEditor/cveditor";
 import * as Util from "@/lib/utils";
-import { SubSection, SplitView, InfoPad, PrintablePage } from "@/components";
+import { SubSection, SplitView, PrintablePage, InfoPad } from "@/components";
 import { usePopup } from "@/hooks/popup";
 import { useCvsStore, save2backend as saveCv2backend } from "@/hooks/useCVs";
 import { useCvInfoStore } from "@/hooks/useCVInfo";
@@ -16,12 +16,11 @@ import SavedCVsUI from "@/components/savedCVs";
 import {
     ImportForm,
     SaveForm,
-    FindReplaceForm,
-    StylesForm,
     SaveFormData,
     ExportForm,
 } from "@/components/forms";
 import { AIEditPane } from "@/components/AIEditPain";
+import { EditPane } from "@/components/EditPane";
 
 export default function ResumeBuilderPage() {
     const ENABLE_AI_EDIT_PANE = false;
@@ -32,6 +31,7 @@ export default function ResumeBuilderPage() {
     const cur_cv = useCvsStore(useShallow((s) => s.ncvs[s.curIdx]));
     const curIsModified = useCvsStore((s) => s.trackMods[s.curIdx]);
     const cvInfoState = useCvInfoStore(); // Fetch data on mount
+    const [editModeEnabled, setEditModeEnabled] = useState(false);
 
     // Fetch data on mount
     useEffect(() => {
@@ -88,15 +88,18 @@ export default function ResumeBuilderPage() {
         replace: string;
     }) => {
         cvsState.findReplace(data.find, data.replace);
-        findReplacePopup.close();
     };
 
     const handleStyleFormSubmit = () => {
         // StylesForm doesn't take any parameters - it handles its own state
-        stylesPopup.close();
+        // No action needed since styles are handled internally
     };
 
-    // POPUPS - Using new simplified API
+    const handleEditModeToggle = () => {
+        setEditModeEnabled(!editModeEnabled);
+    };
+
+    // POPUPS - Using new simplified API (only for Save, Export, and Import)
     const savePopup = usePopup(
         "Save",
         <SaveForm
@@ -133,14 +136,6 @@ export default function ResumeBuilderPage() {
         />,
         { size: "lg" }
     );
-
-    const findReplacePopup = usePopup(
-        "Find & Replace",
-        <FindReplaceForm cb={handleFindReplaceSubmit} />,
-        { size: "default" }
-    );
-
-    const stylesPopup = usePopup("Styles", <StylesForm />, { size: "lg" });
 
     // Only block rendering if we truly have no data
     if (!cvsState.ncvs?.length && !cvsState.status) {
@@ -191,20 +186,17 @@ export default function ResumeBuilderPage() {
                             className:
                                 "px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed",
                         })}
-                        {findReplacePopup.createTriggerButton(
-                            "Find & Replace",
-                            undefined,
-                            {
-                                disabled: !cur_cv,
-                                className:
-                                    "px-3 py-1 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed",
-                            }
-                        )}
-                        {stylesPopup.createTriggerButton("Styles", undefined, {
-                            disabled: !cur_cv,
-                            className:
-                                "px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed",
-                        })}
+                        <button
+                            onClick={handleEditModeToggle}
+                            disabled={!cur_cv}
+                            className={`px-3 py-1 rounded-md disabled:opacity-50 disabled:cursor-not-allowed ${
+                                editModeEnabled
+                                    ? "bg-blue-700 text-white"
+                                    : "bg-blue-600 text-white hover:bg-blue-700"
+                            }`}
+                        >
+                            {editModeEnabled ? "Exit Edit" : "Edit"}
+                        </button>
                     </div>
                 </div>
             </SubSection>
@@ -219,7 +211,22 @@ export default function ResumeBuilderPage() {
                 )}
 
                 {/* ------------ CV EDITOR ------------ */}
-                {ENABLE_CV_INFO && cvInfoState.status ? (
+                {editModeEnabled ? (
+                    <SplitView>
+                        <PrintablePage page_id="cv-page">
+                            <CVEditor
+                                cv={cur_cv?.data}
+                                onUpdate={cvsState.update}
+                            />
+                        </PrintablePage>
+                        <EditPane
+                            cvInfo={cvInfoState.cv_info}
+                            onCvInfoUpdate={cvInfoState.set}
+                            onFindReplaceSubmit={handleFindReplaceSubmit}
+                            onStyleFormSubmit={handleStyleFormSubmit}
+                        />
+                    </SplitView>
+                ) : ENABLE_CV_INFO && cvInfoState.status ? (
                     <SplitView>
                         <PrintablePage page_id="cv-page">
                             <CVEditor
@@ -249,8 +256,6 @@ export default function ResumeBuilderPage() {
             <savePopup.PopupComponent />
             <exportPopup.PopupComponent />
             <importPopup.PopupComponent />
-            <findReplacePopup.PopupComponent />
-            <stylesPopup.PopupComponent />
         </div>
     );
 }

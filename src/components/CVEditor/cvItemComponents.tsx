@@ -276,15 +276,29 @@ const Divided = ({children}: {children: any}) => {
 function DateUI(props: { obj: DateRange, onUpdate?: any }) {
 
 	const DELIM = " - ";
+	const UNDEFINED = "n/a"
 	const PLACEHOLDER = "Present"
 
 	const monthYear2str = (my: MonthYear): string => (
 		format(new Date(my.year, my.month - 1), "MMM yyyy") // Format as "Aug. 2024"
 	);
 
-	const strFromDateRange = (dr: DateRange) => (
-		monthYear2str(dr.start) + DELIM + (dr.end && dr.end.month ? monthYear2str(dr.end) : PLACEHOLDER)
-	);
+	const strFromDateRange = (dr: DateRange) => {
+		let end_str = undefined;
+		let start_str = undefined
+		if (!dr?.start) {
+			start_str = UNDEFINED;
+			end_str = UNDEFINED;
+		} else {
+			start_str = monthYear2str(dr.start);
+			if (dr.end && dr.end.month) {
+				end_str = monthYear2str(dr.end);
+			} else {
+				end_str = PLACEHOLDER; // If no end date, use placeholder
+			}
+		}
+		return start_str + DELIM + end_str;
+	};
 
 	const dateRangeFromStr = (dr: string) => {
 		try {

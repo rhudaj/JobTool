@@ -237,17 +237,17 @@ export const StylesForm = () => {
     };
 
     return (
-        <form id="styles-form" className={"flex flex-col w-100 max-h-500 overflow-y-scroll"}>
-            {Object.entries(StyleManager.getAll()).map(([key, val]) => (
-                <>
-                    <label key={key}>{key}</label>
+        <form id="styles-form" className="flex flex-col gap-2 w-full max-h-500 overflow-y-scroll">
+            {Object.entries(StyleManager.getAll()).map(([key, val], idx) => (
+                <div key={`${key}-${idx}`} className="grid grid-cols-2 gap-2 items-center border-b">
+                    <label>{key}</label>
                     <input
-                        key={key}
+                        className="w-min text-right"
                         type="number"
                         defaultValue={StyleManager.styles[key]}
                         onBlur={(e) => handleUpdate(key, Number(e.target.value))}
                     />
-                </>
+                </div>
             ))}
         </form>
     )
