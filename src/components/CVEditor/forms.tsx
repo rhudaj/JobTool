@@ -1,7 +1,7 @@
 import TextItems from "@/components/TextItems";
 import { CVMetaInfo, NamedCV } from "@/lib/types";
 import { StyleManager } from "./styles";
-import { useForm, SubmitHandler, Controller } from "react-hook-form"
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useState } from "react";
 
 /**
@@ -22,19 +22,18 @@ import { useState } from "react";
 
 const CustomStyles = {
     popup_content: "flex flex-col align-center gap-3 p-2",
-}
+};
 
 export interface SaveFormData extends CVMetaInfo {
     // For annotations
-    jobText?: string
+    jobText?: string;
 }
 export const SaveForm = (props: {
-    cvInfo: CVMetaInfo
+    cvInfo: CVMetaInfo;
     onSave: (formData: SaveFormData) => void;
-    disabled?: boolean
-    saveAnnotation?: boolean
+    disabled?: boolean;
+    saveAnnotation?: boolean;
 }) => {
-
     const {
         register,
         control,
@@ -54,7 +53,7 @@ export const SaveForm = (props: {
             if (!data.name) errors.name = { message: "File name required!" };
             if (!data.path) errors.path = { message: "Path required!" };
             return { values: data, errors };
-        }
+        },
     });
 
     return (
@@ -65,14 +64,14 @@ export const SaveForm = (props: {
             {/* FIELD #1 -- NAME */}
             <label>File Name:</label>
             <div>
-                <input name="file-name" type="text" {...register('name')} />
+                <input name="file-name" type="text" {...register("name")} />
                 <p>{errors.name?.message}</p>
             </div>
 
             {/* FIELD #2 -- PATH */}
             <label>Path:</label>
             <div>
-                <input name="path" type="text" {...register('path')} />
+                <input name="path" type="text" {...register("path")} />
                 <p>{errors.path?.message}</p>
             </div>
 
@@ -85,15 +84,16 @@ export const SaveForm = (props: {
                     <TextItems
                         initItems={field.value}
                         // NOTE: the native <form> element wont react to changes. Only the react-hook-form.
-                        onUpdate={(newTags: string[]) => field.onChange(newTags)}
+                        onUpdate={(newTags: string[]) =>
+                            field.onChange(newTags)
+                        }
                     />
                 )}
             />
             <button type="submit">Save</button>
         </form>
-    )
+    );
 };
-
 
 export const ExportForm = (props: {
     onPDFClicked: () => void;
@@ -116,14 +116,14 @@ export const ExportForm = (props: {
                 Export as JSON
             </button>
         </div>
-    )
-}
+    );
+};
 
 export const AnnotationForm = (props: {
-    onSubmit: (formData: { job?: string }) => void
+    onSubmit: (formData: { job?: string }) => void;
 }) => {
     const { register, handleSubmit, formState } = useForm<{ job?: string }>({
-        defaultValues: { job: "" }
+        defaultValues: { job: "" },
     });
 
     const [submitDone, setSubmitDone] = useState(false);
@@ -131,7 +131,7 @@ export const AnnotationForm = (props: {
     const onSubmit = (data: { job?: string }) => {
         props.onSubmit(data);
         setSubmitDone(true);
-    }
+    };
 
     return (
         <form
@@ -140,31 +140,31 @@ export const AnnotationForm = (props: {
         >
             <label>Job Text</label>
             <textarea
-                {...register('job', {required: true})}
+                {...register("job", { required: true })}
                 placeholder="Paste a job description"
                 className="min-h-30 align-top"
             />
-            <button type="submit" disabled={!formState.isValid || submitDone}>Submit</button>
+            <button type="submit" disabled={!formState.isValid || submitDone}>
+                Submit
+            </button>
         </form>
-    )
-}
-
+    );
+};
 
 interface ImportForm {
-    name: string
-    pasted_text: string
+    name: string;
+    pasted_text: string;
 }
 export const ImportForm = (props: { cb: (ncv: NamedCV) => void }) => {
-
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<ImportForm>()
+    } = useForm<ImportForm>();
 
     const onSubmit: SubmitHandler<ImportForm> = (data) => {
-        console.log(`form data: `, data)
-        if(data.pasted_text) {
+        console.log(`form data: `, data);
+        if (data.pasted_text) {
             let parsed: any;
             try {
                 parsed = JSON.parse(data.pasted_text);
@@ -173,55 +173,75 @@ export const ImportForm = (props: { cb: (ncv: NamedCV) => void }) => {
                     path: "/",
                     data: parsed,
                     tags: [],
-                })
+                });
             } catch (err: unknown) {
-                console.log("Error with your pasted text!")
+                console.log("Error with your pasted text!");
             }
         }
-    }
+    };
 
     return (
-        <form className={CustomStyles.popup_content} id="import-form" onSubmit={handleSubmit(onSubmit)}>
-
+        <form
+            className={CustomStyles.popup_content}
+            id="import-form"
+            onSubmit={handleSubmit(onSubmit)}
+        >
             <label>Copy/Paste</label>
             <textarea
-                {...register("pasted_text", {required: true})}
+                {...register("pasted_text", { required: true })}
                 className="json-paste-area"
                 placeholder="paste json"
             />
             {errors.pasted_text && <span>field required</span>}
 
             <label>Name</label>
-            <input type="text" defaultValue="untitled" {...register("name", { required: true })}/>
+            <input
+                type="text"
+                defaultValue="untitled"
+                {...register("name", { required: true })}
+            />
 
             <button type="submit">Done</button>
         </form>
     );
 };
 
-
-
 interface FindReplaceFormInput {
-    find: string
-    replace: string
+    find: string;
+    replace: string;
 }
-export const FindReplaceForm = (props: { cb: (data: FindReplaceFormInput) => void }) => {
-
+export const FindReplaceForm = (props: {
+    cb: (data: FindReplaceFormInput) => void;
+}) => {
     const {
         register,
         handleSubmit, // validates input before calling `onSubmit`
         formState: { errors },
-    } = useForm<FindReplaceFormInput>()
-    const onSubmit: SubmitHandler<FindReplaceFormInput> = props.cb
+    } = useForm<FindReplaceFormInput>();
+    const onSubmit: SubmitHandler<FindReplaceFormInput> = props.cb;
 
     return (
-        <form className={CustomStyles.popup_content} id="find-replace" onSubmit={handleSubmit(onSubmit)}>
+        <form
+            className={CustomStyles.popup_content}
+            id="find-replace"
+            onSubmit={handleSubmit(onSubmit)}
+        >
             {/* FIND TEXT */}
-            <input type="text" placeholder="find" {...register("find", { required: true })} />
+            <input
+                type="text"
+                placeholder="find"
+                {...register("find", { required: true })}
+                className="border p-1"
+            />
             {errors.find && <span>field required</span>}
 
             {/* REPLACE TEXT */}
-            <input type="text" placeholder="replace" {...register("replace", { required: true })} />
+            <input
+                type="text"
+                placeholder="replace"
+                {...register("replace", { required: true })}
+                className="border p-1"
+            />
             {errors.replace && <span>field required</span>}
 
             <button type="submit">Go</button>
@@ -230,25 +250,32 @@ export const FindReplaceForm = (props: { cb: (data: FindReplaceFormInput) => voi
 };
 
 export const StylesForm = () => {
-
     const handleUpdate = (key: string, val: number) => {
         console.log(`(Styles) Updating ${key} to ${val}`);
         StyleManager.set(key as any, val);
     };
 
     return (
-        <form id="styles-form" className="flex flex-col gap-2 w-full max-h-500 overflow-y-scroll">
+        <form
+            id="styles-form"
+            className="flex flex-col gap-2 w-full max-h-500 overflow-y-scroll"
+        >
             {Object.entries(StyleManager.getAll()).map(([key, val], idx) => (
-                <div key={`${key}-${idx}`} className="grid grid-cols-2 gap-2 items-center border-b">
+                <div
+                    key={`${key}-${idx}`}
+                    className="grid grid-cols-2 gap-2 items-center border-b"
+                >
                     <label>{key}</label>
                     <input
                         className="w-min text-right"
                         type="number"
                         defaultValue={StyleManager.styles[key]}
-                        onBlur={(e) => handleUpdate(key, Number(e.target.value))}
+                        onBlur={(e) =>
+                            handleUpdate(key, Number(e.target.value))
+                        }
                     />
                 </div>
             ))}
         </form>
-    )
+    );
 };

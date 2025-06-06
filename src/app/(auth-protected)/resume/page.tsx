@@ -18,9 +18,11 @@ import {
     SaveForm,
     SaveFormData,
     ExportForm,
+    FindReplaceForm,
+    StylesForm,
 } from "@/components/CVEditor/forms";
 import { AIEditPane } from "@/components/AIEditPain";
-import { EditPane } from "@/components/CVEditor/EditPane";
+import { CustomTabView } from "@/components/ui/customTabView";
 
 export default function ResumeBuilderPage() {
     const ENABLE_AI_EDIT_PANE = false;
@@ -142,6 +144,31 @@ export default function ResumeBuilderPage() {
         return <div className="p-6">Loading CVs...</div>;
     }
 
+    // Define the tabs in the RHS of the split-view when `Edit Mode` is enabled
+    const edit_tabs = [
+        {
+            id: "find-replace",
+            label: "Find/Replace",
+            content: <FindReplaceForm cb={handleFindReplaceSubmit} />,
+        },
+        {
+            id: "styles",
+            label: "Styles",
+            content: <StylesForm />,
+        },
+        {
+            id: "cv-info",
+            label: "CV Info",
+            content: (
+                <InfoPad
+                    mode="ALL-CVS"
+                    info={cvInfoState.cv_info}
+                    onUpdate={cvInfoState.set}
+                />
+            )
+        },
+    ];
+
     return (
         <div className="flex flex-col h-full p-6">
             {/* ------------ VIEW SAVED CVs ------------ */}
@@ -213,34 +240,17 @@ export default function ResumeBuilderPage() {
                 {/* ------------ CV EDITOR ------------ */}
                 {editModeEnabled ? (
                     <SplitView>
+                        {/* LHS VIEW */}
                         <PrintablePage page_id="cv-page">
                             <CVEditor
                                 cv={cur_cv?.data}
                                 onUpdate={cvsState.update}
                             />
                         </PrintablePage>
-                        <EditPane
-                            cvInfo={cvInfoState.cv_info}
-                            onCvInfoUpdate={cvInfoState.set}
-                            onFindReplaceSubmit={handleFindReplaceSubmit}
-                            onStyleFormSubmit={handleStyleFormSubmit}
-                        />
+                        {/* RHS VIEW */}
+                        <CustomTabView tabs={edit_tabs} />
                     </SplitView>
-                ) : ENABLE_CV_INFO && cvInfoState.status ? (
-                    <SplitView>
-                        <PrintablePage page_id="cv-page">
-                            <CVEditor
-                                cv={cur_cv?.data}
-                                onUpdate={cvsState.update}
-                            />
-                        </PrintablePage>
-                        <InfoPad
-                            mode="ALL-CVS"
-                            info={cvInfoState.cv_info}
-                            onUpdate={cvInfoState.set}
-                        />
-                    </SplitView>
-                ) : (
+                )  : (
                     <div className="py-10 px-[20%]  w-full bg-gray-600">
                         <PrintablePage page_id="cv-page">
                             <CVEditor
