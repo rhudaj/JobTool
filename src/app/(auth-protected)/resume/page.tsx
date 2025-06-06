@@ -12,15 +12,15 @@ import { usePopup } from "@/hooks/popup";
 import { useCvsStore, save2backend as saveCv2backend } from "@/hooks/useCVs";
 import { useCvInfoStore } from "@/hooks/useCVInfo";
 import { useShallow } from "zustand/react/shallow";
-import SavedCVsUI from "@/components/savedCVs";
+import SavedCVsUI from "@/components/CVEditor/savedCVs";
 import {
     ImportForm,
     SaveForm,
     SaveFormData,
     ExportForm,
-} from "@/components/forms";
+} from "@/components/CVEditor/forms";
 import { AIEditPane } from "@/components/AIEditPain";
-import { EditPane } from "@/components/EditPane";
+import { EditPane } from "@/components/CVEditor/EditPane";
 
 export default function ResumeBuilderPage() {
     const ENABLE_AI_EDIT_PANE = false;

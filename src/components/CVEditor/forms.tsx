@@ -1,6 +1,6 @@
 import TextItems from "@/components/TextItems";
 import { CVMetaInfo, NamedCV } from "@/lib/types";
-import { StyleManager } from "./CVEditor/styles";
+import { StyleManager } from "./styles";
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { useState } from "react";
 

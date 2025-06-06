@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FindReplaceForm, StylesForm } from "@/components/forms";
+import { FindReplaceForm, StylesForm } from "@/components/CVEditor/forms";
 import { InfoPad } from "@/components/infoPad";
 
 interface EditPaneProps {
@@ -16,6 +16,7 @@ export function EditPane({
     onFindReplaceSubmit,
     onStyleFormSubmit,
 }: EditPaneProps) {
+
     const tabs = [
         {
             id: "find-replace",
