@@ -1,5 +1,5 @@
 export * from './ControlBox';
-export * from './customTable';
+export * from './ui/customTable';
 export * from './dnd/Bucket'
 export * from './infoPad';
 export * from './PrintablePage';
