@@ -61,6 +61,7 @@ function mergeItemWithCore(contentItem: CVContentItem, sectionName: string, core
 
     // Merge core data with content data
     const mergedItem: Experience = {
+        id: referenceItem.id,
         title: coreItem.title || '',
         role: coreItem.role || '',
         location: coreItem.location || '',
@@ -105,14 +106,12 @@ function extractContentFromItem(item: SectionItem, sectionName: string): CVConte
 
     const experienceItem = item as Experience;
 
-    // For experience items, we need to determine the ID
-    // This is a simplified approach - in practice you might want to store IDs differently
-    // For now, we'll derive an ID from the title or role
-    const id = experienceItem.title || experienceItem.role || 'unknown';
+    // Use the existing ID from the experience item
+    const id = experienceItem.id;
 
-    // Return only the content parts, with ID reference
+    // Return only the content parts, with the preserved ID reference
     const contentItem: CVContentReference = {
-        id: id.toLowerCase().replace(/\s+/g, '-'), // Convert to kebab-case ID
+        id: id,
         description: experienceItem.description || [],
         item_list: experienceItem.item_list || []
     };

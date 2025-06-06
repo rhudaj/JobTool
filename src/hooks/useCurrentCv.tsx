@@ -76,7 +76,7 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
 
                     set({
                         cv,
-                        originalCv: structuredClone(cv), // Deep copy for comparison
+                        originalCv: JSON.parse(JSON.stringify(cv)), // Deep copy for comparison
                         isModified: false,
                         isLoading: false,
                         error: null
@@ -118,6 +118,9 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
 
             saveCv: async () => {
                 const state = get();
+
+                console.debug("STATE OF CV BEFORE SAVE:", state.cv);
+
                 if (!state.cv || !state.isModified) {
                     log("saveCv: nothing to save");
                     return;
@@ -142,7 +145,7 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
                     // Update original to match current (no longer modified)
                     set(produce((draft) => {
                         if (draft.cv) {
-                            draft.originalCv = structuredClone(draft.cv);
+                            draft.originalCv = JSON.parse(JSON.stringify(draft.cv));
                             draft.isModified = false;
                             draft.isLoading = false;
                             draft.error = null;
@@ -195,7 +198,7 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
                     // Update current CV to the new name and mark as unmodified
                     set(produce((draft) => {
                         draft.cv = cvToSave;
-                        draft.originalCv = structuredClone(cvToSave);
+                        draft.originalCv = JSON.parse(JSON.stringify(cvToSave));
                         draft.isModified = false;
                         draft.isLoading = false;
                         draft.error = null;

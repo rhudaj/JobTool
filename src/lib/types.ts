@@ -83,6 +83,7 @@ export interface Summary {
 }
 
 export interface Experience {
+    id: string;
     title: string;
     description: string[];
     date: DateRange;

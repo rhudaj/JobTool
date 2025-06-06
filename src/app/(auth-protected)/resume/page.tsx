@@ -54,16 +54,23 @@ export default function ResumeBuilderPage() {
         exportPopup.close();
     };
 
-    const handleSaveFormSubmit = (formData: SaveFormData) => {
+    const handleSaveFormSubmit = async (formData: SaveFormData) => {
         console.log("onSaveFormSubmit: ", formData);
         const overwrite = formData.name === currentCvStore.cv?.name;
 
-        if (overwrite) {
-            currentCvStore.saveCv();
-        } else {
-            currentCvStore.saveCvAs(formData);
+        try {
+            if (overwrite) {
+                await currentCvStore.saveCv();
+            } else {
+                await currentCvStore.saveCvAs(formData);
+            }
+            // Refresh metadata after successful save
+            metadataStore.refresh();
+            savePopup.close();
+        } catch (error) {
+            // Error is already handled in the store, just log it
+            console.error("Save failed:", error);
         }
-        savePopup.close();
     };
 
     const handleImportJsonFileChange = (

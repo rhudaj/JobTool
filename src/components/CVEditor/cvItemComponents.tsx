@@ -46,7 +46,7 @@ const SectionUI: BucketItemComponent<CVSection> = ({ obj, onUpdate }) => {
 
 	const Styles = StyleManager.getAll();
 
-	const onItemUpdate = (newVal: any, i: number) => {
+	const onItemUpdate = (i: number, newVal: any) => {
 		const new_items = [...obj.items];
 		new_items[i] = newVal;
 		onUpdate?.({ ...obj, items: new_items })
