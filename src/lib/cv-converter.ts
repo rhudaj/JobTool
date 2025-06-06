@@ -46,14 +46,14 @@ function mergeItemWithCore(contentItem: CVContentItem, sectionName: string, core
 
     const referenceItem = contentItem as CVContentReference;
 
-    // Find the core item by ID
-    const coreSection = core.sections.find(section => section.id === sectionName);
+    // Find the core item by ID (case-insensitive)
+    const coreSection = core.sections.find(section => section.id.toLowerCase() === sectionName.toLowerCase());
 
     if (!coreSection) {
         throw new Error(`No core section found for section name: ${sectionName}`);
     }
 
-    const coreItem = coreSection.items.find(item => item.id === referenceItem.id);
+    const coreItem = coreSection.items.find(item => item.id.toLowerCase() === referenceItem.id.toLowerCase());
 
     if (!coreItem) {
         throw new Error(`No core item found with id: ${referenceItem.id} in section: ${sectionName}`);
@@ -105,7 +105,17 @@ function extractContentFromItem(item: SectionItem, sectionName: string): CVConte
 
     const experienceItem = item as Experience;
 
-    // For experience items, we expect them to have an ID stored somewhere
-    // This is a placeholder - in practice, you should store IDs when creating items
-    throw new Error(`Cannot extract content from item without stored ID in section: ${sectionName}. Item title: ${experienceItem.title}`);
+    // For experience items, we need to determine the ID
+    // This is a simplified approach - in practice you might want to store IDs differently
+    // For now, we'll derive an ID from the title or role
+    const id = experienceItem.title || experienceItem.role || 'unknown';
+
+    // Return only the content parts, with ID reference
+    const contentItem: CVContentReference = {
+        id: id.toLowerCase().replace(/\s+/g, '-'), // Convert to kebab-case ID
+        description: experienceItem.description || [],
+        item_list: experienceItem.item_list || []
+    };
+
+    return contentItem;
 }

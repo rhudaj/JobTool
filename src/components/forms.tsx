@@ -240,8 +240,9 @@ export const StylesForm = () => {
         <form id="styles-form" className={"flex flex-col w-100 max-h-500 overflow-y-scroll"}>
             {Object.entries(StyleManager.getAll()).map(([key, val]) => (
                 <>
-                    <label>{key}</label>
+                    <label key={key}>{key}</label>
                     <input
+                        key={key}
                         type="number"
                         defaultValue={StyleManager.styles[key]}
                         onBlur={(e) => handleUpdate(key, Number(e.target.value))}

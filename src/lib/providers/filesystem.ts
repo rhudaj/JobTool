@@ -138,29 +138,23 @@ export class FileSystemProvider implements DatabaseProvider {
           const content = fs.readFileSync(filePath, 'utf-8');
           const parsedContent = JSON.parse(content);
 
-          // Check if it's old format (has header_info) or new format
-          let cvContent: NamedCVContent;
-
+          // Check if it's old format (has header_info) - this should be an error
           if (parsedContent.data && parsedContent.data.header_info) {
-            // Old format - convert to new format
-            cvContent = {
-              name: parsedContent.name || path.basename(file, '.json'),
-              path: `${dir.prefix}/${file}`,
-              tags: parsedContent.tags,
-              data: extractContentFromCV(parsedContent.data)
-            };
-          } else {
-            // New format - use as-is
-            cvContent = parsedContent;
-            if (!cvContent.name) {
-              cvContent.name = path.basename(file, '.json');
-            }
-            cvContent.path = `${dir.prefix}/${file}`;
+            throw new Error(`CV file "${file}" is in old format (contains header_info). All CVs should use the new format without header_info.`);
           }
+
+          // New format - use as-is
+          const cvContent: NamedCVContent = parsedContent;
+          if (!cvContent.name) {
+            cvContent.name = path.basename(file, '.json');
+          }
+          cvContent.path = `${dir.prefix}/${file}`;
 
           contents.push(cvContent);
         } catch (error) {
           console.error(`Error reading CV file ${file}:`, error);
+          // Re-throw with file information for better error handling
+          throw new Error(`Failed to parse CV file "${file}": ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }
     }

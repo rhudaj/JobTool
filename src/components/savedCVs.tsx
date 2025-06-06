@@ -74,7 +74,7 @@ function FileTreeUI(props: {
     return (
         <PopoverPanel title="group-list" className="flex justify-between p-4">
             {tree.map(([group, file_list]: [string, File[]]) => (
-                <Popover title="group-item-list">
+                <Popover key={group} title="group-item-list">
                     <PopoverButton as="div">
                         {group}
                         <i className="fa-solid fa-caret-down"/>

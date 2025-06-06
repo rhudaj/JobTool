@@ -37,7 +37,8 @@ const useCvsStore = create<State & Actions>((set, get) => ({
         .catch((error) => {
             console.error("[cvs state] Fetch failed:", error);
             set({ status: false });
-            alert("Failed to fetch CVs")
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            alert(`Failed to fetch CVs!\n\n${errorMessage}`);
         })
     },
     update: (cv: CV) => {
@@ -114,7 +115,19 @@ const useCvsStore = create<State & Actions>((set, get) => ({
 const fetchFromBackend = async (): Promise<NamedCV[]> => {
     const response = await fetch('/api/cvs');
     if (!response.ok) {
-        throw new Error(`Failed to fetch CVs: ${response.status} ${response.statusText}`);
+        // Try to extract detailed error information
+        let errorMessage = `Failed to fetch CVs: ${response.status} ${response.statusText}`;
+
+        try {
+            const errorData = await response.json();
+            if (errorData.details) {
+                errorMessage += `\nDetails: ${errorData.details}`;
+            }
+        } catch (e) {
+            // If we can't parse the error response, use the default message
+        }
+
+        throw new Error(errorMessage);
     }
     const data = await response.json();
     return data;

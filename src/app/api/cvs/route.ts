@@ -9,8 +9,15 @@ export async function GET() {
     return NextResponse.json(cvs);
   } catch (error) {
     console.error("Error fetching CVs:", error);
+
+    // Extract specific file information if available
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
     return NextResponse.json(
-      { error: "Failed to fetch CVs" },
+      {
+        error: "Failed to fetch CVs",
+        details: errorMessage
+      },
       { status: 500 }
     );
   }
