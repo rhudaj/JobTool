@@ -47,9 +47,22 @@ const SectionUI: BucketItemComponent<CVSection> = ({ obj, onUpdate }) => {
 	const Styles = StyleManager.getAll();
 
 	const onItemUpdate = (i: number, newVal: any) => {
+		console.debug("SectionUI.onItemUpdate - RECEIVED:", {
+			sectionName: obj.name,
+			itemIndex: i,
+			originalItem: obj.items[i],
+			newVal
+		});
+
 		const new_items = [...obj.items];
 		new_items[i] = newVal;
-		onUpdate?.({ ...obj, items: new_items })
+		const updatedSection = { ...obj, items: new_items };
+
+		console.debug("SectionUI.onItemUpdate - SENDING:", {
+			updatedSection
+		});
+
+		onUpdate?.(updatedSection);
 	}
 
 	const onBucketUpdate = (newVals: any[]) => {
@@ -133,10 +146,24 @@ const ExperienceUI: BucketItemComponent<Experience, {
 	const Styles = StyleManager.getAll();
 
 	const handleUpdate = (field: keyof Experience, val: any) => {
-		props.onUpdate?.({
+		console.debug("ExperienceUI.handleUpdate - BEFORE:", {
+			field,
+			originalObj: props.obj,
+			originalId: props.obj.id,
+			val
+		});
+
+		const updatedObj = {
 			...props.obj,
 			[field]: val
+		};
+
+		console.debug("ExperienceUI.handleUpdate - AFTER:", {
+			updatedObj,
+			updatedId: updatedObj.id
 		});
+
+		props.onUpdate?.(updatedObj);
 	};
 
 	const handleItemChange = (newVal: any, i: number) => {

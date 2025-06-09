@@ -12,12 +12,24 @@ function CVEditor(props: {
 	const S = StyleManager.getAll();
 
 	const onSectionUpdate = (section: CVSection, i: number) => {
+		console.debug("CVEditor.onSectionUpdate - RECEIVED:", {
+			sectionType: section.bucket_type,
+			sectionIndex: i,
+			section
+		});
+
 		const new_sections = [...props.cv.sections];
 		new_sections[i] = section;
-		props.onUpdate?.({
+		const updatedCV = {
 			...props.cv,
 			sections: new_sections
-		})
+		};
+
+		console.debug("CVEditor.onSectionUpdate - SENDING TO STORE:", {
+			updatedCV
+		});
+
+		props.onUpdate?.(updatedCV);
 	};
 
 	const onBucketUpdate = (newVals: CVSection[]) => {

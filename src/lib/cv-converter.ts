@@ -41,7 +41,7 @@ function mergeSectionWithCore(contentSection: CVContentSection, core: CVCore): C
 function mergeItemWithCore(contentItem: CVContentItem, sectionName: string, core: CVCore): SectionItem {
     // If it's a summary item (no id), return as-is
     if (!('id' in contentItem)) {
-        return contentItem;
+        throw Error(`No id found in CVContentItem (section = ${sectionName}`)
     }
 
     const referenceItem = contentItem as CVContentReference;
@@ -62,14 +62,16 @@ function mergeItemWithCore(contentItem: CVContentItem, sectionName: string, core
     // Merge core data with content data
     const mergedItem: Experience = {
         id: referenceItem.id,
-        title: coreItem.title || '',
-        role: coreItem.role || '',
-        location: coreItem.location || '',
+        title: coreItem.title || undefined,
+        role: coreItem.role || undefined,
+        location: coreItem.location || undefined,
         date: coreItem.date || undefined,
         description: referenceItem.description || [],
         item_list: referenceItem.item_list || [],
-        link: coreItem.link
+        link: coreItem.link || undefined
     };
+
+    console.debug(`mergedItem = ${mergedItem}`)
 
     return mergedItem;
 }

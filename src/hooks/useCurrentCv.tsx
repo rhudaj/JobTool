@@ -101,6 +101,8 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
                     return;
                 }
 
+                console.debug("useCurrentCv.updateCv - RECEIVED CV:", cv);
+
                 set(produce((draft) => {
                     if (!draft.cv || !draft.originalCv) return;
 
@@ -113,6 +115,8 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
                     log("updateCv: changes detected, updating");
                     draft.cv.data = cv;
                     draft.isModified = !isEqual(draft.cv.data, draft.originalCv.data);
+
+                    console.debug("useCurrentCv.updateCv - UPDATED STATE:", draft.cv);
                 }));
             },
 
@@ -231,7 +235,7 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
                 if (shouldDiscard) {
                     set(produce((draft) => {
                         if (draft.originalCv) {
-                            draft.cv = structuredClone(draft.originalCv);
+                            draft.cv = JSON.parse(JSON.stringify(draft.originalCv));
                             draft.isModified = false;
                         }
                     }));
