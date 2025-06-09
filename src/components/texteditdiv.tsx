@@ -40,7 +40,6 @@ function TextEditDiv(props: {
     const onBlur = (e: React.FocusEvent) => {
         setIsEditing(false);
         const html_str = (e.target as HTMLElement).innerHTML;
-
         // Only update if content actually changed to avoid unnecessary state updates
         if (props.onUpdate && html_str !== props.tv) {
             console.log("Updated TextEditDiv!")

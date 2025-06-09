@@ -97,7 +97,9 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
             },
 
             updateCv: (cv: CV) => {
+
                 const state = get();
+
                 if (!state.cv) {
                     log("updateCv: no current CV to update");
                     return;
