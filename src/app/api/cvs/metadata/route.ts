@@ -3,6 +3,7 @@ import { DB, connectDB } from "@/lib/db";
 
 export async function GET() {
     try {
+        console.debug("[GET] api/cvs/metadata")
         await connectDB();
         const cvs = await DB.all_cvs();
 

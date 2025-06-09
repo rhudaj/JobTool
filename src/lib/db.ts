@@ -9,6 +9,7 @@ export class DB {
   // -------------------------------------------------------------------------
 
   static async all_cvs(): Promise<NamedCV[]> {
+    console.debug("[DB] all_cvs (called)")
     const provider = await DatabaseProviderFactory.getProvider();
     return provider.all_cvs();
   }

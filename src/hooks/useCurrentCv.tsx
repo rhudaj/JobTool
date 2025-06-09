@@ -74,6 +74,8 @@ export const useCurrentCvStore = create<CurrentCvState & CurrentCvActions>()(
 
                     const cv: NamedCV = await response.json();
 
+                    console.debug(`Found CV with name '${name}': `, cv);
+
                     set({
                         cv,
                         originalCv: JSON.parse(JSON.stringify(cv)), // Deep copy for comparison

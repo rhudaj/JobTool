@@ -13,6 +13,7 @@ export async function GET(
     const cvs = await DB.all_cvs();
     const cv = cvs.find(cv => cv.name === params.name);
 
+
     if (!cv) {
       return NextResponse.json(
         { error: "CV not found" },

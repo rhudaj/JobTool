@@ -23,6 +23,7 @@ import {
 } from "@/components/CVEditor/forms";
 import { AIEditPane } from "@/components/AIEditPain";
 import { CustomTabView } from "@/components/ui/customTabView";
+import { extractContentFromNamedCV } from "@/lib/cv-converter";
 
 export default function ResumeBuilderPage() {
     const ENABLE_AI_EDIT_PANE = false;
@@ -47,9 +48,22 @@ export default function ResumeBuilderPage() {
         exportPopup.close();
     };
 
+    useEffect(() => {
+        console.debug(
+            "Current CV changed!. Is null? = ",
+            currentCvStore.cv === null
+        );
+    }, [currentCvStore.cv]);
+
     const handleJsonClicked = () => {
-        if (currentCvStore.cv && currentCvStore.cv.data) {
-            Util.downloadAsJson(currentCvStore.cv);
+        // Get fresh state reference
+        if (currentCvStore.cv) {
+            console.info("Downloading CV as json");
+                // Save only the content, not core-stuff
+            const contentOnly = extractContentFromNamedCV(currentCvStore.cv)
+            Util.downloadAsJson(contentOnly);
+        } else {
+            console.warn("Tried to download CV when its empty: ", currentCvStore.cv);
         }
         exportPopup.close();
     };
@@ -79,7 +93,9 @@ export default function ResumeBuilderPage() {
         Util.jsonFileImport(e, (ncv: NamedCV) => {
             // We would need to save the imported CV first, then load it
             // For now, let's just alert about this functionality
-            alert("Import functionality needs to be integrated with the new backend API");
+            alert(
+                "Import functionality needs to be integrated with the new backend API"
+            );
             metadataStore.refresh(); // Refresh metadata after import
         });
         importPopup.close();
@@ -87,7 +103,9 @@ export default function ResumeBuilderPage() {
 
     const handlePasteJson = (json_str: string, name: string) => {
         // Similar issue - we need to save the CV first
-        alert("Paste functionality needs to be integrated with the new backend API");
+        alert(
+            "Paste functionality needs to be integrated with the new backend API"
+        );
         metadataStore.refresh(); // Refresh metadata
     };
 
@@ -121,28 +139,29 @@ export default function ResumeBuilderPage() {
             : { name: "", path: "/", tags: [] };
 
         savePopup.open(
-            <SaveForm
-                cvInfo={cvInfo}
-                onSave={handleSaveFormSubmit}
-            />
+            <SaveForm cvInfo={cvInfo} onSave={handleSaveFormSubmit} />
         );
     };
 
-    const exportPopup = usePopup(
-        "Export",
-        <ExportForm
-            onPDFClicked={handlePDFClicked}
-            onJsonClicked={handleJsonClicked}
-        />,
-        { size: "default" }
-    );
+    const exportPopup = usePopup("Export", null, { size: "default" });
+
+    const openExportPopup = () => {
+        exportPopup.open(
+            <ExportForm
+                onPDFClicked={handlePDFClicked}
+                onJsonClicked={handleJsonClicked}
+            />
+        );
+    };
 
     const importPopup = usePopup(
         "Import",
         <ImportForm
             cb={(ncv: NamedCV) => {
                 // TODO: Integrate with new backend API
-                alert("Import functionality needs to be updated for new architecture");
+                alert(
+                    "Import functionality needs to be updated for new architecture"
+                );
                 importPopup.close();
             }}
         />,
@@ -175,7 +194,7 @@ export default function ResumeBuilderPage() {
                     info={cvInfoState.cv_info}
                     onUpdate={cvInfoState.set}
                 />
-            )
+            ),
         },
     ];
 
@@ -220,11 +239,13 @@ export default function ResumeBuilderPage() {
                         >
                             Save
                         </button>
-                        {exportPopup.createTriggerButton("Export", undefined, {
-                            disabled: !currentCvStore.cv,
-                            className:
-                                "px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed",
-                        })}
+                        <button
+                            onClick={openExportPopup}
+                            disabled={!currentCvStore.cv}
+                            className="px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Export
+                        </button>
                         <button
                             onClick={handleEditModeToggle}
                             disabled={!currentCvStore.cv}
@@ -262,7 +283,7 @@ export default function ResumeBuilderPage() {
                         {/* RHS VIEW */}
                         <CustomTabView tabs={edit_tabs} />
                     </SplitView>
-                )  : (
+                ) : (
                     <div className="py-10 px-[20%]  w-full bg-gray-600">
                         <PrintablePage page_id="cv-page">
                             <CVEditor

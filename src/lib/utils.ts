@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { extractContentFromCV, extractContentFromNamedCV } from "./cv-converter"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

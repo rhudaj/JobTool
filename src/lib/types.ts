@@ -82,16 +82,7 @@ export interface Summary {
     technologies: string[];
 }
 
-export interface Experience {
-    id: string;
-    title: string;
-    description: string[];
-    date: DateRange;
-    item_list: string[];
-    role?: string;
-    location?: string;
-    link?: Link;
-}
+export interface Experience extends CVCoreExperience, CVContentExperience {}
 
 // SECTION – REUSABLE/SUB-ITEMS -------------------------------------------
 
@@ -115,6 +106,11 @@ export interface Link {
                         NEW CV STRUCTURE (with cv_core)
 --------------------------------------------------------------- */
 
+// New NamedCV structure that uses CVContent
+export type NamedCVContent = CVMetaInfo & {
+    data: CVContent;
+};
+
 // New CV content structure that references cv_core by ID
 export interface CVContent {
     sections: CVContentSection[]
@@ -126,24 +122,18 @@ export interface CVContentSection {
     items: CVContentItem[];
 }
 
-export type CVContentItem = CVContentSummary | CVContentReference
+export type CVContentItem = Summary | CVContentExperience
 
-export interface CVContentSummary {
-    summary: string;
-    languages: string[];
-    technologies: string[];
-}
-
-export interface CVContentReference {
+export interface CVContentExperience {
     id: string;
-    description?: string[];
-    item_list?: string[];
+    description: string[];
+    item_list: string[];
 }
 
-// New NamedCV structure that uses CVContent
-export type NamedCVContent = CVMetaInfo & {
-    data: CVContent;
-};
+/* ---------------------------------------------------------------
+                CV Core structure (stored separately)
+--------------------------------------------------------------- */
+
 
 // CV Core structure (stored separately)
 export interface CVCore {
@@ -154,15 +144,15 @@ export interface CVCore {
 
 export interface CVCoreSection {
     id: string;
-    items: CVCoreItem[];
+    items: CVCoreExperience[];
 }
 
-export interface CVCoreItem {
+export interface CVCoreExperience {
     id: string;
-    title?: string;
+    title: string;
+    date: DateRange;
     role?: string;
     location?: string;
-    date?: DateRange;
     link?: Link;
 }
 

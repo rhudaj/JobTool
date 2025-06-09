@@ -389,6 +389,7 @@ function DelimitedList(props: {
 		}
 	};
 
+	if(!props.items) return null
 	return (
 		<div title="delimited-list" className={props.className}>
 			<TextEditDiv tv={props.items.join(props.delimiter)} onUpdate={onUpdate} />
