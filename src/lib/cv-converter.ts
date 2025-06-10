@@ -175,10 +175,10 @@ export function mergeCVInfoContentWithCore(
             // Iterate through each version of the item
             for (const [versionId, contentItem] of Object.entries(itemVersions)) {
                 // Add the ID to the content item if it's not a summary
-                const itemWithId = "summary" in contentItem 
-                    ? contentItem 
+                const itemWithId = "summary" in contentItem
+                    ? contentItem
                     : { ...contentItem, id: itemId };
-                
+
                 // Merge the content item with core data to create a full SectionItem
                 result[sectionName][itemId][versionId] = mergeItemWithCore(
                     itemWithId,
