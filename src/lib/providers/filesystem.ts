@@ -1,15 +1,23 @@
 // File System Provider Implementation (reads from public folder)
-import { NamedCV, NamedCVContent, CVCore, CVInfo, Annotation, CVInfoContent } from "@/lib/types";
+import {
+    NamedCV,
+    NamedCVContent,
+    CVCore,
+    CVInfo,
+    Annotation,
+    CVInfoContent,
+} from "@/lib/types";
 import { DatabaseProvider } from "./IDatabaseProvider";
 import {
     mergeNamedContentWithCore,
-    extractContentFromCV,
-    mergeCVInfoContentWithCore
+    extractContentFromNamedCV,
+    mergeCVInfoContentWithCore,
 } from "../cv-converter";
 import fs from "fs";
 import path from "path";
 
 const CV_INFO_FILE = "cv_info.json";
+const CV_DIR = "cvs";
 
 export class FileSystemProvider implements DatabaseProvider {
     private basePath: string;
@@ -31,9 +39,9 @@ export class FileSystemProvider implements DatabaseProvider {
         }
 
         // Check if CVs directory exists
-        const cvsPath = path.join(this.basePath, "CVs");
+        const cvsPath = path.join(this.basePath, CV_DIR);
         if (!fs.existsSync(cvsPath)) {
-            console.error(`CVs directory does not exist: ${cvsPath}`);
+            console.error(`cv directory does not exist: ${cvsPath}`);
             return false;
         }
 
@@ -84,50 +92,28 @@ export class FileSystemProvider implements DatabaseProvider {
         return results;
     }
 
-    async save_new_cv(cv: NamedCV): Promise<void> {
+    async save_new_cv(ncv: NamedCV): Promise<void> {
         // Extract content from full CV and save as content
-        const content: NamedCVContent = {
-            name: cv.name,
-            path: cv.path,
-            tags: cv.tags,
-            data: extractContentFromCV(cv.data),
-        };
-
+        const content: NamedCVContent = extractContentFromNamedCV(ncv);
         await this.save_new_cv_content(content);
     }
 
-    async update_cv(cv: NamedCV, name: string): Promise<void> {
+    async update_cv(ncv: NamedCV, name: string): Promise<void> {
         // Extract content from full CV and save as content
-        const content: NamedCVContent = {
-            name: cv.name,
-            path: cv.path,
-            tags: cv.tags,
-            data: extractContentFromCV(cv.data),
-        };
-
+        const content: NamedCVContent = extractContentFromNamedCV(ncv);
         await this.update_cv_content(content, name);
     }
 
     async delete_cv(name: string): Promise<void> {
         // Look for the CV in both samples and user directories
-        const possiblePaths = [
-            path.join(this.basePath, "CVs", `${name}.json`),
-            path.join(this.basePath, "user_cvs", `${name}.json`),
-        ];
-
-        let deleted = false;
-
-        for (const possiblePath of possiblePaths) {
-            if (fs.existsSync(possiblePath)) {
-                fs.unlinkSync(possiblePath);
-                console.log(`Deleted CV at: ${possiblePath}`);
-                deleted = true;
-                break;
-            }
-        }
-
-        if (!deleted) {
-            throw new Error(`CV with name "${name}" not found`);
+        const cv_path = path.join(this.basePath, CV_DIR, `${name}.json`);
+        if (fs.existsSync(cv_path)) {
+            fs.unlinkSync(cv_path);
+            console.log(`Deleted CV at: ${cv_path}`);
+        } else {
+            throw new Error(
+                `CV with name "${name}" not found at expected path: ${cv_path}`
+            );
         }
     }
 
@@ -139,54 +125,47 @@ export class FileSystemProvider implements DatabaseProvider {
         const contents: NamedCVContent[] = [];
 
         // Read from both CVs and user_cvs directories
-        const directories = [
-            { path: path.join(this.basePath, "CVs"), prefix: "CVs" },
-            { path: path.join(this.basePath, "user_cvs"), prefix: "user_cvs" },
-        ];
+        const dir = path.join(this.basePath, CV_DIR);
 
-        for (const dir of directories) {
-            // Skip if directory doesn't exist
-            if (!fs.existsSync(dir.path)) {
-                continue;
-            }
+        // Skip if directory doesn't exist
+        if (!fs.existsSync(dir)) {
+            throw new Error(`CV directory does not exist: ${dir}`);
+        }
 
-            // Read all JSON files in the directory
-            const files = fs
-                .readdirSync(dir.path)
-                .filter((file) => file.endsWith(".json"));
+        // Read all JSON files in the directory
+        const files = fs
+            .readdirSync(dir)
+            .filter((file) => file.endsWith(".json"));
 
-            for (const file of files) {
-                try {
-                    const filePath = path.join(dir.path, file);
-                    const content = fs.readFileSync(filePath, "utf-8");
-                    const parsedContent = JSON.parse(content);
+        for (const file of files) {
+            try {
+                const filePath = path.join(dir, file);
+                const content = fs.readFileSync(filePath, "utf-8");
+                const parsedContent = JSON.parse(content);
 
-                    // Check if it's old format (has header_info) - this should be an error
-                    if (parsedContent.data && parsedContent.data.header_info) {
-                        throw new Error(
-                            `CV file "${file}" is in old format (contains header_info). All CVs should use the new format without header_info.`
-                        );
-                    }
-
-                    // New format - use as-is
-                    const cvContent: NamedCVContent = parsedContent;
-                    if (!cvContent.name) {
-                        cvContent.name = path.basename(file, ".json");
-                    }
-                    cvContent.path = `${dir.prefix}/${file}`;
-
-                    contents.push(cvContent);
-                } catch (error) {
-                    console.error(`Error reading CV file ${file}:`, error);
-                    // Re-throw with file information for better error handling
+                // Check if it's old format (has header_info) - this should be an error
+                if (parsedContent.data && parsedContent.data.header_info) {
                     throw new Error(
-                        `Failed to parse CV file "${file}": ${
-                            error instanceof Error
-                                ? error.message
-                                : "Unknown error"
-                        }`
+                        `CV file "${file}" is in old format (contains header_info). All CVs should use the new format without header_info.`
                     );
                 }
+
+                // New format - use as-is
+                const cvContent: NamedCVContent = parsedContent;
+                if (!cvContent.name) {
+                    cvContent.name = path.basename(file, ".json");
+                }
+                cvContent.path = `${CV_DIR}/${file}`;
+
+                contents.push(cvContent);
+            } catch (error) {
+                console.error(`Error reading CV file ${file}:`, error);
+                // Re-throw with file information for better error handling
+                throw new Error(
+                    `Failed to parse CV file "${file}": ${
+                        error instanceof Error ? error.message : "Unknown error"
+                    }`
+                );
             }
         }
 
@@ -203,9 +182,6 @@ export class FileSystemProvider implements DatabaseProvider {
             fs.mkdirSync(userCvsPath, { recursive: true });
         }
 
-        // Set path for reference (consistent with all_cv_contents behavior)
-        cv.path = `user_cvs/${cv.name}.json`;
-
         const filePath = path.join(userCvsPath, `${cv.name}.json`);
         fs.writeFileSync(filePath, JSON.stringify(cv, null, 2));
 
@@ -214,39 +190,16 @@ export class FileSystemProvider implements DatabaseProvider {
 
     async update_cv_content(cv: NamedCVContent, name: string): Promise<void> {
         // Look for the CV in both samples and user directories
-        const possiblePaths = [
-            path.join(this.basePath, "CVs", `${name}.json`),
-            path.join(this.basePath, "user_cvs", `${name}.json`),
-        ];
+        const cv_path = path.join(this.basePath, CV_DIR, `${name}.json`);
 
-        let targetPath: string | null = null;
-
-        for (const possiblePath of possiblePaths) {
-            if (fs.existsSync(possiblePath)) {
-                targetPath = possiblePath;
-                break;
-            }
+        if (!fs.existsSync(cv_path)) {
+            throw new Error(
+                `CV with name "${name}" not found at expected path: ${cv_path}`
+            );
         }
 
-        if (!targetPath) {
-            // If not found, create it in user_cvs
-            const userCvsPath = path.join(this.basePath, "user_cvs");
-            if (!fs.existsSync(userCvsPath)) {
-                fs.mkdirSync(userCvsPath, { recursive: true });
-            }
-            targetPath = path.join(userCvsPath, `${cv.name}.json`);
-            cv.path = `user_cvs/${cv.name}.json`;
-        } else {
-            // Update path based on where the file is located
-            if (targetPath.includes("user_cvs")) {
-                cv.path = `user_cvs/${cv.name}.json`;
-            } else {
-                cv.path = `CVs/${cv.name}.json`;
-            }
-        }
-
-        fs.writeFileSync(targetPath, JSON.stringify(cv, null, 2));
-        console.log(`Updated CV content at: ${targetPath}`);
+        fs.writeFileSync(cv_path, JSON.stringify(cv, null, 2));
+        console.log(`Updated CV content at: ${cv_path}`);
     }
 
     // -------------------------------------------------------------------------
@@ -293,7 +246,6 @@ export class FileSystemProvider implements DatabaseProvider {
             );
 
             return mergedContent;
-
         } catch (error) {
             throw new Error(`Error reading ${CV_INFO_FILE}: ${error}`);
         }

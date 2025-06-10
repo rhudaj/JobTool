@@ -1,12 +1,8 @@
 // Helper functions to convert between old CV structure and new CVContent structure
 import {
-    CV,
-    CVContent,
     CVCore,
     NamedCV,
     NamedCVContent,
-    CVSection,
-    CVContentSection,
     SectionItem,
     CVContentItem,
     CVContentExperience,
@@ -17,11 +13,12 @@ import {
 } from "./types";
 
 /* -----------------------------------------------------------------------------
-            NamedCVContent + CVCore --> NamedCV (for loading/editing)
+             NamedCVContent <--> NamedCV
 ----------------------------------------------------------------------------- */
 
 /**
- * Converts a NamedCVContent and CVCore into a NamedCV
+ * NamedCVContent + CVCore --> NamedCV
+ * (for loading/editing)
  */
 export function mergeNamedContentWithCore(
     namedContent: NamedCVContent,
@@ -102,40 +99,28 @@ function mergeItemWithCore(
     return mergedItem;
 }
 
-/* -----------------------------------------------------------------------------
-                NamedCV --> CVContent (inverse operation, for saving)
------------------------------------------------------------------------------ */
-
+/**
+ * NamedCV --> CVContent (inverse operation, for saving)
+ */
 export function extractContentFromNamedCV(ncv: NamedCV): NamedCVContent {
     return {
         ...ncv,
-        data: extractContentFromCV(ncv.data)
-    };
-}
-
-/**
- * Converts a full CV back to CVContent (strips core data)
- * This is useful when saving CVs - we only save the content part
- */
-export function extractContentFromCV(cv: CV): CVContent {
-    return {
-        sections: cv.sections.map((section) => ({
+        data: {
+        sections: ncv.data.sections.map((section) => ({
             name: section.name,
             bucket_type: section.bucket_type,
             items: section.items.map((item) =>
-                extractContentFromItem(item, section.name)
+                extractContentFromItem(item)
             ),
         })),
+    }
     };
 }
 
 /**
  * Extracts content from a section item, removing core data and adding ID reference
  */
-function extractContentFromItem(
-    item: SectionItem,
-    sectionName: string
-): CVContentItem {
+function extractContentFromItem(item: SectionItem): CVContentItem {
     // If it's a summary item, return as-is
     if ("summary" in item) {
         return item;
@@ -153,11 +138,13 @@ function extractContentFromItem(
     return contentItem;
 }
 
-
 /* -----------------------------------------------------------------------------
-                CVInfoContent --> CVInfo (for loading/editing)
+                        CVInfoContent (db) <--> CVInfo (app)
 ----------------------------------------------------------------------------- */
 
+/**
+ * CVInfoContent --> CVInfo (for loading/editing)
+ */
 export function mergeCVInfoContentWithCore(
     content: CVInfoContent,
     core: CVCore
@@ -185,6 +172,36 @@ export function mergeCVInfoContentWithCore(
                     sectionName,
                     core
                 );
+            }
+        }
+    }
+
+    return result;
+}
+
+/**
+ * CVInfo --> CVInfoContent (inverse operation, for saving)
+ */
+export function extractContentFromCVInfo(cvInfo: CVInfo): CVInfoContent {
+    const result: CVInfoContent = {};
+
+    // Iterate through each section
+    for (const [sectionName, sectionItems] of Object.entries(cvInfo)) {
+        result[sectionName] = {};
+
+        // Iterate through each item in the section
+        for (const [itemId, itemVersions] of Object.entries(sectionItems)) {
+            result[sectionName][itemId] = {};
+
+            // Iterate through each version of the item
+            for (const [versionId, contentItem] of Object.entries(itemVersions)) {
+                // Add the ID to the content item if it's not a summary
+                const itemWithId = "summary" in contentItem
+                    ? contentItem
+                    : { ...contentItem, id: itemId };
+
+                // Store the content item by version ID
+                result[sectionName][itemId][versionId] = itemWithId;
             }
         }
     }

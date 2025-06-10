@@ -3,7 +3,7 @@ import * as mongo from "mongodb";
 import { NamedCV, NamedCVContent, CVCore } from "@/lib/types";
 import { DatabaseProvider } from "./IDatabaseProvider";
 import { CVInfo, Annotation } from "@/lib/types";
-import { mergeNamedContentWithCore, extractContentFromCV } from "../cv-converter";
+import { mergeNamedContentWithCore, extractContentFromNamedCV } from "../cv-converter";
 
 export class MongoDBProvider implements DatabaseProvider {
   private db: mongo.Db;
@@ -63,27 +63,15 @@ export class MongoDBProvider implements DatabaseProvider {
     return contents.map(content => mergeNamedContentWithCore(content, core));
   }
 
-  async save_new_cv(cv: NamedCV): Promise<void> {
+  async save_new_cv(ncv: NamedCV): Promise<void> {
     // Extract content from full CV and save as content
-    const content: NamedCVContent = {
-      name: cv.name,
-      path: cv.path,
-      tags: cv.tags,
-      data: extractContentFromCV(cv.data)
-    };
-
+    const content: NamedCVContent = extractContentFromNamedCV(ncv);
     await this.save_new_cv_content(content);
   }
 
-  async update_cv(cv: NamedCV, name: string): Promise<void> {
+  async update_cv(ncv: NamedCV, name: string): Promise<void> {
     // Extract content from full CV and save as content
-    const content: NamedCVContent = {
-      name: cv.name,
-      path: cv.path,
-      tags: cv.tags,
-      data: extractContentFromCV(cv.data)
-    };
-
+    const content: NamedCVContent = extractContentFromNamedCV(ncv);
     await this.update_cv_content(content, name);
   }
 
@@ -110,12 +98,7 @@ export class MongoDBProvider implements DatabaseProvider {
       // Check if it's old format (has header_info) or new format
       if (content.data && content.data.header_info) {
         // Old format - convert to new format
-        return {
-          name: content.name,
-          path: content.path,
-          tags: content.tags,
-          data: extractContentFromCV(content.data)
-        } as NamedCVContent;
+        return extractContentFromNamedCV(content as NamedCV);
       } else {
         // New format - use as-is
         return content as NamedCVContent;

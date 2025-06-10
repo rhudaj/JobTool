@@ -48,3 +48,7 @@
 
 --------------------------------------------------
 * Support 2 page resumes
+
+--------------------------------------------------
+* Seperate NamedCV into: `metadata` and `data`
+* Add `date_created` and `last_updated` to `metadata`
