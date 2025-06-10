@@ -12,6 +12,8 @@ import {
     CVContentExperience,
     Experience,
     Summary,
+    CVInfoContent,
+    CVInfo,
 } from "./types";
 
 /* -----------------------------------------------------------------------------
@@ -86,9 +88,9 @@ function mergeItemWithCore(
     );
 
     if (!coreItem) {
-        throw new Error(
-            `No core item found with id: ${referenceItem.id} in section: ${sectionName}`
-        );
+        console.warn(`⚠️ Warning: No core item found with id: ${referenceItem.id} in section: ${sectionName}. Skipping merge.`);
+        // Return the content item as-is if no core data is found
+        return referenceItem as Experience;
     }
 
     // Merge core data with content data
@@ -149,4 +151,43 @@ function extractContentFromItem(
     };
 
     return contentItem;
+}
+
+
+/* -----------------------------------------------------------------------------
+                CVInfoContent --> CVInfo (for loading/editing)
+----------------------------------------------------------------------------- */
+
+export function mergeCVInfoContentWithCore(
+    content: CVInfoContent,
+    core: CVCore
+): CVInfo {
+    const result: CVInfo = {};
+
+    // Iterate through each section
+    for (const [sectionName, sectionContent] of Object.entries(content)) {
+        result[sectionName] = {};
+
+        // Iterate through each item in the section
+        for (const [itemId, itemVersions] of Object.entries(sectionContent)) {
+            result[sectionName][itemId] = {};
+
+            // Iterate through each version of the item
+            for (const [versionId, contentItem] of Object.entries(itemVersions)) {
+                // Add the ID to the content item if it's not a summary
+                const itemWithId = "summary" in contentItem 
+                    ? contentItem 
+                    : { ...contentItem, id: itemId };
+                
+                // Merge the content item with core data to create a full SectionItem
+                result[sectionName][itemId][versionId] = mergeItemWithCore(
+                    itemWithId,
+                    sectionName,
+                    core
+                );
+            }
+        }
+    }
+
+    return result;
 }

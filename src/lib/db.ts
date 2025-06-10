@@ -1,7 +1,6 @@
 // New Database Interface using Provider Pattern
-import { NamedCV, NamedCVContent, CVCore } from "@/lib/types";
+import { NamedCV, NamedCVContent, CVCore, CVInfo, Annotation } from "@/lib/types";
 import { DatabaseProviderFactory } from "./providers/factory";
-import { CVInfo, Annotation } from "./providers/IDatabaseProvider";
 
 export class DB {
   // -------------------------------------------------------------------------

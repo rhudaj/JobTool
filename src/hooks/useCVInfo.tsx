@@ -1,4 +1,4 @@
-import { CVInfo } from "@/components/infoPad";
+import { CVInfo } from "@/lib/types";
 import { create } from "zustand";
 
 // ------------------------------------------------------
@@ -55,7 +55,7 @@ const save2backend = async (cv_info: CVInfo) => {
             body: JSON.stringify(cv_info)
         });
         if (!response.ok) {
-            throw new Error('Failed to save CV info');
+            throw new Error(`Failed to save cv-info (${response.status}): ${response.statusText}`);
         }
         alert("Success! Saved cv info");
     } catch (error) {
@@ -66,7 +66,7 @@ const save2backend = async (cv_info: CVInfo) => {
 const fetchFromBackend = async (): Promise<CVInfo> => {
     const response = await fetch('/api/cv-info');
     if (!response.ok) {
-        throw new Error('Failed to fetch CV info');
+        throw new Error(`Failed to fetch cv-info (${response.status}): ${response.statusText}`);
     }
     return response.json();
 }

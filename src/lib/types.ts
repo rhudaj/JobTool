@@ -46,12 +46,22 @@ export interface CoverLetterResponse {
                             CVInfo
 --------------------------------------------------------------- */
 
+// What the app sees (delivered from the database)
 export interface CVInfo {
-    [ secName: string ]: {                  // section name
-        [ groupName: string ]: {            // e.g. experience/project id
-            [ itemName: string ]: any;      // e.g. id: experience content
-        }
-    }
+    [secName: string]: {
+        [itemId: string]: {
+            [versionId: string]: SectionItem;
+        };
+    };
+}
+
+// Whats stored in the database:
+export interface CVInfoContent {
+    [secName: string]: {
+        [itemId: string]: {
+            [versionId: string]: CVContentItem; // NOTE: minus the `id` field
+        };
+    };
 }
 
 /* ---------------------------------------------------------------
@@ -59,11 +69,11 @@ export interface CVInfo {
 --------------------------------------------------------------- */
 
 export interface Annotation {
-  job: string;
-  ncv?: NamedCV;
-  annotations?: any;
-  timestamp?: string; // Allow timestamp to be added
-  [key: string]: any; // Allow additional properties
+    job: string;
+    ncv?: NamedCV;
+    annotations?: any;
+    timestamp?: string; // Allow timestamp to be added
+    [key: string]: any; // Allow additional properties
 }
 
 /* ---------------------------------------------------------------
@@ -71,9 +81,9 @@ export interface Annotation {
 --------------------------------------------------------------- */
 
 export interface CVMetaInfo {
-    name: string,
-    path?: string,
-    tags?: string[]
+    name: string;
+    path?: string;
+    tags?: string[];
 }
 
 export type NamedCV = CVMetaInfo & {
@@ -84,10 +94,10 @@ export type NamedCV = CVMetaInfo & {
 
 export interface CV {
     header_info: {
-        name: string,
-        links: Link[]
-    },
-    sections: CVSection[]
+        name: string;
+        links: Link[];
+    };
+    sections: CVSection[];
 }
 
 export interface CVSection {
@@ -98,7 +108,7 @@ export interface CVSection {
 
 // SECTION ITEMS ------------------------------------------------------
 
-export type SectionItem = Summary | Experience
+export type SectionItem = Summary | Experience;
 
 export interface Summary {
     summary: string;
@@ -137,7 +147,7 @@ export type NamedCVContent = CVMetaInfo & {
 
 // New CV content structure that references cv_core by ID
 export interface CVContent {
-    sections: CVContentSection[]
+    sections: CVContentSection[];
 }
 
 export interface CVContentSection {
@@ -146,7 +156,7 @@ export interface CVContentSection {
     items: CVContentItem[];
 }
 
-export type CVContentItem = Summary | CVContentExperience
+export type CVContentItem = Summary | CVContentExperience;
 
 export interface CVContentExperience {
     id: string;
@@ -157,7 +167,6 @@ export interface CVContentExperience {
 /* ---------------------------------------------------------------
                 CV Core structure (stored separately)
 --------------------------------------------------------------- */
-
 
 // CV Core structure (stored separately)
 export interface CVCore {

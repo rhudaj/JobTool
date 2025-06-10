@@ -7,6 +7,7 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
+    "test": "npx ts-node --project testing/tsconfig.json testing/runner.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -54,6 +55,7 @@
     "eslint-config-next": "15.2.4",
     "postcss": "^8.5.4",
     "tailwindcss": "^3.4.17",
+    "ts-node": "^10.9.1",
     "typescript": "^5"
   }
 }

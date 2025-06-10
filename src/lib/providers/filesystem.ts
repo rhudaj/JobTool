@@ -1,12 +1,14 @@
 // File System Provider Implementation (reads from public folder)
-import { NamedCV, NamedCVContent, CVCore } from "@/lib/types";
-import { DatabaseProvider, CVInfo, Annotation } from "./IDatabaseProvider";
+import { NamedCV, NamedCVContent, CVCore, CVInfo, Annotation } from "@/lib/types";
+import { DatabaseProvider } from "./IDatabaseProvider";
 import {
     mergeNamedContentWithCore,
     extractContentFromCV,
 } from "../cv-converter";
 import fs from "fs";
 import path from "path";
+
+const CV_INFO_FILE = "cv_info.json";
 
 export class FileSystemProvider implements DatabaseProvider {
     private basePath: string;
@@ -279,13 +281,12 @@ export class FileSystemProvider implements DatabaseProvider {
     // -------------------------------------------------------------------------
 
     async cv_info(): Promise<CVInfo> {
-        const cvInfoPath = path.join(this.basePath, "cv_info.json");
-
+        const cvInfoPath = path.join(this.basePath, CV_INFO_FILE);
         try {
             const content = fs.readFileSync(cvInfoPath, "utf-8");
             return JSON.parse(content);
         } catch (error) {
-            throw new Error(`Error reading cv_info.json: ${error}`);
+            throw new Error(`Error reading ${CV_INFO_FILE}: ${error}`);
         }
     }
 

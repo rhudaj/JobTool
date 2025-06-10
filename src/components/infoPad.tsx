@@ -102,7 +102,6 @@ export function InfoPad(props: {
     onUpdate: (newInfo: CVInfo)=>void
 }) {
 
-
     // ----------------- STATE -----------------
 
     const [state, setState] = useImmer<{sections: SectionOfVersionedItems[], status: boolean}>({
