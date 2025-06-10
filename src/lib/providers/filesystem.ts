@@ -1,9 +1,10 @@
 // File System Provider Implementation (reads from public folder)
-import { NamedCV, NamedCVContent, CVCore, CVInfo, Annotation } from "@/lib/types";
+import { NamedCV, NamedCVContent, CVCore, CVInfo, Annotation, CVInfoContent } from "@/lib/types";
 import { DatabaseProvider } from "./IDatabaseProvider";
 import {
     mergeNamedContentWithCore,
     extractContentFromCV,
+    mergeCVInfoContentWithCore
 } from "../cv-converter";
 import fs from "fs";
 import path from "path";
@@ -80,9 +81,7 @@ export class FileSystemProvider implements DatabaseProvider {
             }
         });
 
-        return contents.map((content) =>
-            mergeNamedContentWithCore(content, core)
-        );
+        return results;
     }
 
     async save_new_cv(cv: NamedCV): Promise<void> {
@@ -283,8 +282,18 @@ export class FileSystemProvider implements DatabaseProvider {
     async cv_info(): Promise<CVInfo> {
         const cvInfoPath = path.join(this.basePath, CV_INFO_FILE);
         try {
-            const content = fs.readFileSync(cvInfoPath, "utf-8");
-            return JSON.parse(content);
+            const content_str = fs.readFileSync(cvInfoPath, "utf-8");
+            const content: CVInfoContent = JSON.parse(content_str);
+
+            const core = await this.cv_core();
+
+            const mergedContent: CVInfo = mergeCVInfoContentWithCore(
+                content,
+                core
+            );
+
+            return mergedContent;
+
         } catch (error) {
             throw new Error(`Error reading ${CV_INFO_FILE}: ${error}`);
         }

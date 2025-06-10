@@ -95,6 +95,7 @@ const useCVInfoFromAllCvs = () => {
 //                  MAIN COMPONENT
 // -----------------------------------------------------------------------
 
+// TODO: mode='ALL-CVS' is currently not working
 export function InfoPad(props: {
     mode: 'ALL-CVS' | 'CV-INFO'
     // ONLY FOR WHEN mode == CV-INFO:

@@ -190,7 +190,7 @@ export default function ResumeBuilderPage() {
             label: "CV Info",
             content: (
                 <InfoPad
-                    mode="ALL-CVS"
+                    mode="CV-INFO"
                     info={cvInfoState.cv_info}
                     onUpdate={cvInfoState.set}
                 />
