@@ -4,15 +4,7 @@ import { VersionedItemUI, VersionedItem } from "@/components/versionedItem"
 import { useImmer } from 'use-immer';
 import { useCvsStore } from '@/hooks/useCVs';
 import { arrNullOrEmpty } from "@/lib/utils";
-
-
-export interface CVInfo {
-    [ secName: string ]: {                  // section name
-        [ groupName: string ]: {            // e.g. experience/project id
-            [ itemName: string ]: any;      // e.g. id: experience content
-        }
-    }
-}
+import { CVInfo } from "@/lib/types";
 
 interface SectionOfVersionedItems {
     secName: string;

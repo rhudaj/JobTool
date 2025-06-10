@@ -1,6 +1,6 @@
 // File System Provider Implementation (reads from public folder)
 import { NamedCV, NamedCVContent, CVCore } from "@/lib/types";
-import { DatabaseProvider, CVInfo, Annotation } from "./types";
+import { DatabaseProvider, CVInfo, Annotation } from "./IDatabaseProvider";
 import {
     mergeNamedContentWithCore,
     extractContentFromCV,

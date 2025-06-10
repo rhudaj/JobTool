@@ -1,7 +1,8 @@
 // MongoDB Provider Implementation
 import * as mongo from "mongodb";
 import { NamedCV, NamedCVContent, CVCore } from "@/lib/types";
-import { DatabaseProvider, CVInfo, Annotation } from "./types";
+import { DatabaseProvider } from "./IDatabaseProvider";
+import { CVInfo, Annotation } from "@/lib/types";
 import { mergeNamedContentWithCore, extractContentFromCV } from "../cv-converter";
 
 export class MongoDBProvider implements DatabaseProvider {

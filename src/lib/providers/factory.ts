@@ -1,5 +1,5 @@
 // Database Provider Factory
-import { DatabaseProvider } from "./types";
+import { DatabaseProvider } from "./IDatabaseProvider";
 import { MongoDBProvider } from "./mongodb";
 import { FileSystemProvider } from "./filesystem";
 

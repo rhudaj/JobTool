@@ -43,6 +43,30 @@ export interface CoverLetterResponse {
 }
 
 /* ---------------------------------------------------------------
+                            CVInfo
+--------------------------------------------------------------- */
+
+export interface CVInfo {
+    [ secName: string ]: {                  // section name
+        [ groupName: string ]: {            // e.g. experience/project id
+            [ itemName: string ]: any;      // e.g. id: experience content
+        }
+    }
+}
+
+/* ---------------------------------------------------------------
+                            Annotation
+--------------------------------------------------------------- */
+
+export interface Annotation {
+  job: string;
+  ncv?: NamedCV;
+  annotations?: any;
+  timestamp?: string; // Allow timestamp to be added
+  [key: string]: any; // Allow additional properties
+}
+
+/* ---------------------------------------------------------------
                         (NAMED) CV
 --------------------------------------------------------------- */
 

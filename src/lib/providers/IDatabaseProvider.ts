@@ -1,17 +1,5 @@
 // Types for database providers
-import { NamedCV, NamedCVContent, CVCore } from "@/lib/types";
-
-export interface CVInfo {
-  [key: string]: any;
-}
-
-export interface Annotation {
-  job: string;
-  ncv?: NamedCV;
-  annotations?: any;
-  timestamp?: string; // Allow timestamp to be added
-  [key: string]: any; // Allow additional properties
-}
+import { NamedCV, NamedCVContent, CVCore, CVInfo, Annotation } from "@/lib/types";
 
 // Common interface that both providers must implement
 export interface DatabaseProvider {
