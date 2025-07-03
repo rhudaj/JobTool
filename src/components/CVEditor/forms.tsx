@@ -1,6 +1,5 @@
 import TextItems from "@/components/TextItems";
 import { CVMetaInfo, NamedCV } from "@/lib/types";
-import { StyleManager } from "./styles";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useState } from "react";
 
@@ -249,10 +248,14 @@ export const FindReplaceForm = (props: {
     );
 };
 
+import { useStyles } from "./styles";
+
 export const StylesForm = () => {
+    const { styles, setStyle, getAllStyles } = useStyles();
+
     const handleUpdate = (key: string, val: number) => {
         console.log(`(Styles) Updating ${key} to ${val}`);
-        StyleManager.set(key as any, val);
+        setStyle(key as any, val);
     };
 
     return (
@@ -260,7 +263,7 @@ export const StylesForm = () => {
             id="styles-form"
             className="flex flex-col gap-2 w-full max-h-500 overflow-y-scroll"
         >
-            {Object.entries(StyleManager.getAll()).map(([key, val], idx) => (
+            {Object.entries(getAllStyles()).map(([key, val], idx) => (
                 <div
                     key={`${key}-${idx}`}
                     className="grid grid-cols-2 gap-2 items-center border-b"
@@ -269,7 +272,7 @@ export const StylesForm = () => {
                     <input
                         className="w-min text-right"
                         type="number"
-                        defaultValue={StyleManager.styles[key]}
+                        defaultValue={styles[key]}
                         onBlur={(e) =>
                             handleUpdate(key, Number(e.target.value))
                         }

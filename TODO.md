@@ -1,3 +1,5 @@
+* **BUG**: styles won't update when changed.
+
 * Bring the `id` field out of the `Experience`:
 
     e.g.

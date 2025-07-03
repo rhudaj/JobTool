@@ -4,7 +4,7 @@ import TextEditDiv from "@/components/texteditdiv";
 import ItemBucket from "@/components/dnd/Bucket";
 import { format, parse } from "date-fns"
 import { BucketItemComponent, getBucketType, Item } from "@/components/dnd/types";
-import { StyleManager } from "./styles";
+import { useStyles } from "./styles";
 import { capitlize } from "@/lib/utils";
 import { JSX, useMemo } from "react";
 
@@ -13,12 +13,10 @@ import { JSX, useMemo } from "react";
 ------------------------------------------------------------ */
 
 const SectionUI: BucketItemComponent<CVSection> = ({ obj, onUpdate }) => {
+	const { getAllStyles } = useStyles();
 
-	// Infer the Bucket Type from the object
-	const bt = useMemo(
-		() => obj.bucket_type ? getBucketType(obj.bucket_type) : null,
-		[obj.bucket_type]
-	);
+	// Use getBucketType (non-reactive)
+	const bt = getBucketType(obj.bucket_type || "text");
 
 	// Create the items from the data
 	const items: Item<unknown>[] = useMemo(() =>
@@ -44,7 +42,7 @@ const SectionUI: BucketItemComponent<CVSection> = ({ obj, onUpdate }) => {
 		[bt, obj.items]
 	);
 
-	const Styles = StyleManager.getAll();
+	const Styles = getAllStyles();
 
 	const onItemUpdate = (newVal: any, i: number) => {
 		console.debug("SectionUI.onItemUpdate - RECEIVED:", {
@@ -142,8 +140,9 @@ const ExperienceUI: BucketItemComponent<Experience, {
 	type: 'experience' | 'project'
 	disableBucketFeatures?: boolean
 }> = (props) => {
+	const { getAllStyles, getStyle } = useStyles();
 
-	const Styles = StyleManager.getAll();
+	const Styles = getAllStyles();
 
 	const handleUpdate = (field: keyof Experience, val: any) => {
 		console.debug("ExperienceUI.handleUpdate - BEFORE:", {
@@ -200,7 +199,7 @@ const ExperienceUI: BucketItemComponent<Experience, {
 		link: (
 			data.link && data.link.icon && data.link.url ? <LinkUI key="link" {...data.link as Link}/> : null
 		),
-		bulletPoints: data.description.map((item: string, i: number)=>(
+		bulletPoints: data.description?.map((item: string, i: number)=>(
 			<li key={i} className="list-disc">
 				<TextEditDiv
 					tv={item}
@@ -252,7 +251,7 @@ const ExperienceUI: BucketItemComponent<Experience, {
 		<div
 			title="experience"
 			className="flex flex-col gap-[0.5cqh]"
-			style={{rowGap: StyleManager.get("exp_row_gap")}}
+			style={{rowGap: getStyle("exp_row_gap")}}
 		>
 			{/* HEADER ROWS */}
 			{head_rows.map((row, i) =>
@@ -359,7 +358,8 @@ function DateUI(props: { obj: DateRange, onUpdate?: any }) {
 /** Helper for ExpeienceUI */
 function LinkUI(props: Link) {
 	// const Styles = useStyleStore().getComputedStyles();
-	const Styles = StyleManager.getAll();
+	const { getAllStyles } = useStyles();
+	const Styles = getAllStyles();
 	return (
 		<a
 			title="link"

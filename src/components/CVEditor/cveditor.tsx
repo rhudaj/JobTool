@@ -2,14 +2,15 @@
 import { CV, CVSection, Link } from "@/lib/types";
 import * as UI from "./cvItemComponents"
 import ItemBucket from "@/components/dnd/Bucket";
-import { StyleManager } from "./styles";
+import { useStyles } from "./styles";
 
 function CVEditor(props: {
 	cv: CV,
 	onUpdate?: (cv: CV) => void
 }) {
+	const { getAllStyles } = useStyles();
 
-	const S = StyleManager.getAll();
+	const S = getAllStyles();
 
 	const onSectionUpdate = (section: CVSection, i: number) => {
 		console.debug("CVEditor.onSectionUpdate - RECEIVED:", {

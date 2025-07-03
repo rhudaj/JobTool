@@ -1,6 +1,6 @@
 import { ExperienceUI, SectionUI, SummaryUI } from "../CVEditor/cvItemComponents";
 import TextEditDiv from "../texteditdiv";
-import { StyleManager } from "../CVEditor/styles";
+import { StyleManager, setStyleChangeCallback } from "../CVEditor/styles";
 import { CVSection, Experience, Summary } from "@/lib/types";
 
 export interface Item<T>{
@@ -38,7 +38,8 @@ interface BucketType<T> {
     DisplayItem?: BucketItemComponent<T>
 };
 
-const BucketTypes: { [key: string]: BucketType<unknown> } = {
+// Create a function that returns BucketTypes with current styles
+export const createBucketTypes = (getStyle: (key: string) => string): { [key: string]: BucketType<unknown> } => ({
     "text": {
         layoutClass: "border-1 border-dashed min-h-10",
         DisplayItem: (props: DisplayItemProps<string>) =>
@@ -51,19 +52,19 @@ const BucketTypes: { [key: string]: BucketType<unknown> } = {
     },
     "experiences": {
         layoutClass: "grid",
-        style: { rowGap: StyleManager.get("experiences_gap") },
+        style: { rowGap: getStyle("experiences_gap") },
         DisplayItem: (props: DisplayItemProps<Experience>) =>
             <ExperienceUI {...props} type="experience"/>
     },
     "projects": {
         layoutClass:  "grid",
-        style: { rowGap: StyleManager.get("experiences_gap") },
+        style: { rowGap: getStyle("experiences_gap") },
         DisplayItem: (props: DisplayItemProps<Experience>) =>
             <ExperienceUI {...props} type="project" />
     },
     "exp_points": {
         layoutClass: "flex flex-col",
-        style: { rowGap: StyleManager.get("bullet_point_gap") },
+        style: { rowGap: getStyle("bullet_point_gap") },
         DisplayItem: (props: {obj: string, onUpdate: any}) => (
             <li>
                 <TextEditDiv tv={props.obj} onUpdate={props.onUpdate} />
@@ -77,26 +78,35 @@ const BucketTypes: { [key: string]: BucketType<unknown> } = {
     },
     "sections": {
         layoutClass: "grid",
-        style: { rowGap: StyleManager.get("sec_row_gap") },
+        style: { rowGap: getStyle("sec_row_gap") },
         DisplayItem: (props: DisplayItemProps<CVSection>) =>
             <SectionUI {...props}/>
     },
     "cl_paragraphs": {
         DisplayItem: (props: { obj: string, onUpdate: any })=> <TextEditDiv tv={props.obj} onUpdate={props.onUpdate}/>
     }
-};
+});
 
-export const getBucketType = (name: keyof typeof BucketTypes) => {
+const BucketTypes: { [key: string]: BucketType<unknown> } = createBucketTypes(StyleManager.get.bind(StyleManager));
 
+// Set up callback to update BucketTypes when styles change
+setStyleChangeCallback(() => {
+    // Update BucketTypes with new styles
+    const newBucketTypes = createBucketTypes(StyleManager.get.bind(StyleManager));
+    Object.keys(newBucketTypes).forEach(key => {
+        BucketTypes[key] = newBucketTypes[key];
+    });
+});
+
+export const getBucketType = (name: string) => {
     if(!name) {
-        // use the default: "text"
         name = "text"
     }
 
-    if(Object.keys(BucketTypes).indexOf(name as string) === -1) {
+    if(Object.keys(BucketTypes).indexOf(name) === -1) {
         return null;
     }
     return BucketTypes[name];
-}
+};
 
 export const allBucketTypeNames = Object.keys(BucketTypes);
